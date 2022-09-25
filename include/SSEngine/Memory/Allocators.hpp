@@ -87,3 +87,5 @@ namespace SSEngine
         return 0;
     }
 }
+
+SS_CREATE_NAME_ALIAS(Allocator) = SSEngine::Allocator;

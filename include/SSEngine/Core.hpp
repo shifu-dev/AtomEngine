@@ -2,6 +2,14 @@
 #include <stddef.h>
 #include <bits/c++config.h>
 
+#define SS_NAME SoulSphere
+#define SS_ENGINE_NAME SoulSphereEngine
+#define SS_ENGINE_SHORT_NAME SSEngine
+#define SS_CREATE_NAME_ALIAS(type) using SS ##type
+
+// ****************************************************
+// type aliases for ease of use
+
 using uchar = unsigned char;
 using ushort = unsigned short int;
 using ulong = unsigned long int;
