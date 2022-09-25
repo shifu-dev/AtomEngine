@@ -1,3 +1,4 @@
+#pragma once
 #include <stddef.h>
 #include <bits/c++config.h>
 
@@ -25,10 +26,37 @@ enum ubyte : unsigned char {};
 #define ptr *
 #define in const
 #define ref &
+#define out(type) outarg<type>
 
-#define public public:
-#define protected protected:
-#define private private:
-
-#define noexcept noexcept
+// #define noexcept noexcept
 #define noexceptif(cond) noexcept(noexcept(cond))
+
+template <typename T>
+struct outarg
+{
+public:
+    using type = T;
+
+public:
+    outarg() = delete;
+    outarg(T ref value) : value(value) {}
+
+    template <typename TParam>
+    void operator=(TParam arg)
+    {
+        value = arg;
+    }
+
+    operator T ref() const noexcept
+    {
+        return value;
+    }
+
+    T ref operator -> ()
+    {
+        return value;
+    }
+
+public:
+    T ref value;
+};
