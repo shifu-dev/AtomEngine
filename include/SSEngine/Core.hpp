@@ -30,10 +30,11 @@ enum ubyte : unsigned char {};
 #define isnull(ptr) (ptr is nullptr)
 #define isnotnull(ptr) (isnull(ptr) is false)
 
-#define var auto
+// #define var auto
 #define ptr *
-#define in const
-#define ref &
+#define lref &
+#define rref &&
+#define dtor ~
 
 #define noexcept noexcept
 #define noexceptif(cond) noexcept(noexcept(cond))
