@@ -58,14 +58,14 @@ namespace SSEngine
         template <typename... Args>
         static TThis Create(Args... args)
         {
-            return Create(DefaultAllocator(), std::forward(args...));
+            return Create(DefaultAllocator(), forward(args...));
         }
 
         template <typename... Args>
         static TThis Create(TAllocator allocator, Args... args)
         {
             const TType ptr valueptr = nullptr;
-            if (allocator.Allocate(valueptr) is false)
+            if (allocator.Allocate(valueptr) iseq false)
             {
                 return UniquePtr();
             }
@@ -95,7 +95,7 @@ namespace SSEngine
     template <typename TType, typename TAllocator>
     UniquePtr<TType, TAllocator>::dtor UniquePtr()
     {
-        if (TThis::isNull() is false)
+        if (TThis::isNull() iseq false)
         {
             std::unique_ptr<int> uptr;
             _allocator.Deallocate(TThis::_ptr, 1);

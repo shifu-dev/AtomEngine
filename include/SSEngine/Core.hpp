@@ -1,5 +1,7 @@
 #pragma once
-#include <stddef.h>
+#include <cstddef>
+#include <memory>
+#include <iostream>
 #include <bits/c++config.h>
 
 #define SS_NAME SoulSphere
@@ -8,7 +10,7 @@
 #define SS_CREATE_NAME_ALIAS(type) using SS ##type
 
 // ****************************************************
-// type aliases for ease of use
+// * type aliases for ease of use
 
 using uchar = unsigned char;
 using ushort = unsigned short int;
@@ -16,19 +18,20 @@ using ulong = unsigned long int;
 using uint = unsigned int;
 using uchar = unsigned char;
 using umax = size_t;
-enum byte : char {};
-enum ubyte : unsigned char {};
+
+using byte = std::byte;
+// enum class byte : uchar {};
 
 // ****************************************************
-// macros (keywords) to improve code readibility
+// * macros (keywords) to improve code readibility
 
 #define nullt std::nullptr_t
-#define null nullptr;
+#define null nullptr
 
-#define is ==
+#define iseq ==
 #define isnot !=
-#define isnull(ptr) (ptr is nullptr)
-#define isnotnull(ptr) (isnull(ptr) is false)
+#define isnull(ptr) (ptr iseq nullptr)
+#define isnotnull(ptr) (isnull(ptr) iseq false)
 
 // #define var auto
 #define ptr *
@@ -38,3 +41,19 @@ enum ubyte : unsigned char {};
 
 #define noexcept noexcept
 #define noexceptif(cond) noexcept(noexcept(cond))
+
+// ****************************************************
+// * arguments forwarding and moving
+
+
+template<typename Type>
+constexpr Type rref forward(typename std::remove_reference<Type>::type lref arg) noexcept
+{
+    return static_cast<Type rref>(arg);
+}
+
+template <typename T>
+constexpr auto move(T value) noexcept
+{
+    return std::move(value);
+}
