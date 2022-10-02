@@ -128,7 +128,7 @@ namespace SSEngine
     }
 
     template <>
-    void ptr Allocator::Allocate<void>(const sizet count)
+    inline void ptr Allocator::Allocate<void>(const sizet count)
     {
         // explicit specialization for void type,
         // to avoid call to sizeof() operator on void type
@@ -143,7 +143,7 @@ namespace SSEngine
     }
 
     template <>
-    void Allocator::Deallocate(void ptr src, const sizet count)
+    inline void Allocator::Deallocate(void ptr src, const sizet count)
     {
         // explicit specialization for void type,
         // to avoid call to sizeof() operator on void type
@@ -151,7 +151,7 @@ namespace SSEngine
         DeallocateRaw(src, count);
     }
 
-    Allocator::memptr Allocator::AllocateRaw(sizet count, bool clear)
+    inline Allocator::memptr Allocator::AllocateRaw(sizet count, bool clear)
     {
         count = std::max<sizet>(0, count);
         memptr dest = null;
@@ -172,7 +172,7 @@ namespace SSEngine
         return dest;
     }
 
-    void Allocator::DeallocateRaw(memptr src, const sizet count)
+    inline void Allocator::DeallocateRaw(memptr src, const sizet count)
     {
         if (isnotnull(src))
         {
@@ -181,7 +181,7 @@ namespace SSEngine
     }
 
     using DefaultAllocator = SSEngine::Allocator;
-    Allocator defaultAllocator = Allocator();
+    inline constexpr Allocator defaultAllocator = Allocator();
 }
 
 SS_CREATE_NAME_ALIAS(Allocator) = SSEngine::Allocator;
