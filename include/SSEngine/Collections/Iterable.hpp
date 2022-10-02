@@ -26,27 +26,30 @@ namespace SSEngine
     {
     public:
         /// @brief type of value stored by this iterable
-        using ValueType = TValueType;
+        using ValueTypeT = TValueType;
+
+        /// @brief type to manage count
+        using SizeT = umax;
 
         /// @brief iterator used by iterable to iterate through data
         /// @note Iterable uses IteratorPointer which holds a pointer to acutal iterable
         /// to provide interface like abilities
-        using IteratorT = IteratorPointer<TValueType>;
+        using IteratorPointerT = IteratorPointer<TValueType>;
 
     public:
-        IteratorT begin() noexcept
+        IteratorPointerT begin() noexcept
         {
             return Iterable_begin();
         }
 
-        IteratorT end() noexcept
+        IteratorPointerT end() noexcept
         {
             return Iterable_end();
         }
 
     protected:
-        virtual IteratorT Iterable_begin() noexcept abstract;
-        virtual IteratorT Iterable_end() noexcept abstract;
+        virtual IteratorPointerT Iterable_begin() noexcept abstract;
+        virtual IteratorPointerT Iterable_end() noexcept abstract;
     };
 }
 

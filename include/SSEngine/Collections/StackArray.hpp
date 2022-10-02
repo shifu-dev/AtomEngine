@@ -1,6 +1,7 @@
 #pragma once
 #include "SSEngine/Core.hpp"
 #include "SSEngine/Collections/Iterable.hpp"
+#include "SSEngine/Collections/Collection.hpp"
 #include <stdexcept>
 
 namespace SSEngine
@@ -15,15 +16,18 @@ namespace SSEngine
     /// @tparam TValueType type of value stored in array
     /// @tparam TSize size of array, this cannot be changed
     template <typename TValueType, umax TSize>
-    class StackArray : public Iterable<TValueType>
+    class StackArray : public Collection<TValueType>
     {
+        using CollectionT = Collection<TValueType>;
+
     public:
-        using ValueTypeT = TValueType;
+        using SizeT = typename CollectionT::SizeT;
+        using ValueTypeT = typename CollectionT::ValueTypeT;
         using IteratorT = StackArrayIterator<TValueType>;
         using IteratorPointerT = IteratorPointer<TValueType>;
 
         // ************************************************************************
-        // * Iterable | BEGIN
+        // * Iterable<TValueType> | BEGIN
 
     protected:
 
@@ -37,7 +41,43 @@ namespace SSEngine
             return IteratorPointerT(new IteratorT(_array + (_count - 1)), _allocator);
         }
 
-        // * Iterable | END
+        // * Iterable<TValueType> | END
+        // ************************************************************************
+
+        // ************************************************************************
+        // * Collection<TValueType> | BEGIN
+
+    public:
+
+        virtual void Push(const ValueTypeT lref value) override
+        {
+            // TODO: implement this
+        }
+
+        virtual void Remove(const ValueTypeT lref value) override
+        {
+            // TODO: implement this
+        }
+
+        virtual bool Contains(const ValueTypeT lref value) const noexcept override
+        {
+            for (SizeT i = 0; i < _count; i++)
+            {
+                if (value == _array[i])
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        virtual SizeT Count() const noexcept override
+        {
+            return _count;
+        }
+
+        // * Collection<TValueType> | END
         // ************************************************************************
 
     protected:
