@@ -23,8 +23,9 @@ namespace SSEngine
 
         /// @brief checks if given element is present in collection
         /// @param element element to compare with
-        /// @return true if element is present in the collection 
-        virtual bool Contains(const ValueTypeT lref element) const noexcept abstract;
+        /// @param comparer comparer used to compare elements
+        /// @return true if element is present in the collection
+        virtual bool Contains(const ValueTypeT lref element, const ComparerT lef comparer) const noexcept abstract;
     };
 
     /// @brief a data structure that can modify elements
