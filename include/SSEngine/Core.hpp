@@ -33,11 +33,11 @@ using byte = std::byte;
 #define isnull(ptr) (ptr iseq nullptr)
 #define isnotnull(ptr) (isnull(ptr) iseq false)
 
-// #define var auto
 #define ptr *
 #define lref &
 #define rref &&
 #define dtor ~
+#define abstract = 0
 
 #define noexcept noexcept
 #define noexceptif(cond) noexcept(noexcept(cond))

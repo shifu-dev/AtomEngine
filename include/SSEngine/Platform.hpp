@@ -1,3 +1,5 @@
+#pragma once
+
 // _WIN32 indicates both win32 and win64
 #ifdef _WIN32 && !_WIN64
 #define SS_PLATFORM_WIN32
