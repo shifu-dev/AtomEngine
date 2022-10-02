@@ -7,7 +7,7 @@ namespace SSEngine
     /// @brief a read only data structure
     /// @tparam TValueType type of element to store
     template <typename TValueType>
-    class ReadOnlyCollection : public Iterable<TValueType>
+    class ReadOnlyCollection : public virtual Iterable<TValueType>
     {
         using IterableT = Iterable<TValueType>;
 
@@ -30,7 +30,7 @@ namespace SSEngine
     /// @brief a data structure that can modify elements
     /// @tparam TValueType type of element to store
     template <typename TValueType>
-    class Collection : public ReadOnlyCollection<TValueType>
+    class Collection : public virtual ReadOnlyCollection<TValueType>
     {
         using ReadOnlyCollectionT = ReadOnlyCollection<TValueType>;
 
@@ -53,7 +53,7 @@ namespace SSEngine
     /// @brief base class for collections which can manage memory dynamically
     /// @tparam TValueType type of element to store
     template <typename TValueType>
-    class DynamicCollection : public Collection<TValueType>
+    class DynamicCollection : public virtual Collection<TValueType>
     {
         using CollectionT = Collection<TValueType>;
 

@@ -16,7 +16,7 @@ namespace SSEngine
     /// @tparam TValueType type of value stored in array
     /// @tparam TSize size of array, this cannot be changed
     template <typename TValueType, umax TSize>
-    class StackArray : public Collection<TValueType>
+    class StackArray : public DynamicList<TValueType>
     {
         using CollectionT = Collection<TValueType>;
 
@@ -80,8 +80,61 @@ namespace SSEngine
         // * Collection<TValueType> | END
         // ************************************************************************
 
+        // ************************************************************************
+        // * DynamicCollection<TValueType> | BEGIN
+
+    public:
+
+        virtual void Resize(const SizeT count) override { }
+
+        virtual SizeT Reserve(const SizeT count) override { return 0; }
+
+        virtual SizeT Capacity() override { return 0; }
+
+        // ************************************************************************
+        // * DynamicCollection<TValueType> | END
+
+        // * List<TValueType> | BEGIN
+        // ************************************************************************
+
+    public:
+
+        virtual const ValueTypeT lref ElementAt(const SizeT index) const override
+        {
+            AssertIndex(index);
+
+            return _array[index];
+        }
+
+        virtual SizeT IndexOf(const ValueTypeT lref element) const override
+        {
+            for (SizeT i = 0; i < _count; i++)
+            {
+                if (_array[i] iseq element)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        virtual ValueTypeT lref ElementAt(const SizeT index) override
+        {
+            AssertIndex(index);
+
+            return _array[index];
+        }
+
+        virtual void InsertAt(const SizeT index, const ValueTypeT lref element) override { }
+
+        virtual void RemoveAt(const SizeT index) override { }
+
+        // ************************************************************************
+        // * List<TValueType> | END
+
     protected:
-        void AssertIndex(umax index)
+        void AssertIndex(const SizeT index) const
         {
             if (index > (_count - 1))
             {
@@ -92,7 +145,7 @@ namespace SSEngine
     protected:
         Allocator _allocator;
         TValueType _array[TSize];
-        umax _count;
+        SizeT _count;
     };
 
     /// @brief iterator for stack array
