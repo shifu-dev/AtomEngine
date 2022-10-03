@@ -42,6 +42,9 @@ using byte = std::byte;
 #define noexcept noexcept
 #define noexceptif(cond) noexcept(noexcept(cond))
 
+#define typeof(T) typeid(T)
+#define nameof(T) typeid(T).name()
+
 // ****************************************************
 // * arguments forwarding and moving
 
