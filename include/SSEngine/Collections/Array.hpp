@@ -18,9 +18,9 @@ namespace SSEngine
     public:
         using SizeT = typename CollectionT::SizeT;
         using ValueTypeT = typename CollectionT::ValueTypeT;
-        using ComparerT = typename CollectionT::ComparerT;
         using IteratorT = ArrayIterator<TValueType>;
         using IteratorPointerT = IteratorPointer<TValueType>;
+        using EqualityComparerT = typename CollectionT::EqualityComparerT;
         static constexpr SizeT npos = -1;
 
     public:
@@ -58,7 +58,7 @@ namespace SSEngine
             return _array;
         }
 
-        virtual SizeT IndexOf(const ValueTypeT lref element, const ComparerT lref comparer) const override
+        virtual SizeT IndexOf(const ValueTypeT lref element, const EqualityComparerT lref comparer) const override
         {
             for (SizeT i = 0; i < _count; i++)
             {

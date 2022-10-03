@@ -4,17 +4,17 @@
 
 namespace SSEngine
 {
-    /// @brief a read only data structure
+    /// @brief a data structure that can modify elements
     /// @tparam TValueType type of element to store
     template <typename TValueType>
-    class ReadOnlyCollection : public virtual Iterable<TValueType>
+    class Collection : public virtual Iterable<TValueType>
     {
         using IterableT = Iterable<TValueType>;
 
     public:
         using SizeT = typename IterableT::SizeT;
         using ValueTypeT = typename IterableT::ValueTypeT;
-        using ComparerT = EqualityComparer<ValueTypeT>;
+        using EqualityComparerT = EqualityComparer<ValueTypeT>;
 
     public:
 
@@ -31,21 +31,7 @@ namespace SSEngine
         /// @param element element to compare with
         /// @param comparer comparer used to compare elements
         /// @return true if element is present in the collection
-        virtual bool Contains(const ValueTypeT lref element, const ComparerT lref comparer) const noexcept abstract;
-    };
-
-    /// @brief a data structure that can modify elements
-    /// @tparam TValueType type of element to store
-    template <typename TValueType>
-    class Collection : public virtual ReadOnlyCollection<TValueType>
-    {
-        using ReadOnlyCollectionT = ReadOnlyCollection<TValueType>;
-
-    public:
-        using SizeT = typename ReadOnlyCollectionT::SizeT;
-        using ValueTypeT = typename ReadOnlyCollectionT::ValueTypeT;
-
-    public:
+        virtual bool Contains(const ValueTypeT lref element, const EqualityComparerT lref comparer) const noexcept abstract;
 
         /// @brief adds element to collection
         /// @param element element to store
