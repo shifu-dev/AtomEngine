@@ -14,6 +14,7 @@ namespace SSEngine
     public:
         using SizeT = typename IterableT::SizeT;
         using ValueTypeT = typename IterableT::ValueTypeT;
+        using ComparerT = EqualityComparer<ValueTypeT>;
 
     public:
 
@@ -21,11 +22,16 @@ namespace SSEngine
         /// @return count of elements
         virtual SizeT Count() const noexcept abstract;
 
+        virtual bool IsEmpty() const noexcept
+        {
+            return Count() == 0;
+        }
+
         /// @brief checks if given element is present in collection
         /// @param element element to compare with
         /// @param comparer comparer used to compare elements
         /// @return true if element is present in the collection
-        virtual bool Contains(const ValueTypeT lref element, const ComparerT lef comparer) const noexcept abstract;
+        virtual bool Contains(const ValueTypeT lref element, const ComparerT lref comparer) const noexcept abstract;
     };
 
     /// @brief a data structure that can modify elements
@@ -44,7 +50,7 @@ namespace SSEngine
         /// @brief adds element to collection
         /// @param element element to store
         /// @note position of element is implementation dependent
-        virtual void Push(const ValueTypeT lref element) abstract;
+        virtual void Insert(const ValueTypeT lref element) abstract;
 
         /// @brief removed element from collection
         /// @param element element to remove
@@ -77,5 +83,9 @@ namespace SSEngine
         /// @brief current allocated memory
         /// @return count of memory for element currently allocated
         virtual SizeT Capacity() abstract;
+
+        /// @brief resizes capacity equal to count
+        /// @return count of memory for element currently allocated
+        virtual SizeT ShrinkToFit() abstract;
     };
 }
