@@ -7,54 +7,64 @@ namespace SSEngine
     /// @note this class acts like a unique ptr with functionality of iterators
     /// @tparam TValueType 
     template <typename TValueType>
-    class IteratorPointer : public Iterator<TValueType>
+    class ForwardIteratorPointer : public ForwardIterator<TValueType>
     {
     public:
         /// @brief type of impl iterator
-        using TIterator = Iterator<TValueType>;
+        using ForwardIteratorT = ForwardIterator<TValueType>;
 
         /// @todo inherit doc from base class
-        using ValueType = typename TIterator::ValueType;
+        using ValueTypeT = typename ForwardIteratorT::ValueTypeT;
+
+        using AllocatorT = Allocator;
 
     protected:
         /// @brief pointer to the implementation iterator
-        TIterator ptr _iterator;
+        ForwardIteratorT ptr _iterator;
 
         /// @brief alloctor to manage impl iterator reference
-        Allocator lref _allocator;
+        AllocatorT lref _allocator;
 
     public:
         /// @brief default constructor initializes impl iterator with null
-        IteratorPointer() : IteratorPointer(nullptr) { }
+        ForwardIteratorPointer() : ForwardIteratorPointer(nullptr) { }
 
         /// @brief initializes impl iterator with specified iterator pointer
         /// @param iterator pointer to iterator
         /// @param allocator allocator used to manage pointer to iterator
-        IteratorPointer(TIterator ptr iterator, Allocator lref allocator)
+        ForwardIteratorPointer(ForwardIteratorT ptr iterator, AllocatorT lref allocator)
             : _iterator(iterator), _allocator(allocator) { }
 
         /// @brief destructor destroys impl iterator using @param _allocator 
-        dtor IteratorPointer()
+        dtor ForwardIteratorPointer()
         {
             // _allocator.Deallocate(_iterator);
         }
 
-        virtual TIterator lref operator ++() override
+        virtual ValueTypeT lref Value() override
         {
-            return ++(ptr _iterator);
+            return _iterator->Value();
         }
 
-        virtual bool operator ==(const TIterator lref rhs) override
+        virtual const ValueTypeT lref Value() const override
         {
-            return (ptr this == rhs);
+            return _iterator->Value();
         }
 
-        virtual TValueType lref operator ptr() override
+        virtual void MoveFwd() noexcept override
         {
-            return ptr(ptr _iterator);
+            _iterator->MoveFwd();
+        }
+
+        virtual int Compare(const ForwardIterator<ValueTypeT> lref rhs) const noexcept override
+        {
+            return _iterator->Compare(rhs);
         }
     };
+
+    template <typename TValueType>
+    using IteratorPointer = ForwardIteratorPointer<TValueType>;
 }
 
 template <typename TValueType>
-using SSIteratorPointer = SSEngine::IteratorPointer<TValueType>;
+using SSForwardIteratorPointer = SSEngine::ForwardIteratorPointer<TValueType>;

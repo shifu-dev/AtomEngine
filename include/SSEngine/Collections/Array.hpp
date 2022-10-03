@@ -3,13 +3,11 @@
 #include "SSEngine/Collections/Comparer.hpp"
 #include "SSEngine/Collections/Iterable.hpp"
 #include "SSEngine/Collections/Collection.hpp"
+#include "SSEngine/Collections/ArrayIterator.hpp"
 #include <stdexcept>
 
 namespace SSEngine
 {
-    template <typename TValueType>
-    class ArrayIterator;
-
     /// @brief represents a collection that holds memory in contiguous order
     /// @tparam TValueType type of element stored in array
     template <typename TValueType>
@@ -176,51 +174,6 @@ namespace SSEngine
         TValueType ptr _array;
         SizeT _capacity;
         SizeT _count;
-    };
-
-    /// @brief iterator for stack array
-    /// @tparam TValueType type of element stack array holds
-    template <typename TValueType>
-    class ArrayIterator : public Iterator<TValueType>
-    {
-        using ValueTypeT = typename Array<TValueType>::ValueTypeT;
-        using ThisT = ArrayIterator<ValueTypeT>;
-        using BaseT = Iterator<TValueType>;
-
-    public:
-        ArrayIterator(TValueType ptr elementPtr)
-            : _ptr(elementPtr) { }
-
-        virtual TValueType lref operator *() override
-        {
-            return (ptr _ptr);
-        }
-
-        virtual Iterator<TValueType> lref operator ++() override
-        {
-            _ptr++;
-            return (ptr this);
-        }
-
-        virtual bool operator ==(const Iterator<TValueType> lref rhs) override
-        {
-            // we convert to pointer to avoid exception try catch when cast fails
-            auto rhsPtr = dynamic_cast<const ThisT ptr>(lref rhs);
-            if (rhsPtr isnot nullptr)
-            {
-                return (ptr this) == (ptr rhsPtr);
-            }
-
-            return false;
-        }
-
-        bool operator ==(const ArrayIterator<TValueType> lref rhs)
-        {
-            return _ptr == rhs._ptr;
-        }
-
-    protected:
-        ValueTypeT ptr _ptr;
     };
 }
 
