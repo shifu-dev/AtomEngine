@@ -16,7 +16,7 @@ namespace SSEngine
         using ValueTypeT = typename Array<TValueType>::ValueTypeT;
         using ThisT = ArrayIterator<ValueTypeT>;
         using BaseT = RandomAccessIterator<TValueType>;
-        using SizeT = umax;
+        using SizeT = sizet;
 
     public:
         ArrayIterator(TValueType ptr elementPtr)

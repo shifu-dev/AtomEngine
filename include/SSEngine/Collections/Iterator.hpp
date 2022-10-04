@@ -92,7 +92,7 @@ namespace SSEngine
     class RandomAccessIterator : public virtual BidirectionalIterator<TValueType>
     {
         using ThisT = BidirectionalIterator<TValueType>;
-        using SizeT = umax;
+        using SizeT = sizet;
 
     public:
         virtual void MoveBwdBy(const SizeT steps) noexcept abstract;

@@ -14,7 +14,9 @@ namespace SSEngine
     public:
         using SizeT = typename IterableT::SizeT;
         using ValueTypeT = typename IterableT::ValueTypeT;
-        using EqualityComparerT = EqualityComparer<ValueTypeT>;
+        using ComparerT = typename IterableT::ComparerT;
+        using EqualityComparerT = typename IterableT::EqualityComparerT;
+        using IterableT::NPOS;
 
     public:
 
@@ -53,6 +55,9 @@ namespace SSEngine
     public:
         using SizeT = typename CollectionT::SizeT;
         using ValueTypeT = typename CollectionT::ValueTypeT;
+        using ComparerT = typename CollectionT::ComparerT;
+        using EqualityComparerT = typename CollectionT::EqualityComparerT;
+        using CollectionT::NPOS;
 
     public:
 

@@ -4,6 +4,5 @@
 #include "SSEngine/Collections/Iterable.hpp"
 #include "SSEngine/Collections/Collection.hpp"
 #include "SSEngine/Collections/List.hpp"
-#include "SSEngine/Collections/CollectionTraits.hpp"
 #include "SSEngine/Collections/Array.hpp"
 #include "SSEngine/Collections/StackArray.hpp"

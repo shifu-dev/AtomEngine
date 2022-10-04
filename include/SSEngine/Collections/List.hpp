@@ -16,8 +16,9 @@ namespace SSEngine
     public:
         using SizeT = typename CollectionT::SizeT;
         using ValueTypeT = typename CollectionT::ValueTypeT;
+        using ComparerT = typename CollectionT::ComparerT;
         using EqualityComparerT = typename CollectionT::EqualityComparerT;
-        static constexpr SizeT npos = -1;
+        using CollectionT::NPOS;
 
     public:
 
@@ -42,12 +43,12 @@ namespace SSEngine
 
         /// @brief finds the index of element
         /// @param element element to find
-        /// @return index of element, npos if not found
+        /// @return index of element, NPOS if not found
         virtual SizeT IndexOf(const ValueTypeT lref element, const EqualityComparerT lref comparer) const abstract;
 
         virtual bool Contains(const ValueTypeT lref element, const EqualityComparerT lref comparer) const noexcept override
         {
-            return IndexOf(element, comparer) isnot npos;
+            return IndexOf(element, comparer) isnot NPOS;
         }
 
         /// @brief access element by ref at index

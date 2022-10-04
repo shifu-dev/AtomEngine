@@ -25,16 +25,24 @@ namespace SSEngine
     class Iterable
     {
     public:
+        /// @brief type to manage count
+        using SizeT = sizet;
+
         /// @brief type of value stored by this iterable
         using ValueTypeT = TValueType;
 
-        /// @brief type to manage count
-        using SizeT = sizet;
+        /// @brief type used to compare elements, typically during sort
+        using ComparerT = Comparer<ValueTypeT>;
+
+        /// @brief type used to compare elements, typically during find
+        using EqualityComparerT = EqualityComparer<ValueTypeT>;
 
         /// @brief iterator used by iterable to iterate through data
         /// @note Iterable uses IteratorPointer which holds a pointer to acutal iterable
         /// to provide interface like abilities
         using IteratorPointerT = IteratorPointer<TValueType>;
+
+        static constexpr SizeT NPOS = -1;
 
     public:
         IteratorPointerT begin() noexcept

@@ -13,15 +13,16 @@ namespace SSEngine
     template <typename TValueType>
     class Array : public List<TValueType>
     {
-        using CollectionT = Collection<TValueType>;
+        using ListT = List<TValueType>;
 
     public:
-        using SizeT = typename CollectionT::SizeT;
-        using ValueTypeT = typename CollectionT::ValueTypeT;
+        using SizeT = typename ListT::SizeT;
+        using ValueTypeT = typename ListT::ValueTypeT;
+        using ComparerT = typename ListT::ComparerT;
+        using EqualityComparerT = typename ListT::EqualityComparerT;
         using IteratorT = ArrayIterator<TValueType>;
-        using IteratorPointerT = IteratorPointer<TValueType>;
-        using EqualityComparerT = typename CollectionT::EqualityComparerT;
-        static constexpr SizeT npos = -1;
+        using IteratorPointerT = typename ListT::IteratorPointerT;
+        using ListT::NPOS;
 
     public:
         virtual IteratorT Begin()
@@ -68,7 +69,7 @@ namespace SSEngine
                 }
             }
 
-            return npos;
+            return NPOS;
         }
 
         virtual SizeT Count() const noexcept override
