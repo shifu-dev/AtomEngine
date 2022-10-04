@@ -17,7 +17,7 @@ using ushort = unsigned short int;
 using ulong = unsigned long int;
 using uint = unsigned int;
 using uchar = unsigned char;
-using umax = size_t;
+using sizet = size_t;
 
 using byte = std::byte;
 // enum class byte : uchar {};

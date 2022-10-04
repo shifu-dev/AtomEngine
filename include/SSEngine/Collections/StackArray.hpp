@@ -9,7 +9,7 @@ namespace SSEngine
     /// @brief stack allocated non-resiable array
     /// @tparam TValueType type of value stored in array
     /// @tparam TSize size of array, this cannot be changed
-    template <typename TValueType, umax TSize>
+    template <typename TValueType, sizet TSize>
     class StackArray : public Array<TValueType>
     {
         using ArrayT = Array<TValueType>;
@@ -28,5 +28,5 @@ namespace SSEngine
     };
 }
 
-template <typename TValueType, umax TSize>
+template <typename TValueType, sizet TSize>
 using SSStackArray = SSEngine::StackArray<TValueType, TSize>;

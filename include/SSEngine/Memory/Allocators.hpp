@@ -22,7 +22,7 @@ namespace SSEngine
         using memptr = memt ptr;
 
         /// @brief value type to represent count
-        using sizet = umax;
+        using sizet = sizet;
 
     public:
         constexpr Allocator() = default;

@@ -29,7 +29,7 @@ namespace SSEngine
         using ValueTypeT = TValueType;
 
         /// @brief type to manage count
-        using SizeT = umax;
+        using SizeT = sizet;
 
         /// @brief iterator used by iterable to iterate through data
         /// @note Iterable uses IteratorPointer which holds a pointer to acutal iterable
