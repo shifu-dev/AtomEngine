@@ -17,32 +17,33 @@ namespace SSEngine
         using ThisT = ArrayIterator<ValueTypeT>;
         using BaseT = RandomAccessIterator<TValueType>;
         using SizeT = sizet;
+        using IteratorT = Iterator<ValueTypeT>;
 
     public:
         ArrayIterator(TValueType ptr elementPtr)
             : _ptr(elementPtr) { }
 
-        virtual TValueType lref Value() override
+        virtual TValueType lref Value() noexcept override
         {
             return ptr _ptr;
         }
 
-        virtual const TValueType lref Value() const override
+        virtual const TValueType lref Value() const noexcept override
         {
             return ptr _ptr;
         }
 
-        virtual void MoveFwdBy(const SizeT steps) noexcept override
+        virtual void MoveFwdBy(const SizeT steps) const noexcept override
         {
             _ptr + steps;
         }
 
-        virtual void MoveBwdBy(const SizeT steps) noexcept override
+        virtual void MoveBwdBy(const SizeT steps) const noexcept override
         {
             _ptr - steps;
         }
 
-        virtual int Compare(const ForwardIterator<ValueTypeT> lref rhs) const noexcept override
+        virtual int Compare(const IteratorT lref rhs) const noexcept override
         {
             const ThisT ptr rhsPtr = dynamic_cast<const ThisT ptr>(lref rhs);
             if (rhsPtr isnot null)
@@ -53,7 +54,7 @@ namespace SSEngine
             return -1;
         }
 
-        virtual int Compare(const ArrayIterator<ValueTypeT> lref rhs) const noexcept
+        virtual int Compare(const ThisT lref rhs) const noexcept
         {
             return _ptr - rhs._ptr;
         }

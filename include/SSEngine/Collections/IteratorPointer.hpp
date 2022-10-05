@@ -11,6 +11,9 @@ namespace SSEngine
     {
     public:
         /// @brief type of impl iterator
+        using IteratorT = Iterator<TValueType>;
+
+        /// @brief type of impl iterator
         using ForwardIteratorT = ForwardIterator<TValueType>;
 
         /// @todo inherit doc from base class
@@ -41,30 +44,24 @@ namespace SSEngine
             // _allocator.Deallocate(_iterator);
         }
 
-        virtual ValueTypeT lref Value() override
+        virtual ValueTypeT lref Value() noexcept override
         {
             return _iterator->Value();
         }
 
-        virtual const ValueTypeT lref Value() const override
+        virtual const ValueTypeT lref Value() const noexcept override
         {
             return _iterator->Value();
         }
 
-        virtual void MoveFwd() noexcept override
+        virtual void MoveFwd() const noexcept override
         {
             _iterator->MoveFwd();
         }
 
-        virtual int Compare(const ForwardIterator<ValueTypeT> lref rhs) const noexcept override
+        virtual int Compare(const IteratorT lref rhs) const noexcept override
         {
             return _iterator->Compare(rhs);
         }
     };
-
-    template <typename TValueType>
-    using IteratorPointer = ForwardIteratorPointer<TValueType>;
 }
-
-template <typename TValueType>
-using SSForwardIteratorPointer = SSEngine::ForwardIteratorPointer<TValueType>;

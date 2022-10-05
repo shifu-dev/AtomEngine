@@ -20,7 +20,9 @@ namespace SSEngine
         using ValueTypeT = typename ListT::ValueTypeT;
         using ComparerT = typename ListT::ComparerT;
         using EqualityComparerT = typename ListT::EqualityComparerT;
-        using IteratorT = ArrayIterator<TValueType>;
+        using IterableT = Iterable<ValueTypeT>;
+        using IteratorT = ArrayIterator<ValueTypeT>;
+        using ForwardIteratorT = ForwardIterator<ValueTypeT>;
         using IteratorPointerT = typename ListT::IteratorPointerT;
         using ListT::NPOS;
 
@@ -127,7 +129,7 @@ namespace SSEngine
             _array[index] = element;
         }
 
-        virtual void InsertAt(const SizeT index, Iterator<ValueTypeT> lref it, const SizeT count) override
+        virtual void InsertAt(const SizeT index, const ForwardIteratorT lref it, const SizeT count) override
         {
             AssertIndex(index);
             AssertCapacityFor(count);
@@ -199,6 +201,16 @@ namespace SSEngine
             return IteratorPointerT(new IteratorT(_array + (_count - 1)), _allocator);
         }
 
+        virtual const IteratorPointerT Iterable_begin() const noexcept override
+        {
+            return IteratorPointerT(new IteratorT(_array + 0), _allocator);
+        }
+
+        virtual const IteratorPointerT Iterable_end() const noexcept override
+        {
+            return IteratorPointerT(new IteratorT(_array + (_count - 1)), _allocator);
+        }
+
         void AssertIndex(const SizeT index) const
         {
             if (index > (_count - 1))
@@ -220,7 +232,7 @@ namespace SSEngine
         }
 
     protected:
-        Allocator _allocator;
+        mutable Allocator _allocator;
         TValueType ptr _array;
         SizeT _capacity;
         SizeT _count;

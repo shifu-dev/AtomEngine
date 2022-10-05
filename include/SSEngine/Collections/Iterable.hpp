@@ -42,7 +42,7 @@ namespace SSEngine
         /// @brief iterator used by iterable to iterate through data
         /// @note Iterable uses IteratorPointer which holds a pointer to acutal iterable
         /// to provide interface like abilities
-        using IteratorPointerT = IteratorPointer<TValueType>;
+        using IteratorPointerT = ForwardIteratorPointer<TValueType>;
 
         static constexpr SizeT NPOS = -1;
 
@@ -52,7 +52,17 @@ namespace SSEngine
             return Iterable_begin();
         }
 
+        const IteratorPointerT Begin() const noexcept
+        {
+            return Iterable_begin();
+        }
+
         IteratorPointerT End() noexcept
+        {
+            return Iterable_end();
+        }
+
+        const IteratorPointerT End() const noexcept
         {
             return Iterable_end();
         }
@@ -62,7 +72,17 @@ namespace SSEngine
             return Iterable_begin();
         }
 
+        const IteratorPointerT begin() const noexcept
+        {
+            return Iterable_begin();
+        }
+
         IteratorPointerT end() noexcept
+        {
+            return Iterable_end();
+        }
+
+        const IteratorPointerT end() const noexcept
         {
             return Iterable_end();
         }
@@ -70,6 +90,9 @@ namespace SSEngine
     protected:
         virtual IteratorPointerT Iterable_begin() noexcept abstract;
         virtual IteratorPointerT Iterable_end() noexcept abstract;
+
+        virtual const IteratorPointerT Iterable_begin() const noexcept abstract;
+        virtual const IteratorPointerT Iterable_end() const noexcept abstract;
     };
 }
 

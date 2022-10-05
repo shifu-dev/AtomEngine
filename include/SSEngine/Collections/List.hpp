@@ -19,6 +19,9 @@ namespace SSEngine
         using ComparerT = typename CollectionT::ComparerT;
         using EqualityComparerT = typename CollectionT::EqualityComparerT;
         using DefaultEqualityComparerT = typename CollectionT::DefaultEqualityComparerT;
+        using IterableT = Iterable<ValueTypeT>;
+        using IteratorT = Iterator<ValueTypeT>;
+        using ForwardIteratorT = ForwardIterator<ValueTypeT>;
         using PredicateT = int;
         using CollectionT::NPOS;
 
@@ -125,9 +128,9 @@ namespace SSEngine
 
         // **********************************************************************
 
-        virtual void InsertAt(const SizeT index, Iterator<ValueTypeT> lref it, const SizeT count) abstract;
+        virtual void InsertAt(const SizeT index, const ForwardIteratorT lref it, const SizeT count) abstract;
 
-        virtual void InsertAt(const SizeT index, Iterator<ValueTypeT> lref begin, Iterator<ValueTypeT> lref end)
+        virtual void InsertAt(const SizeT index, const ForwardIteratorT lref begin, const ForwardIteratorT lref end)
         {
             SizeT count = 0;
             for (auto lref it = begin; it isnot end; it++)
@@ -138,24 +141,19 @@ namespace SSEngine
             InsertAt(index, begin, count);
         }
 
-        virtual void InsertAt(const SizeT index, const Iterable<ValueTypeT> lref elements, const SizeT count)
+        virtual void InsertAt(const SizeT index, const IterableT lref elements, const SizeT count)
         {
-            // TODO: fix this, remove need of const_cast
-            auto rref begin = const_cast<Iterable<ValueTypeT> lref>(elements).Begin();
-            InsertAt(index, begin, count);
+            InsertAt(index, elements.Begin(), count);
         }
 
-        virtual void InsertAt(const SizeT index, const Iterable<ValueTypeT> lref elements)
+        virtual void InsertAt(const SizeT index, const IterableT lref elements)
         {
-            // TODO: fix this, remove need of const_cast
-            auto rref begin = const_cast<Iterable<ValueTypeT> lref>(elements).Begin();
-            auto rref end = const_cast<Iterable<ValueTypeT> lref>(elements).End();
-            InsertAt(index, begin, end);
+            InsertAt(index, elements.Begin(), elements.End());
         }
 
-        virtual void InsertAt(const SizeT index, const Collection<ValueTypeT> lref elements)
+        virtual void InsertAt(const SizeT index, const CollectionT lref elements)
         {
-            InsertAt(index, static_cast<const Iterable<ValueTypeT> lref>(elements), elements.Count());
+            InsertAt(index, static_cast<const IterableT lref>(elements), elements.Count());
         }
 
         template <ValueTypeT... TElements>
@@ -165,27 +163,27 @@ namespace SSEngine
             InsertAt(ArrayIterator(arr), sizeof...(TElements));
         }
 
-        virtual void InsertFront(Iterator<ValueTypeT> lref it, const SizeT count)
+        virtual void InsertFront(const ForwardIteratorT lref it, const SizeT count)
         {
             InsertAt(0, it, count);
         }
 
-        virtual void InsertFront(Iterator<ValueTypeT> lref begin, Iterator<ValueTypeT> lref end)
+        virtual void InsertFront(const ForwardIteratorT lref begin, const ForwardIteratorT lref end)
         {
             InsertAt(0, begin, end);
         }
 
-        virtual void InsertFront(const Iterable<ValueTypeT> lref elements, const SizeT count)
+        virtual void InsertFront(const IterableT lref elements, const SizeT count)
         {
             InsertAt(0, elements, count);
         }
 
-        virtual void InsertFront(const Iterable<ValueTypeT> lref elements)
+        virtual void InsertFront(const IterableT lref elements)
         {
             InsertAt(0, elements);
         }
 
-        virtual void InsertFront(const Collection<ValueTypeT> lref elements)
+        virtual void InsertFront(const CollectionT lref elements)
         {
             InsertAt(0, elements);
         }
@@ -196,27 +194,27 @@ namespace SSEngine
             InsertAt<TElements...>(0);
         }
 
-        virtual void InsertBack(Iterator<ValueTypeT> lref it, const SizeT count)
+        virtual void InsertBack(const ForwardIteratorT lref it, const SizeT count)
         {
             InsertAt(ThisT::Count() - 1, it, count);
         }
 
-        virtual void InsertBack(Iterator<ValueTypeT> lref begin, Iterator<ValueTypeT> lref end)
+        virtual void InsertBack(const ForwardIteratorT lref begin, const ForwardIteratorT lref end)
         {
             InsertAt(ThisT::Count() - 1, begin, end);
         }
 
-        virtual void InsertBack(const Iterable<ValueTypeT> lref elements, const SizeT count)
+        virtual void InsertBack(const IterableT lref elements, const SizeT count)
         {
             InsertAt(ThisT::Count() - 1, elements, count);
         }
 
-        virtual void InsertBack(const Iterable<ValueTypeT> lref elements)
+        virtual void InsertBack(const IterableT lref elements)
         {
             InsertAt(ThisT::Count() - 1, elements);
         }
 
-        virtual void InsertBack(const Collection<ValueTypeT> lref elements)
+        virtual void InsertBack(const CollectionT lref elements)
         {
             InsertAt(ThisT::Count() - 1, elements);
         }
