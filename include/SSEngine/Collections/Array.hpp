@@ -25,6 +25,29 @@ namespace SSEngine
         using ListT::NPOS;
 
     public:
+        Array() noexcept = default;
+
+        Array(const Iterable<ValueTypeT> lref iterable) noexcept
+        {
+            InsertBack(iterable);
+        }
+
+        Array(const Collection<ValueTypeT> lref list) noexcept
+        {
+            InsertBack(list);
+        }
+
+    public:
+        virtual const ValueTypeT lref operator[](SizeT index) const noexcept
+        {
+            return _array[index];
+        }
+
+        virtual ValueTypeT lref operator[](SizeT index) noexcept
+        {
+            return _array[index];
+        }
+
         virtual IteratorT Begin()
         {
             return IteratorT(_array + 0);
@@ -59,9 +82,22 @@ namespace SSEngine
             return _array;
         }
 
-        virtual SizeT IndexOf(const ValueTypeT lref element, const EqualityComparerT lref comparer) const override
+        virtual SizeT FirstIndexOf(const ValueTypeT lref element, const EqualityComparerT lref comparer) const override
         {
             for (SizeT i = 0; i < _count; i++)
+            {
+                if (comparer.Compare(_array[i], element) iseq true)
+                {
+                    return i;
+                }
+            }
+
+            return NPOS;
+        }
+
+        virtual SizeT LastIndexOf(const ValueTypeT lref element, const EqualityComparerT lref comparer) const override
+        {
+            for (SizeT i = _count; i >= 0; i--)
             {
                 if (comparer.Compare(_array[i], element) iseq true)
                 {
@@ -75,16 +111,6 @@ namespace SSEngine
         virtual SizeT Count() const noexcept override
         {
             return _count;
-        }
-
-        virtual void Insert(const ValueTypeT lref element) override
-        {
-            InsertBack(element);
-        }
-
-        virtual void Remove(const ValueTypeT lref element) override
-        {
-            // RemoveFront(element);
         }
 
         virtual void InsertAt(const SizeT index, const ValueTypeT lref element) override
@@ -101,6 +127,24 @@ namespace SSEngine
             _array[index] = element;
         }
 
+        virtual void InsertAt(const SizeT index, Iterator<ValueTypeT> lref it, const SizeT count) override
+        {
+            AssertIndex(index);
+            AssertCapacityFor(count);
+
+            for (SizeT i = _count; i >= index; i--)
+            {
+                std::swap(_array[i], _array[i + count]);
+            }
+
+            _count += count;
+            for (SizeT i = index; i < count; i++)
+            {
+                _array[index] = ptr it;
+                it++;
+            }
+        }
+
         virtual void RemoveAt(const SizeT index) override
         {
             AssertIndex(index);
@@ -114,24 +158,34 @@ namespace SSEngine
             _count--;
         }
 
-        virtual void InsertBack(const ValueTypeT lref element)
+        virtual void InsertBack(const ValueTypeT lref element) override
         {
             AssertCapacityFor(1);
             _array[_count] = element;
             _count++;
         }
 
-        virtual void RemoveBack(const ValueTypeT lref element)
+        virtual void RemoveBack() override
         {
-            if (_count > 0)
-            {
-                _array[_count] = ValueTypeT();
-                _count--;
-            }
+            AssertIndex(0);
+
+            _array[_count] = ValueTypeT();
+            _count--;
         }
 
-        virtual void Resize(const SizeT count)
+        virtual void RemoveFrom(const SizeT from, const SizeT to)
         {
+            const SizeT count = to - from;
+            for (SizeT i = from; i < (_count - count); i++)
+            {
+                _array[i] = _array[i + count];
+            }
+
+            for (SizeT i = (_count - count); i < _count; i++)
+            {
+                _array[i] = ValueTypeT();
+            }
+            _count -= count;
         }
 
     protected:
@@ -161,12 +215,7 @@ namespace SSEngine
         {
             if (_count >= _capacity)
             {
-                Resize(_count + count);
-
-                if (_count >= _capacity)
-                {
-                    throw std::runtime_error("could not allocate memory " + (_count + 1));
-                }
+                throw std::runtime_error("could not allocate memory for " + (_count + 1));
             }
         }
 

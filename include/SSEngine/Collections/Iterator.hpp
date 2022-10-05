@@ -51,6 +51,14 @@ namespace SSEngine
             return ptr this;
         }
 
+        /// @brief move iterator to point to next element
+        /// @note calls MoveFwd()
+        ThisT lref operator ++(int)
+        {
+            MoveFwd();
+            return ptr this;
+        }
+
         /// @brief compares with other iterator
         /// @param rhs other iterator to compare with
         /// @return true if both iterators represent same value

@@ -14,4 +14,13 @@ namespace SSEngine
     {
         virtual bool Compare(const Type lref lhs, const Type lref rhs) const noexcept abstract;
     };
+
+    template <typename Type>
+    struct DefaultEqualityComparer : public EqualityComparer<Type>
+    {
+        virtual bool Compare(const Type lref lhs, const Type lref rhs) const noexcept override
+        {
+            return lhs == rhs;
+        }
+    };
 }

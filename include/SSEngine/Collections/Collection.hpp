@@ -16,6 +16,7 @@ namespace SSEngine
         using ValueTypeT = typename IterableT::ValueTypeT;
         using ComparerT = typename IterableT::ComparerT;
         using EqualityComparerT = typename IterableT::EqualityComparerT;
+        using DefaultEqualityComparerT = typename IterableT::DefaultEqualityComparerT;
         using IterableT::NPOS;
 
     public:
