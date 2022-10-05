@@ -13,11 +13,13 @@ namespace SSEngine
     template <typename TValueType>
     class ArrayIterator : public RandomAccessIterator<TValueType>
     {
-        using ValueTypeT = typename Array<TValueType>::ValueTypeT;
-        using ThisT = ArrayIterator<ValueTypeT>;
-        using BaseT = RandomAccessIterator<TValueType>;
         using SizeT = sizet;
-        using IteratorT = Iterator<ValueTypeT>;
+        using ThisT = ArrayIterator<TValueType>;
+        using BaseT = RandomAccessIterator<TValueType>;
+        using IteratorT = Iterator<TValueType>;
+
+    public:
+        using ValueTypeT = TValueType;
 
     public:
         ArrayIterator(TValueType ptr elementPtr)

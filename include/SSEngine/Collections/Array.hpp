@@ -11,7 +11,7 @@ namespace SSEngine
     /// @brief represents a collection that holds memory in contiguous order
     /// @tparam TValueType type of element stored in array
     template <typename TValueType>
-    class Array : public List<TValueType>
+    class Array : public virtual List<TValueType>, public virtual IteratorIterable<ArrayIterator<TValueType>>
     {
         using ListT = List<TValueType>;
 
@@ -27,6 +27,9 @@ namespace SSEngine
         using ListT::NPOS;
 
     public:
+
+        // *******************************************************************
+
         Array() noexcept = default;
 
         Array(const Iterable<ValueTypeT> lref iterable) noexcept
@@ -40,6 +43,9 @@ namespace SSEngine
         }
 
     public:
+
+        // *******************************************************************
+
         virtual const ValueTypeT lref operator[](SizeT index) const noexcept
         {
             return _array[index];
@@ -50,15 +56,29 @@ namespace SSEngine
             return _array[index];
         }
 
-        virtual IteratorT Begin()
+        // *******************************************************************
+
+        virtual IteratorT Begin() noexcept override
         {
             return IteratorT(_array + 0);
         }
 
-        virtual IteratorT End()
+        virtual const IteratorT Begin() const noexcept override
+        {
+            return IteratorT(_array + 0);
+        }
+
+        virtual IteratorT End() noexcept override
         {
             return IteratorT(_array + _count);
         }
+
+        virtual const IteratorT End() const noexcept override
+        {
+            return IteratorT(_array + _count);
+        }
+
+        // *******************************************************************
 
         virtual ValueTypeT lref ElementAt(const SizeT index) override
         {
@@ -74,6 +94,8 @@ namespace SSEngine
             return _array[index];
         }
 
+        // *******************************************************************
+
         ValueTypeT ptr RawData() noexcept
         {
             return _array;
@@ -83,6 +105,8 @@ namespace SSEngine
         {
             return _array;
         }
+
+        // *******************************************************************
 
         virtual SizeT FirstIndexOf(const ValueTypeT lref element, const EqualityComparerT lref comparer) const override
         {
@@ -110,10 +134,14 @@ namespace SSEngine
             return NPOS;
         }
 
+        // *******************************************************************
+
         virtual SizeT Count() const noexcept override
         {
             return _count;
         }
+
+        // *******************************************************************
 
         virtual void InsertAt(const SizeT index, const ValueTypeT lref element) override
         {
@@ -128,6 +156,23 @@ namespace SSEngine
             _count++;
             _array[index] = element;
         }
+
+        virtual void InsertBack(const ValueTypeT lref element) override
+        {
+            AssertCapacityFor(1);
+            _array[_count] = element;
+            _count++;
+        }
+
+        virtual void RemoveBack() override
+        {
+            AssertIndex(0);
+
+            _array[_count] = ValueTypeT();
+            _count--;
+        }
+
+        // *******************************************************************
 
         virtual void InsertAt(const SizeT index, const ForwardIteratorT lref it, const SizeT count) override
         {
@@ -147,6 +192,8 @@ namespace SSEngine
             }
         }
 
+        // *******************************************************************
+
         virtual void RemoveAt(const SizeT index) override
         {
             AssertIndex(index);
@@ -160,20 +207,7 @@ namespace SSEngine
             _count--;
         }
 
-        virtual void InsertBack(const ValueTypeT lref element) override
-        {
-            AssertCapacityFor(1);
-            _array[_count] = element;
-            _count++;
-        }
-
-        virtual void RemoveBack() override
-        {
-            AssertIndex(0);
-
-            _array[_count] = ValueTypeT();
-            _count--;
-        }
+        // *******************************************************************
 
         virtual void RemoveFrom(const SizeT from, const SizeT to)
         {
@@ -191,25 +225,8 @@ namespace SSEngine
         }
 
     protected:
-        virtual IteratorPointerT Iterable_begin() noexcept override
-        {
-            return IteratorPointerT(new IteratorT(_array + 0), _allocator);
-        }
 
-        virtual IteratorPointerT Iterable_end() noexcept override
-        {
-            return IteratorPointerT(new IteratorT(_array + (_count - 1)), _allocator);
-        }
-
-        virtual const IteratorPointerT Iterable_begin() const noexcept override
-        {
-            return IteratorPointerT(new IteratorT(_array + 0), _allocator);
-        }
-
-        virtual const IteratorPointerT Iterable_end() const noexcept override
-        {
-            return IteratorPointerT(new IteratorT(_array + (_count - 1)), _allocator);
-        }
+        // *******************************************************************
 
         void AssertIndex(const SizeT index) const
         {
@@ -231,8 +248,9 @@ namespace SSEngine
             }
         }
 
+        // *******************************************************************
+
     protected:
-        mutable Allocator _allocator;
         TValueType ptr _array;
         SizeT _capacity;
         SizeT _count;

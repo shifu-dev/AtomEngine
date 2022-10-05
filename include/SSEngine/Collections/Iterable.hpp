@@ -94,6 +94,56 @@ namespace SSEngine
         virtual const IteratorPointerT Iterable_begin() const noexcept abstract;
         virtual const IteratorPointerT Iterable_end() const noexcept abstract;
     };
+
+    /// @brief Iterable helper class
+    /// @tparam TIterator 
+    template <typename TIterator>
+    class IteratorIterable : public virtual Iterable<typename TIterator::ValueTypeT>
+    {
+    public:
+        using IteratorT = TIterator;
+        using AllocatorT = Allocator;
+        using ValueTypeT = typename IteratorT::ValueTypeT;
+        using IterableT = Iterable<ValueTypeT>;
+        using IteratorPointerT = typename IterableT::IteratorPointerT;
+
+    public:
+        virtual IteratorT Begin() noexcept abstract;
+        virtual const IteratorT Begin() const noexcept abstract;
+
+        virtual IteratorT End() noexcept abstract;
+        virtual const IteratorT End() const noexcept abstract;
+
+        IteratorT begin() noexcept { return Begin(); }
+        const IteratorT begin() const noexcept { return Begin(); }
+
+        IteratorT end() noexcept { return End(); }
+        const IteratorT end() const noexcept { return End(); }
+
+    protected:
+        virtual const IteratorPointerT Iterable_begin() const noexcept override
+        {
+            return IteratorPointerT(_allocator.Construct<IteratorT>(IteratorT(Begin())), _allocator);
+        }
+
+        virtual IteratorPointerT Iterable_begin() noexcept override
+        {
+            return IteratorPointerT(_allocator.Construct<IteratorT>(IteratorT(Begin())), _allocator);
+        }
+
+        virtual const IteratorPointerT Iterable_end() const noexcept override
+        {
+            return IteratorPointerT(_allocator.Construct<IteratorT>(IteratorT(End())), _allocator);
+        }
+
+        virtual IteratorPointerT Iterable_end() noexcept override
+        {
+            return IteratorPointerT(_allocator.Construct<IteratorT>(IteratorT(End())), _allocator);
+        }
+
+    protected:
+        mutable AllocatorT _allocator;
+    };
 }
 
 template <typename TValueType>
