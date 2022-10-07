@@ -10,8 +10,8 @@ namespace SSEngine
     template <typename TValueType>
     class List : public virtual Collection<TValueType>
     {
-        using ThisT = List<TValueType>;
         using CollectionT = Collection<TValueType>;
+        using CollectionT::Count;
 
     public:
         using SizeT = typename CollectionT::SizeT;
@@ -59,14 +59,14 @@ namespace SSEngine
         /// @return reference first element
         virtual const ValueTypeT lref ElementBack() const
         {
-            return ElementAt(ThisT::Count() - 1);
+            return ElementAt(Count() - 1);
         }
 
         /// @brief access element by ref at index
         /// @return reference first element
         virtual ValueTypeT lref ElementBack()
         {
-            return ElementAt(ThisT::Count() - 1);
+            return ElementAt(Count() - 1);
         }
 
         // **********************************************************************
@@ -118,7 +118,7 @@ namespace SSEngine
         /// @note calls InsertAt(Count() - 1, element)
         virtual void InsertBack(const ValueTypeT lref element)
         {
-            InsertAt(ThisT::Count() - 1, element);
+            InsertAt(Count() - 1, element);
         }
 
         virtual void Insert(const ValueTypeT lref element) override
@@ -196,33 +196,33 @@ namespace SSEngine
 
         virtual void InsertBack(const ForwardIteratorT lref it, const SizeT count)
         {
-            InsertAt(ThisT::Count() - 1, it, count);
+            InsertAt(Count() - 1, it, count);
         }
 
         virtual void InsertBack(const ForwardIteratorT lref begin, const ForwardIteratorT lref end)
         {
-            InsertAt(ThisT::Count() - 1, begin, end);
+            InsertAt(Count() - 1, begin, end);
         }
 
         virtual void InsertBack(const IterableT lref elements, const SizeT count)
         {
-            InsertAt(ThisT::Count() - 1, elements, count);
+            InsertAt(Count() - 1, elements, count);
         }
 
         virtual void InsertBack(const IterableT lref elements)
         {
-            InsertAt(ThisT::Count() - 1, elements);
+            InsertAt(Count() - 1, elements);
         }
 
         virtual void InsertBack(const CollectionT lref elements)
         {
-            InsertAt(ThisT::Count() - 1, elements);
+            InsertAt(Count() - 1, elements);
         }
 
         template <ValueTypeT... TElements>
         void InsertBack(const SizeT index)
         {
-            InsertAt<TElements...>(ThisT::Count() - 1);
+            InsertAt<TElements...>(Count() - 1);
         }
 
         // **********************************************************************
@@ -242,7 +242,7 @@ namespace SSEngine
         /// @note calls RemoveAt(Count() - 1)
         virtual void RemoveBack()
         {
-            RemoveAt(ThisT::Count() - 1);
+            RemoveAt(Count() - 1);
         }
 
         virtual void RemoveFront(const ValueTypeT lref element)
@@ -272,7 +272,7 @@ namespace SSEngine
 
         virtual void RemoveFrom(const SizeT indexFrom)
         {
-            RemoveFrom(indexFrom, ThisT::Count() - 1);
+            RemoveFrom(indexFrom, Count() - 1);
         }
 
         // **********************************************************************
