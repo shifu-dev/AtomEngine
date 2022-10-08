@@ -11,7 +11,7 @@ namespace SSEngine
     /// @brief iterator for stack array
     /// @tparam TValueType type of element stack array holds
     template <typename TValueType>
-    class ArrayIterator : public RandomAccessIterator<TValueType>
+    class ArrayIterator : public virtual RandomAccessIterator<TValueType>
     {
         using SizeT = sizet;
         using ThisT = ArrayIterator<TValueType>;
@@ -24,6 +24,12 @@ namespace SSEngine
     public:
         ArrayIterator(TValueType ptr elementPtr)
             : _ptr(elementPtr) { }
+
+        ArrayIterator(const ThisT lref other) = default;
+        ArrayIterator(ThisT rref other) = default;
+
+        ThisT lref operator = (const ThisT lref other) = default;
+        ThisT lref operator = (ThisT rref other) = default;
 
         virtual TValueType lref Value() noexcept override
         {
@@ -65,6 +71,3 @@ namespace SSEngine
         ValueTypeT ptr _ptr;
     };
 }
-
-template <typename TValueType>
-using SSArray = SSEngine::Array<TValueType>;

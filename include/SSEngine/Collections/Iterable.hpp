@@ -123,26 +123,23 @@ namespace SSEngine
     protected:
         virtual const IteratorPointerT Iterable_begin() const noexcept override
         {
-            return IteratorPointerT(_allocator.Construct<IteratorT>(IteratorT(Begin())), _allocator);
+            return IteratorPointerT:: template Create<IteratorT>(Begin());
         }
 
         virtual IteratorPointerT Iterable_begin() noexcept override
         {
-            return IteratorPointerT(_allocator.Construct<IteratorT>(IteratorT(Begin())), _allocator);
+            return IteratorPointerT:: template Create<IteratorT>(Begin());
         }
 
         virtual const IteratorPointerT Iterable_end() const noexcept override
         {
-            return IteratorPointerT(_allocator.Construct<IteratorT>(IteratorT(End())), _allocator);
+            return IteratorPointerT:: template Create<IteratorT>(End());
         }
 
         virtual IteratorPointerT Iterable_end() noexcept override
         {
-            return IteratorPointerT(_allocator.Construct<IteratorT>(IteratorT(End())), _allocator);
+            return IteratorPointerT:: template Create<IteratorT>(End());
         }
-
-    protected:
-        mutable AllocatorT _allocator;
     };
 }
 
