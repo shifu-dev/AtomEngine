@@ -24,6 +24,7 @@ namespace SSEngine
         using IteratorT = ArrayIterator<ValueTypeT>;
         using ForwardIteratorT = ForwardIterator<ValueTypeT>;
         using IteratorPointerT = typename ListT::IteratorPointerT;
+        using typename ListT::PredicateT;
         using ListT::NPOS;
 
     public:
@@ -46,12 +47,12 @@ namespace SSEngine
 
         // *******************************************************************
 
-        virtual const ValueTypeT lref operator[](SizeT index) const noexcept
+        virtual const ValueTypeT lref operator[](SizeT index) const noexcept final override
         {
             return _array[index];
         }
 
-        virtual ValueTypeT lref operator[](SizeT index) noexcept
+        virtual ValueTypeT lref operator[](SizeT index) noexcept final override
         {
             return _array[index];
         }
@@ -74,36 +75,36 @@ namespace SSEngine
             }
         }
 
-        virtual IteratorT Begin() noexcept override
+        virtual IteratorT Begin() noexcept final override
         {
             return IteratorT(_array + 0);
         }
 
-        virtual const IteratorT Begin() const noexcept override
+        virtual const IteratorT Begin() const noexcept final override
         {
             return IteratorT(_array + 0);
         }
 
-        virtual IteratorT End() noexcept override
+        virtual IteratorT End() noexcept final override
         {
             return IteratorT(_array + _count);
         }
 
-        virtual const IteratorT End() const noexcept override
+        virtual const IteratorT End() const noexcept final override
         {
             return IteratorT(_array + _count);
         }
 
         // *******************************************************************
 
-        virtual ValueTypeT lref ElementAt(const SizeT index) override
+        virtual ValueTypeT lref ElementAt(const SizeT index) final override
         {
             AssertIndex(index);
 
             return _array[index];
         }
 
-        virtual const ValueTypeT lref ElementAt(const SizeT index) const override
+        virtual const ValueTypeT lref ElementAt(const SizeT index) const final override
         {
             AssertIndex(index);
 
@@ -124,7 +125,7 @@ namespace SSEngine
 
         // *******************************************************************
 
-        virtual SizeT FirstIndexOf(const ValueTypeT lref element, const EqualityComparerT lref comparer) const override
+        virtual SizeT FirstIndexOf(const ValueTypeT lref element, const EqualityComparerT lref comparer) const final override
         {
             for (SizeT i = 0; i < _count; i++)
             {
@@ -137,7 +138,7 @@ namespace SSEngine
             return NPOS;
         }
 
-        virtual SizeT LastIndexOf(const ValueTypeT lref element, const EqualityComparerT lref comparer) const override
+        virtual SizeT LastIndexOf(const ValueTypeT lref element, const EqualityComparerT lref comparer) const final override
         {
             for (SizeT i = _count; i >= 0; i--)
             {
@@ -152,14 +153,14 @@ namespace SSEngine
 
         // *******************************************************************
 
-        virtual SizeT Count() const noexcept override
+        virtual SizeT Count() const noexcept final override
         {
             return _count;
         }
 
         // *******************************************************************
 
-        virtual void InsertAt(const SizeT index, const ValueTypeT lref element) override
+        virtual void InsertAt(const SizeT index, const ValueTypeT lref element) final override
         {
             AssertIndex(index);
             AssertCapacityFor(1);
@@ -173,14 +174,14 @@ namespace SSEngine
             _array[index] = element;
         }
 
-        virtual void InsertBack(const ValueTypeT lref element) override
+        virtual void InsertBack(const ValueTypeT lref element) final override
         {
             AssertCapacityFor(1);
             _array[_count] = element;
             _count++;
         }
 
-        virtual void RemoveBack() override
+        virtual void RemoveBack() final override
         {
             AssertIndex(0);
 
@@ -190,7 +191,7 @@ namespace SSEngine
 
         // *******************************************************************
 
-        virtual void InsertAt(const SizeT index, const ForwardIteratorT lref it, const SizeT count) override
+        virtual void InsertAt(const SizeT index, const ForwardIteratorT lref it, const SizeT count) final override
         {
             AssertIndex(index);
             AssertCapacityFor(count);
@@ -210,7 +211,7 @@ namespace SSEngine
 
         // *******************************************************************
 
-        virtual void RemoveAt(const SizeT index) override
+        virtual void RemoveAt(const SizeT index) final override
         {
             AssertIndex(index);
 
@@ -225,7 +226,7 @@ namespace SSEngine
 
         // *******************************************************************
 
-        virtual void RemoveFrom(const SizeT from, const SizeT to)
+        virtual void RemoveFrom(const SizeT from, const SizeT to) final override
         {
             const SizeT count = to - from;
             for (SizeT i = from; i < (_count - count); i++)
@@ -240,9 +241,25 @@ namespace SSEngine
             _count -= count;
         }
 
-    protected:
+        // *******************************************************************
+
+        virtual void RemoveIf(const PredicateT lref pred) noexcept final override
+        {
+            SizeT count = _count;
+            for (SizeT i = 0; i < count; i++)
+            {
+                if (pred(_array[i], SizeT(i)) iseq true)
+                {
+                    RemoveAt(i);
+
+                    i--;
+                    count--;
+                }
+            }
+        }
 
         // *******************************************************************
+    protected:
 
         void AssertIndex(const SizeT index) const
         {

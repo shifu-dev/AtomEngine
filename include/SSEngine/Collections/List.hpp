@@ -22,7 +22,7 @@ namespace SSEngine
         using IterableT = Iterable<ValueTypeT>;
         using IteratorT = Iterator<ValueTypeT>;
         using ForwardIteratorT = ForwardIterator<ValueTypeT>;
-        using PredicateT = int;
+        using PredicateT = Predicate<const ValueTypeT lref, SizeT>;
         using CollectionT::NPOS;
 
     public:
@@ -276,6 +276,14 @@ namespace SSEngine
         }
 
         // **********************************************************************
+
+        virtual void RemoveIf(const PredicateT lref pred) noexcept abstract;
+
+        template <typename TFunctor>
+        void RemoveIfT(const TFunctor lref func) noexcept
+        {
+            RemoveIf(PredicateT::Create(func));
+        }
     };
 
     /// @brief list like structure that can manage memory dynamically
