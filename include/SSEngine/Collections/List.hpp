@@ -277,12 +277,12 @@ namespace SSEngine
 
         // **********************************************************************
 
-        virtual void RemoveIf(const PredicateT lref pred) noexcept abstract;
+        virtual void RemoveIfCallable(const PredicateT lref pred) noexcept abstract;
 
         template <typename TFunctor>
-        void RemoveIfT(const TFunctor lref func) noexcept
+        void RemoveIf(const TFunctor lref func) noexcept
         {
-            RemoveIf(PredicateT::Create(func));
+            RemoveIfCallable(PredicateT::Create(func));
         }
     };
 

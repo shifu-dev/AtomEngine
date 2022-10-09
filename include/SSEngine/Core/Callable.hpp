@@ -3,18 +3,20 @@
 
 namespace SSEngine
 {
-    template <typename TFunc, typename TResult, typename... TArgs>
+    template <typename TFunctor, typename TResult, typename... TArgs>
     class CallableFunctor;
 
     template <typename TResult, typename... TArgs> class Callable;
     template <typename TResult, typename... TArgs>
     class Callable <TResult(TArgs...)>
     {
+        using ThisT = Callable<TResult(TArgs...)>;
+
     public:
-        template <typename TFunc>
-        static CallableFunctor<TFunc, TResult, TArgs...> Create(const TFunc lref func)
+        template <typename TFunctor>
+        static CallableFunctor<TFunctor, TResult, TArgs...> Create(const TFunctor lref func)
         {
-            return CallableFunctor<TFunc, TResult, TArgs...>(func);
+            return CallableFunctor<TFunctor, TResult, TArgs...>(func);
         }
 
     public:
@@ -27,11 +29,11 @@ namespace SSEngine
     template <typename... TArgs>
     using Action = Callable<void(TArgs...)>;
 
-    template <typename TFunc, typename TResult, typename... TArgs>
+    template <typename TFunctor, typename TResult, typename... TArgs>
     class CallableFunctor : public Callable<TResult(TArgs...)>
     {
     public:
-        CallableFunctor(const TFunc lref func) : func(func) { }
+        CallableFunctor(const TFunctor lref func) : func(func) { }
 
     public:
         virtual TResult operator () (TArgs rref ... args) const override
@@ -40,6 +42,6 @@ namespace SSEngine
         }
 
     public:
-        const TFunc func;
+        const TFunctor func;
     };
 }

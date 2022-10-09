@@ -243,7 +243,7 @@ namespace SSEngine
 
         // *******************************************************************
 
-        virtual void RemoveIf(const PredicateT lref pred) noexcept final override
+        virtual void RemoveIfCallable(const PredicateT lref pred) noexcept final override
         {
             SizeT count = _count;
             for (SizeT i = 0; i < count; i++)
