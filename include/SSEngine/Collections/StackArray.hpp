@@ -7,18 +7,18 @@
 namespace SSEngine
 {
     /// @brief stack allocated non-resiable array
-    /// @tparam TValueType type of value stored in array
+    /// @tparam TElement type of value stored in array
     /// @tparam TSize size of array, this cannot be changed
-    template <typename TValueType, sizet TSize>
-    class StackArray : public Array<TValueType>
+    template <typename TElement, sizet TSize>
+    class StackArray : public Array<TElement>
     {
-        using ArrayT = Array<TValueType>;
+        using ArrayT = Array<TElement>;
 
     public:
-        using SizeT = typename ArrayT::SizeT;
-        using ValueTypeT = typename ArrayT::ValueTypeT;
+        using SizeType = typename ArrayT::SizeType;
+        using ElementType = typename ArrayT::ElementType;
         using IteratorT = typename ArrayT::IteratorT;
-        using InitializerListT = std::initializer_list<ValueTypeT>;
+        using InitializerListT = std::initializer_list<ElementType>;
 
     public:
         StackArray() : ArrayT()
@@ -29,9 +29,9 @@ namespace SSEngine
         }
 
     protected:
-        ValueTypeT _stackArray[TSize];
+        ElementType _stackArray[TSize];
     };
 }
 
-template <typename TValueType, sizet TSize>
-using SSStackArray = SSEngine::StackArray<TValueType, TSize>;
+template <typename TElement, sizet TSize>
+using SSStackArray = SSEngine::StackArray<TElement, TSize>;

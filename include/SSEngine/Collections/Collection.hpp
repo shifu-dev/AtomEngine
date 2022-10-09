@@ -5,15 +5,15 @@
 namespace SSEngine
 {
     /// @brief a data structure that can modify elements
-    /// @tparam TValueType type of element to store
-    template <typename TValueType>
-    class Collection : public virtual Iterable<TValueType>
+    /// @tparam TElement type of element to store
+    template <typename TElement>
+    class Collection : public virtual Iterable<TElement>
     {
-        using IterableT = Iterable<TValueType>;
+        using IterableT = Iterable<TElement>;
 
     public:
-        using SizeT = typename IterableT::SizeT;
-        using ValueTypeT = typename IterableT::ValueTypeT;
+        using SizeType = typename IterableT::SizeType;
+        using ElementType = typename IterableT::ElementType;
         using ComparerT = typename IterableT::ComparerT;
         using EqualityComparerT = typename IterableT::EqualityComparerT;
         using DefaultEqualityComparerT = typename IterableT::DefaultEqualityComparerT;
@@ -23,7 +23,7 @@ namespace SSEngine
 
         /// @brief current count of elements
         /// @return count of elements
-        virtual SizeT Count() const noexcept abstract;
+        virtual SizeType Count() const noexcept abstract;
 
         virtual bool IsEmpty() const noexcept
         {
@@ -34,28 +34,28 @@ namespace SSEngine
         /// @param element element to compare with
         /// @param comparer comparer used to compare elements
         /// @return true if element is present in the collection
-        virtual bool Contains(const ValueTypeT lref element, const EqualityComparerT lref comparer) const noexcept abstract;
+        virtual bool Contains(const ElementType lref element, const EqualityComparerT lref comparer) const noexcept abstract;
 
         /// @brief adds element to collection
         /// @param element element to store
         /// @note position of element is implementation dependent
-        virtual void Insert(const ValueTypeT lref element) abstract;
+        virtual void Insert(const ElementType lref element) abstract;
 
         /// @brief removed element from collection
         /// @param element element to remove
-        virtual void Remove(const ValueTypeT lref element) abstract;
+        virtual void Remove(const ElementType lref element) abstract;
     };
 
     /// @brief base class for collections which can manage memory dynamically
-    /// @tparam TValueType type of element to store
-    template <typename TValueType>
-    class DynamicCollection : public virtual Collection<TValueType>
+    /// @tparam TElement type of element to store
+    template <typename TElement>
+    class DynamicCollection : public virtual Collection<TElement>
     {
-        using CollectionT = Collection<TValueType>;
+        using CollectionT = Collection<TElement>;
 
     public:
-        using SizeT = typename CollectionT::SizeT;
-        using ValueTypeT = typename CollectionT::ValueTypeT;
+        using SizeType = typename CollectionT::SizeType;
+        using ElementType = typename CollectionT::ElementType;
         using ComparerT = typename CollectionT::ComparerT;
         using EqualityComparerT = typename CollectionT::EqualityComparerT;
         using CollectionT::NPOS;
@@ -65,19 +65,19 @@ namespace SSEngine
         /// @brief resizes the underlying memory
         /// @param count count of objects to allocate memor for
         /// @note this does not change element count
-        virtual void Resize(const SizeT count) abstract;
+        virtual void Resize(const SizeType count) abstract;
 
         /// @brief asks the collection to reserve memory for count elements
         /// @param count minimum count of elements to reserve memory for
         /// @return count of reserved memory for element
-        virtual SizeT Reserve(const SizeT count) abstract;
+        virtual SizeType Reserve(const SizeType count) abstract;
 
         /// @brief current allocated memory
         /// @return count of memory for element currently allocated
-        virtual SizeT Capacity() abstract;
+        virtual SizeType Capacity() abstract;
 
         /// @brief resizes capacity equal to count
         /// @return count of memory for element currently allocated
-        virtual SizeT ShrinkToFit() abstract;
+        virtual SizeType ShrinkToFit() abstract;
     };
 }

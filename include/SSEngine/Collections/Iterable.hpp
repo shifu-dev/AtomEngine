@@ -11,7 +11,7 @@ namespace SSEngine
     /// extended class will be able to be used in range based for loop
     /// and funtions expecting an iterable type
     ///
-    /// @tparam TValueType type of value hold by this iterable
+    /// @tparam TElement type of value hold by this iterable
     ///
     /// @example
     /// void GetMeListOfNames(const Iterable<string> ref names)
@@ -22,47 +22,47 @@ namespace SSEngine
     ///     }
     /// }
     ///
-    template <typename TValueType>
+    template <typename TElement>
     class Iterable
     {
     public:
         /// @brief type to manage count
-        using SizeT = sizet;
+        using SizeType = sizet;
 
         /// @brief type of value stored by this iterable
-        using ValueTypeT = TValueType;
+        using ElementType = TElement;
 
         /// @brief type used to compare elements, typically during sort
-        using ComparerT = Comparer<ValueTypeT>;
+        using ComparerT = Comparer<ElementType>;
 
         /// @brief type used to compare elements, typically during find
-        using EqualityComparerT = EqualityComparer<ValueTypeT>;
+        using EqualityComparerT = EqualityComparer<ElementType>;
 
-        using DefaultEqualityComparerT = DefaultEqualityComparer<ValueTypeT>;
+        using DefaultEqualityComparerT = DefaultEqualityComparer<ElementType>;
 
         /// @brief iterator used by iterable to iterate through data
         /// @note Iterable uses IteratorPointer which holds a pointer to acutal iterable
         /// to provide interface like abilities
-        using IteratorPointerT = ForwardIteratorPointer<TValueType>;
+        using IteratorPointerT = ForwardIteratorPointer<TElement>;
 
-        static constexpr SizeT NPOS = -1;
+        static constexpr SizeType NPOS = -1;
 
     public:
 
         template <typename TCallable>
         void ForEachT(const TCallable lref callable) const
         {
-            ForEach(Callable<void(const ValueTypeT lref)>::Create(callable));
+            ForEach(Callable<void(const ElementType lref)>::Create(callable));
         }
 
         template <typename TCallable>
         void ForEachT(const TCallable lref callable)
         {
-            ForEach(Callable<void(ValueTypeT lref)>::Create(callable));
+            ForEach(Callable<void(ElementType lref)>::Create(callable));
         }
 
-        virtual void ForEach(const Callable<void(const ValueTypeT lref)> lref callback) const abstract;
-        virtual void ForEach(const Callable<void(ValueTypeT lref)> lref callback) abstract;
+        virtual void ForEach(const Callable<void(const ElementType lref)> lref callback) const abstract;
+        virtual void ForEach(const Callable<void(ElementType lref)> lref callback) abstract;
 
         IteratorPointerT Begin() noexcept
         {
@@ -115,13 +115,13 @@ namespace SSEngine
     /// @brief Iterable helper class
     /// @tparam TIterator 
     template <typename TIterator>
-    class IteratorIterable : public virtual Iterable<typename TIterator::ValueTypeT>
+    class IteratorIterable : public virtual Iterable<typename TIterator::ElementType>
     {
     public:
         using IteratorT = TIterator;
         using AllocatorT = Allocator;
-        using ValueTypeT = typename IteratorT::ValueTypeT;
-        using IterableT = Iterable<ValueTypeT>;
+        using ElementType = typename IteratorT::ElementType;
+        using IterableT = Iterable<ElementType>;
         using IteratorPointerT = typename IterableT::IteratorPointerT;
 
     public:
@@ -160,5 +160,5 @@ namespace SSEngine
     };
 }
 
-template <typename TValueType>
-using SSIterable = SSEngine::Iterable<TValueType>;
+template <typename TElement>
+using SSIterable = SSEngine::Iterable<TElement>;

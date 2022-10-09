@@ -5,24 +5,24 @@
 
 namespace SSEngine
 {
-    template <typename TValueType>
+    template <typename TElement>
     class Array;
 
     /// @brief iterator for stack array
-    /// @tparam TValueType type of element stack array holds
-    template <typename TValueType>
-    class ArrayIterator : public virtual RandomAccessIterator<TValueType>
+    /// @tparam TElement type of element stack array holds
+    template <typename TElement>
+    class ArrayIterator : public virtual RandomAccessIterator<TElement>
     {
-        using SizeT = sizet;
-        using ThisT = ArrayIterator<TValueType>;
-        using BaseT = RandomAccessIterator<TValueType>;
-        using IteratorT = Iterator<TValueType>;
+        using SizeType = sizet;
+        using ThisT = ArrayIterator<TElement>;
+        using BaseT = RandomAccessIterator<TElement>;
+        using IteratorT = Iterator<TElement>;
 
     public:
-        using ValueTypeT = TValueType;
+        using ElementType = TElement;
 
     public:
-        ArrayIterator(TValueType ptr elementPtr)
+        ArrayIterator(TElement ptr elementPtr)
             : _ptr(elementPtr) { }
 
         ArrayIterator(const ThisT lref other) = default;
@@ -31,22 +31,22 @@ namespace SSEngine
         ThisT lref operator = (const ThisT lref other) = default;
         ThisT lref operator = (ThisT rref other) = default;
 
-        virtual TValueType lref Value() noexcept override
+        virtual TElement lref Value() noexcept override
         {
             return ptr _ptr;
         }
 
-        virtual const TValueType lref Value() const noexcept override
+        virtual const TElement lref Value() const noexcept override
         {
             return ptr _ptr;
         }
 
-        virtual void MoveFwdBy(const SizeT steps) const noexcept override
+        virtual void MoveFwdBy(const SizeType steps) const noexcept override
         {
             _ptr = _ptr + steps;
         }
 
-        virtual void MoveBwdBy(const SizeT steps) const noexcept override
+        virtual void MoveBwdBy(const SizeType steps) const noexcept override
         {
             _ptr = _ptr - steps;
         }
@@ -68,6 +68,6 @@ namespace SSEngine
         }
 
     protected:
-        mutable ValueTypeT ptr _ptr;
+        mutable ElementType ptr _ptr;
     };
 }

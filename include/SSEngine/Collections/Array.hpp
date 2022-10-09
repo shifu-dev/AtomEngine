@@ -9,20 +9,20 @@
 namespace SSEngine
 {
     /// @brief represents a collection that holds memory in contiguous order
-    /// @tparam TValueType type of element stored in array
-    template <typename TValueType>
-    class Array : public virtual List<TValueType>, public virtual IteratorIterable<ArrayIterator<TValueType>>
+    /// @tparam TElement type of element stored in array
+    template <typename TElement>
+    class Array : public virtual List<TElement>, public virtual IteratorIterable<ArrayIterator<TElement>>
     {
-        using ListT = List<TValueType>;
+        using ListT = List<TElement>;
 
     public:
-        using SizeT = typename ListT::SizeT;
-        using ValueTypeT = typename ListT::ValueTypeT;
+        using SizeType = typename ListT::SizeType;
+        using ElementType = typename ListT::ElementType;
         using ComparerT = typename ListT::ComparerT;
         using EqualityComparerT = typename ListT::EqualityComparerT;
-        using IterableT = Iterable<ValueTypeT>;
-        using IteratorT = ArrayIterator<ValueTypeT>;
-        using ForwardIteratorT = ForwardIterator<ValueTypeT>;
+        using IterableT = Iterable<ElementType>;
+        using IteratorT = ArrayIterator<ElementType>;
+        using ForwardIteratorT = ForwardIterator<ElementType>;
         using IteratorPointerT = typename ListT::IteratorPointerT;
         using typename ListT::PredicateT;
         using ListT::NPOS;
@@ -33,12 +33,12 @@ namespace SSEngine
 
         Array() noexcept = default;
 
-        Array(const Iterable<ValueTypeT> lref iterable) noexcept
+        Array(const Iterable<ElementType> lref iterable) noexcept
         {
             InsertBack(iterable);
         }
 
-        Array(const Collection<ValueTypeT> lref list) noexcept
+        Array(const Collection<ElementType> lref list) noexcept
         {
             InsertBack(list);
         }
@@ -47,29 +47,29 @@ namespace SSEngine
 
         // *******************************************************************
 
-        virtual const ValueTypeT lref operator[](SizeT index) const noexcept final override
+        virtual const ElementType lref operator[](SizeType index) const noexcept final override
         {
             return _array[index];
         }
 
-        virtual ValueTypeT lref operator[](SizeT index) noexcept final override
+        virtual ElementType lref operator[](SizeType index) noexcept final override
         {
             return _array[index];
         }
 
         // *******************************************************************
 
-        virtual void ForEach(const Callable<void(const ValueTypeT lref)> lref callback) const final override
+        virtual void ForEach(const Callable<void(const ElementType lref)> lref callback) const final override
         {
-            for (SizeT i = 0; i < _count; i++)
+            for (SizeType i = 0; i < _count; i++)
             {
                 callback(_array[i]);
             }
         }
 
-        virtual void ForEach(const Callable<void(ValueTypeT lref)> lref callback) final override
+        virtual void ForEach(const Callable<void(ElementType lref)> lref callback) final override
         {
-            for (SizeT i = 0; i < _count; i++)
+            for (SizeType i = 0; i < _count; i++)
             {
                 callback(_array[i]);
             }
@@ -97,14 +97,14 @@ namespace SSEngine
 
         // *******************************************************************
 
-        virtual ValueTypeT lref ElementAt(const SizeT index) final override
+        virtual ElementType lref ElementAt(const SizeType index) final override
         {
             AssertIndex(index);
 
             return _array[index];
         }
 
-        virtual const ValueTypeT lref ElementAt(const SizeT index) const final override
+        virtual const ElementType lref ElementAt(const SizeType index) const final override
         {
             AssertIndex(index);
 
@@ -113,21 +113,21 @@ namespace SSEngine
 
         // *******************************************************************
 
-        ValueTypeT ptr RawData() noexcept
+        ElementType ptr RawData() noexcept
         {
             return _array;
         }
 
-        const ValueTypeT ptr RawData() const noexcept
+        const ElementType ptr RawData() const noexcept
         {
             return _array;
         }
 
         // *******************************************************************
 
-        virtual SizeT FirstIndexOf(const ValueTypeT lref element, const EqualityComparerT lref comparer) const final override
+        virtual SizeType FirstIndexOf(const ElementType lref element, const EqualityComparerT lref comparer) const final override
         {
-            for (SizeT i = 0; i < _count; i++)
+            for (SizeType i = 0; i < _count; i++)
             {
                 if (comparer.Compare(_array[i], element) iseq true)
                 {
@@ -138,9 +138,9 @@ namespace SSEngine
             return NPOS;
         }
 
-        virtual SizeT LastIndexOf(const ValueTypeT lref element, const EqualityComparerT lref comparer) const final override
+        virtual SizeType LastIndexOf(const ElementType lref element, const EqualityComparerT lref comparer) const final override
         {
-            for (SizeT i = _count; i >= 0; i--)
+            for (SizeType i = _count; i >= 0; i--)
             {
                 if (comparer.Compare(_array[i], element) iseq true)
                 {
@@ -153,19 +153,19 @@ namespace SSEngine
 
         // *******************************************************************
 
-        virtual SizeT Count() const noexcept final override
+        virtual SizeType Count() const noexcept final override
         {
             return _count;
         }
 
         // *******************************************************************
 
-        virtual void InsertAt(const SizeT index, const ValueTypeT lref element) final override
+        virtual void InsertAt(const SizeType index, const ElementType lref element) final override
         {
             AssertIndex(index);
             AssertCapacityFor(1);
 
-            for (SizeT i = _count; i >= index; i--)
+            for (SizeType i = _count; i >= index; i--)
             {
                 std::swap(_array[i], _array[i - 1]);
             }
@@ -174,7 +174,7 @@ namespace SSEngine
             _array[index] = element;
         }
 
-        virtual void InsertBack(const ValueTypeT lref element) final override
+        virtual void InsertBack(const ElementType lref element) final override
         {
             AssertCapacityFor(1);
             _array[_count] = element;
@@ -185,24 +185,24 @@ namespace SSEngine
         {
             AssertIndex(0);
 
-            _array[_count] = ValueTypeT();
+            _array[_count] = ElementType();
             _count--;
         }
 
         // *******************************************************************
 
-        virtual void InsertAt(const SizeT index, const ForwardIteratorT lref it, const SizeT count) final override
+        virtual void InsertAt(const SizeType index, const ForwardIteratorT lref it, const SizeType count) final override
         {
             AssertIndex(index);
             AssertCapacityFor(count);
 
-            for (SizeT i = _count; i >= index; i--)
+            for (SizeType i = _count; i >= index; i--)
             {
                 std::swap(_array[i], _array[i + count]);
             }
 
             _count += count;
-            for (SizeT i = index; i < count; i++)
+            for (SizeType i = index; i < count; i++)
             {
                 _array[index] = ptr it;
                 it++;
@@ -211,32 +211,32 @@ namespace SSEngine
 
         // *******************************************************************
 
-        virtual void RemoveAt(const SizeT index) final override
+        virtual void RemoveAt(const SizeType index) final override
         {
             AssertIndex(index);
 
-            for (SizeT i = index; i < _count; i++)
+            for (SizeType i = index; i < _count; i++)
             {
                 std::swap(_array[i], _array[i + 1]);
             }
 
-            _array[_count] = ValueTypeT();
+            _array[_count] = ElementType();
             _count--;
         }
 
         // *******************************************************************
 
-        virtual void RemoveFrom(const SizeT from, const SizeT to) final override
+        virtual void RemoveFrom(const SizeType from, const SizeType to) final override
         {
-            const SizeT count = to - from;
-            for (SizeT i = from; i < (_count - count); i++)
+            const SizeType count = to - from;
+            for (SizeType i = from; i < (_count - count); i++)
             {
                 _array[i] = _array[i + count];
             }
 
-            for (SizeT i = (_count - count); i < _count; i++)
+            for (SizeType i = (_count - count); i < _count; i++)
             {
-                _array[i] = ValueTypeT();
+                _array[i] = ElementType();
             }
             _count -= count;
         }
@@ -245,10 +245,10 @@ namespace SSEngine
 
         virtual void RemoveIfCallable(const PredicateT lref pred) noexcept final override
         {
-            SizeT count = _count;
-            for (SizeT i = 0; i < count; i++)
+            SizeType count = _count;
+            for (SizeType i = 0; i < count; i++)
             {
-                if (pred(_array[i], SizeT(i)) iseq true)
+                if (pred(_array[i], SizeType(i)) iseq true)
                 {
                     RemoveAt(i);
 
@@ -261,7 +261,7 @@ namespace SSEngine
         // *******************************************************************
     protected:
 
-        void AssertIndex(const SizeT index) const
+        void AssertIndex(const SizeType index) const
         {
             if (index > (_count - 1))
             {
@@ -273,7 +273,7 @@ namespace SSEngine
         /// @param count count of elements to insert
         /// @note this function is called every time any number
         /// of elements are to be inserted irrelevance of their position
-        void AssertCapacityFor(const SizeT count)
+        void AssertCapacityFor(const SizeType count)
         {
             if (_count >= _capacity)
             {
@@ -284,11 +284,11 @@ namespace SSEngine
         // *******************************************************************
 
     protected:
-        TValueType ptr _array;
-        SizeT _capacity;
-        SizeT _count;
+        TElement ptr _array;
+        SizeType _capacity;
+        SizeType _count;
     };
 }
 
-template <typename TValueType>
-using SSArray = SSEngine::Array<TValueType>;
+template <typename TElement>
+using SSArray = SSEngine::Array<TElement>;

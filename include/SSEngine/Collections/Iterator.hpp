@@ -3,19 +3,19 @@
 
 namespace SSEngine
 {
-    template <typename TValueType>
+    template <typename TElement>
     class InputIterator {};
 
-    template <typename TValueType>
+    template <typename TElement>
     class OutputIterator {};
 
-    template <typename TValueType>
-    class Iterator : public virtual InputIterator<TValueType>, public virtual OutputIterator<TValueType>
+    template <typename TElement>
+    class Iterator : public virtual InputIterator<TElement>, public virtual OutputIterator<TElement>
     {
-        using ThisT = Iterator<TValueType>;
+        using ThisT = Iterator<TElement>;
 
     public:
-        using ValueTypeT = TValueType;
+        using ElementType = TElement;
 
     public:
 
@@ -23,22 +23,22 @@ namespace SSEngine
 
         /// @brief current element value
         /// @return return current element value by const ref
-        virtual const ValueTypeT lref Value() const noexcept abstract;
+        virtual const ElementType lref Value() const noexcept abstract;
 
         /// @brief current element value
         /// @return return current element value by ref
-        virtual ValueTypeT lref Value() noexcept abstract;
+        virtual ElementType lref Value() noexcept abstract;
 
         /// @brief ptr operator to return current iteration value by const ref
         /// @return value of current iteration
-        const ValueTypeT lref operator *() const noexcept
+        const ElementType lref operator *() const noexcept
         {
             return Value();
         }
 
         /// @brief ptr operator to return current iteration value by ref
         /// @return value of current iteration
-        ValueTypeT lref operator *() noexcept
+        ElementType lref operator *() noexcept
         {
             return Value();
         }
@@ -72,10 +72,10 @@ namespace SSEngine
         // **************************************************************
     };
 
-    template <typename TValueType>
-    class ForwardIterator : public virtual Iterator<TValueType>
+    template <typename TElement>
+    class ForwardIterator : public virtual Iterator<TElement>
     {
-        using ThisT = ForwardIterator<TValueType>;
+        using ThisT = ForwardIterator<TElement>;
 
     public:
 
@@ -119,10 +119,10 @@ namespace SSEngine
         // **************************************************************
     };
 
-    template <typename TValueType>
-    class BidirectionalIterator : public virtual ForwardIterator<TValueType>
+    template <typename TElement>
+    class BidirectionalIterator : public virtual ForwardIterator<TElement>
     {
-        using ThisT = BidirectionalIterator<TValueType>;
+        using ThisT = BidirectionalIterator<TElement>;
 
     public:
 
@@ -165,41 +165,41 @@ namespace SSEngine
         // **************************************************************
     };
 
-    template <typename TValueType>
-    class RandomAccessIterator : public virtual BidirectionalIterator<TValueType>
+    template <typename TElement>
+    class RandomAccessIterator : public virtual BidirectionalIterator<TElement>
     {
-        using ThisT = BidirectionalIterator<TValueType>;
-        using SizeT = sizet;
+        using ThisT = BidirectionalIterator<TElement>;
+        using SizeType = sizet;
 
     public:
 
         // **************************************************************
 
-        virtual void MoveBwdBy(const SizeT steps) const noexcept abstract;
-        virtual void MoveFwdBy(const SizeT steps) const noexcept abstract;
+        virtual void MoveBwdBy(const SizeType steps) const noexcept abstract;
+        virtual void MoveFwdBy(const SizeType steps) const noexcept abstract;
 
         virtual void MoveFwd() const noexcept override { MoveFwdBy(1); }
         virtual void MoveBwd() const noexcept override { MoveBwdBy(1); }
 
-        ThisT lref operator + (const SizeT steps) noexcept
+        ThisT lref operator + (const SizeType steps) noexcept
         {
             MoveFwdBy(steps);
             return ptr this;
         }
 
-        const ThisT lref operator + (const SizeT steps) const noexcept
+        const ThisT lref operator + (const SizeType steps) const noexcept
         {
             MoveFwdBy(steps);
             return ptr this;
         }
 
-        ThisT lref operator - (const SizeT steps) noexcept
+        ThisT lref operator - (const SizeType steps) noexcept
         {
             MoveBwdBy(steps);
             return ptr this;
         }
 
-        const ThisT lref operator - (const SizeT steps) const noexcept
+        const ThisT lref operator - (const SizeType steps) const noexcept
         {
             MoveBwdBy(steps);
             return ptr this;

@@ -5,20 +5,20 @@ namespace SSEngine
 {
     /// @brief pointer to iterator to provide iterface ability to Iterable
     /// @note this class acts like a unique ptr with functionality of iterators
-    /// @tparam TValueType type of value iterator points to
-    template <typename TValueType>
+    /// @tparam TElement type of value iterator points to
+    template <typename TElement>
     class IteratorPointer :
-        public virtual Iterator<TValueType>
+        public virtual Iterator<TElement>
     {
-        using SizeT = sizet;
-        using ThisT = IteratorPointer<TValueType>;
+        using SizeType = sizet;
+        using ThisT = IteratorPointer<TElement>;
 
     public:
         /// @brief type of impl iterator
-        using IteratorT = Iterator<TValueType>;
+        using IteratorT = Iterator<TElement>;
 
         /// @todo inherit doc from base class
-        using ValueTypeT = typename IteratorT::ValueTypeT;
+        using ElementType = typename IteratorT::ElementType;
 
         /// @brief allocator type used to manage iterator ptr
         using AllocatorT = Allocator;
@@ -35,7 +35,7 @@ namespace SSEngine
         IteratorPointer(const TIterator lref iterator) noexcept :
             ThisT(lref iterator, sizeof(TIterator)) { }
 
-        IteratorPointer(const IteratorT ptr iterator, const SizeT size) noexcept
+        IteratorPointer(const IteratorT ptr iterator, const SizeType size) noexcept
         {
             _allocator = AllocatorT();
             _iteratorSize = size;
@@ -116,12 +116,12 @@ namespace SSEngine
 
         // *******************************************************************
 
-        virtual ValueTypeT lref Value() noexcept final override
+        virtual ElementType lref Value() noexcept final override
         {
             return _iterator->Value();
         }
 
-        virtual const ValueTypeT lref Value() const noexcept final override
+        virtual const ElementType lref Value() const noexcept final override
         {
             return _iterator->Value();
         }
@@ -179,19 +179,19 @@ namespace SSEngine
         /// @brief alloctor to manage impl iterator reference
         AllocatorT _allocator;
 
-        SizeT _iteratorSize;
+        SizeType _iteratorSize;
     };
 
     /// @extends IteratorPointer
-    template <typename TValueType>
+    template <typename TElement>
     class ForwardIteratorPointer :
-        public virtual IteratorPointer<TValueType>,
-        public virtual ForwardIterator<TValueType>
+        public virtual IteratorPointer<TElement>,
+        public virtual ForwardIterator<TElement>
     {
-        using SizeT = sizet;
-        using ThisT = ForwardIteratorPointer<TValueType>;
-        using BaseT = IteratorPointer<TValueType>;
-        using IteratorT = ForwardIterator<TValueType>;
+        using SizeType = sizet;
+        using ThisT = ForwardIteratorPointer<TElement>;
+        using BaseT = IteratorPointer<TElement>;
+        using IteratorT = ForwardIterator<TElement>;
 
         using BaseT::_iterator;
 
@@ -205,7 +205,7 @@ namespace SSEngine
         ForwardIteratorPointer(const TIterator lref iterator) noexcept :
             ThisT(lref iterator, sizeof(TIterator)) { }
 
-        ForwardIteratorPointer(const IteratorT ptr iterator, const SizeT size) noexcept :
+        ForwardIteratorPointer(const IteratorT ptr iterator, const SizeType size) noexcept :
             BaseT(iterator, size) { }
 
         ForwardIteratorPointer(const ThisT lref other) noexcept :
@@ -252,15 +252,15 @@ namespace SSEngine
     };
 
     /// @extends ForwardIteratorPointer
-    template <typename TValueType>
+    template <typename TElement>
     class BidirectionalIteratorPointer :
-        public virtual ForwardIteratorPointer<TValueType>,
-        public virtual BidirectionalIterator<TValueType>
+        public virtual ForwardIteratorPointer<TElement>,
+        public virtual BidirectionalIterator<TElement>
     {
-        using SizeT = sizet;
-        using ThisT = BidirectionalIteratorPointer<TValueType>;
-        using BaseT = ForwardIteratorPointer<TValueType>;
-        using IteratorT = BidirectionalIterator<TValueType>;
+        using SizeType = sizet;
+        using ThisT = BidirectionalIteratorPointer<TElement>;
+        using BaseT = ForwardIteratorPointer<TElement>;
+        using IteratorT = BidirectionalIterator<TElement>;
 
         using BaseT::_iterator;
 
@@ -274,7 +274,7 @@ namespace SSEngine
         BidirectionalIteratorPointer(const TIterator lref iterator) noexcept :
             ThisT(lref iterator, sizeof(TIterator)) { }
 
-        BidirectionalIteratorPointer(const IteratorT ptr iterator, const SizeT size) noexcept :
+        BidirectionalIteratorPointer(const IteratorT ptr iterator, const SizeType size) noexcept :
             BaseT(iterator, size) { }
 
         BidirectionalIteratorPointer(const ThisT lref other) noexcept :
@@ -321,15 +321,15 @@ namespace SSEngine
     };
 
     /// @extends BidirectionalIteratorPointer
-    template <typename TValueType>
+    template <typename TElement>
     class RandomAccessIteratorPointer :
-        public virtual BidirectionalIteratorPointer<TValueType>,
-        public virtual RandomAccessIterator<TValueType>
+        public virtual BidirectionalIteratorPointer<TElement>,
+        public virtual RandomAccessIterator<TElement>
     {
-        using SizeT = sizet;
-        using ThisT = RandomAccessIteratorPointer<TValueType>;
-        using BaseT = BidirectionalIteratorPointer<TValueType>;
-        using IteratorT = RandomAccessIterator<TValueType>;
+        using SizeType = sizet;
+        using ThisT = RandomAccessIteratorPointer<TElement>;
+        using BaseT = BidirectionalIteratorPointer<TElement>;
+        using IteratorT = RandomAccessIterator<TElement>;
 
         using BaseT::_iterator;
 
@@ -343,7 +343,7 @@ namespace SSEngine
         RandomAccessIteratorPointer(const TIterator lref iterator) noexcept :
             ThisT(lref iterator, sizeof(TIterator)) { }
 
-        RandomAccessIteratorPointer(const IteratorT ptr iterator, const SizeT size) noexcept :
+        RandomAccessIteratorPointer(const IteratorT ptr iterator, const SizeType size) noexcept :
             BaseT(iterator, size) { }
 
         RandomAccessIteratorPointer(const ThisT lref other) noexcept :
@@ -364,12 +364,12 @@ namespace SSEngine
 
         // *******************************************************************
 
-        virtual void MoveFwdBy(const SizeT steps) const noexcept override
+        virtual void MoveFwdBy(const SizeType steps) const noexcept override
         {
             dynamic_cast<IteratorT ptr>(_iterator)->MoveFwdBy(steps);
         }
 
-        virtual void MoveBwdBy(const SizeT steps) const noexcept override
+        virtual void MoveBwdBy(const SizeType steps) const noexcept override
         {
             dynamic_cast<IteratorT ptr>(_iterator)->MoveBwdBy(steps);
         }
