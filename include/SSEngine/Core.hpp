@@ -2,6 +2,7 @@
 #include <cstddef>
 #include <memory>
 #include <iostream>
+#include <cstring>
 #include <bits/c++config.h>
 
 #define SS_NAME SoulSphere
@@ -48,15 +49,27 @@ using byte = std::byte;
 // ****************************************************
 // * arguments forwarding and moving
 
-
-template<typename Type>
-constexpr Type rref forward(typename std::remove_reference<Type>::type lref arg) noexcept
+namespace SSEngine
 {
-    return static_cast<Type rref>(arg);
-}
+    template<typename Type>
+    constexpr Type rref forward(typename std::remove_reference<Type>::type lref arg) noexcept
+    {
+        return static_cast<Type rref>(arg);
+    }
 
-template <typename T>
-constexpr auto move(T value) noexcept
-{
-    return std::move(value);
+    template <typename T>
+    constexpr auto move(T value) noexcept
+    {
+        return std::move(value);
+    }
+
+    constexpr void memcpy(void ptr dest, void ptr src, const sizet size) noexcept
+    {
+        std::memcpy(dest, src, size);
+    }
+
+    constexpr void memset(void ptr dest, const int value, const sizet count) noexcept
+    {
+        std::memset(dest, value, count);
+    }
 }

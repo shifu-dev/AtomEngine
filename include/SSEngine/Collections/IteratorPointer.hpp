@@ -10,6 +10,7 @@ namespace SSEngine
     class IteratorPointer :
         public virtual Iterator<TValueType>
     {
+        using SizeT = sizet;
         using ThisT = IteratorPointer<TValueType>;
 
     public:
@@ -24,37 +25,91 @@ namespace SSEngine
 
     public:
 
-        /// @brief construct iterator within IteratorPointer
-        /// @tparam TIterator type of iterator
-        /// @tparam ...TArgs type of arguments to construct iterator
-        /// @param ...args arguments to construct iterator
-        template <typename TIterator, typename... TArgs>
-        static ThisT Create(TArgs rref... args) noexcept
-        {
-            ThisT itPtr;
-            itPtr.Construct<TIterator>(forward<TArgs>(args)...);
-            return itPtr;
-        }
-
-    protected:
-        template <typename TIterator, typename... TArgs>
-        void Construct(TArgs rref... args) noexcept
-        {
-            _allocator = AllocatorT();
-            _iterator = _allocator.Construct<TIterator>(forward<TArgs>(args)...);
-        }
-
-    public:
-
         // *******************************************************************
 
         /// @brief default constructor initializes impl iterator with null
-        IteratorPointer() : _allocator(), _iterator(nullptr) { }
+        IteratorPointer() noexcept :
+            _allocator(), _iterator(nullptr) { }
+
+        template <typename TIterator>
+        IteratorPointer(const TIterator lref iterator) noexcept :
+            ThisT(lref iterator, sizeof(TIterator)) { }
+
+        IteratorPointer(const IteratorT ptr iterator, const SizeT size) noexcept
+        {
+            _allocator = AllocatorT();
+            _iteratorSize = size;
+            _iterator = static_cast<IteratorT ptr>(
+                _allocator.AllocateRaw(_iteratorSize, false));
+        }
+
+        IteratorPointer(const ThisT lref other) noexcept
+        {
+            _allocator = AllocatorT();
+            _iteratorSize = other._iteratorSize;
+            _iterator = static_cast<IteratorT ptr>(
+                _allocator.AllocateRaw(_iteratorSize, false));
+
+            mempcpy(_iterator, other._iterator, _iteratorSize);
+        }
+
+        IteratorPointer(ThisT rref other) noexcept
+        {
+            if (other isnot ptr this)
+            {
+                _allocator.DeallocateRaw(_iterator, _iteratorSize);
+
+                _iteratorSize = other._iteratorSize;
+                _iterator = static_cast<IteratorT ptr>(
+                    _allocator.AllocateRaw(other._iteratorSize, false));
+
+                memcpy(_iterator, other._iterator, other._iteratorSize);
+
+                memset(_iterator, 0, other._iteratorSize);
+                other._iterator = nullptr;
+                other._iteratorSize = 0;
+            }
+        }
+
+        ThisT lref operator = (const ThisT lref other) noexcept
+        {
+            if (other isnot ptr this)
+            {
+                _allocator.DeallocateRaw(_iterator, _iteratorSize);
+
+                _iteratorSize = other._iteratorSize;
+                _iterator = static_cast<IteratorT ptr>(
+                    _allocator.AllocateRaw(other._iteratorSize, false));
+
+                mempcpy(_iterator, other._iterator, _iteratorSize);
+            }
+
+            return ptr this;
+        }
+
+        ThisT lref operator = (ThisT rref other) noexcept
+        {
+            if (other isnot ptr this)
+            {
+                _allocator.DeallocateRaw(_iterator, _iteratorSize);
+
+                _iterator = static_cast<IteratorT ptr>(
+                    _allocator.AllocateRaw(other._iteratorSize, false));
+                _iteratorSize = other._iteratorSize;
+                memcpy(_iterator, other._iterator, other._iteratorSize);
+
+                memset(_iterator, 0, other._iteratorSize);
+                other._iterator = nullptr;
+                other._iteratorSize = 0;
+            }
+
+            return ptr this;
+        }
 
         /// @brief destructor destroys impl iterator using @param _allocator 
         dtor IteratorPointer()
         {
-            _allocator.Destruct(_iterator);
+            _allocator.DeallocateRaw(_iterator, _iteratorSize);
         }
 
         // *******************************************************************
@@ -94,6 +149,8 @@ namespace SSEngine
 
         /// @brief alloctor to manage impl iterator reference
         AllocatorT _allocator;
+
+        SizeT _iteratorSize;
     };
 
     /// @extends IteratorPointer
@@ -102,66 +159,67 @@ namespace SSEngine
         public virtual IteratorPointer<TValueType>,
         public virtual ForwardIterator<TValueType>
     {
+        using SizeT = sizet;
         using ThisT = ForwardIteratorPointer<TValueType>;
         using BaseT = IteratorPointer<TValueType>;
         using IteratorT = ForwardIterator<TValueType>;
 
-    public:
-        using typename BaseT::AllocatorT;
-
-    public:
-
-        /// @brief construct iterator within IteratorPointer
-        /// @tparam TIterator type of iterator
-        /// @tparam ...TArgs type of arguments to construct iterator
-        /// @param ...args arguments to construct iterator
-        template <typename TIterator, typename... TArgs>
-        static ThisT Create(TArgs rref... args) noexcept
-        {
-            ThisT itPtr;
-            itPtr.Construct<TIterator>(forward<TArgs>(args)...);
-
-            return itPtr;
-        }
-
-    protected:
-        template <typename TIterator, typename... TArgs>
-        void Construct(TArgs rref... args) noexcept
-        {
-            BaseT:: template Construct<TIterator>(forward<TArgs>(args)...);
-
-            _iterator = dynamic_cast<IteratorT ptr>(BaseT::_iterator);
-        }
+        using BaseT::_iterator;
 
     public:
 
         /// @brief default constructor initializes impl iterator with null
-        ForwardIteratorPointer() : BaseT(), _iterator(nullptr) { }
+        ForwardIteratorPointer() noexcept :
+            BaseT() { }
+
+        template <typename TIterator>
+        ForwardIteratorPointer(const TIterator lref iterator) noexcept :
+            ThisT(lref iterator, sizeof(TIterator)) { }
+
+        ForwardIteratorPointer(const IteratorT ptr iterator, const SizeT size) noexcept :
+            BaseT(iterator, size) { }
+
+        ForwardIteratorPointer(const ThisT lref other) noexcept :
+            BaseT(other) { }
+
+        ForwardIteratorPointer(ThisT rref other) noexcept :
+            BaseT(other) { }
+
+        ThisT lref operator = (const ThisT lref other) noexcept
+        {
+            BaseT::operator = (other);
+        }
+
+        ThisT lref operator = (ThisT rref other) noexcept
+        {
+            BaseT::operator = (other);
+        }
 
         // *******************************************************************
 
         virtual void MoveFwd() const noexcept override
         {
-            _iterator->MoveFwd();
+            dynamic_cast<IteratorT ptr>(_iterator)->MoveFwd();
         }
 
         // *******************************************************************
 
         IteratorT lref operator -> () noexcept
         {
-            return ptr _iterator;
+            return ptr dynamic_cast<IteratorT ptr>(_iterator);
         }
 
         const IteratorT lref operator -> () const noexcept
         {
-            return ptr _iterator;
+            return ptr dynamic_cast<IteratorT ptr>(_iterator);
         }
 
         // *******************************************************************
 
-    protected:
-
-        IteratorT ptr _iterator;
+        operator BaseT () const noexcept
+        {
+            return BaseT(ptr this);
+        }
     };
 
     /// @extends ForwardIteratorPointer
@@ -170,66 +228,70 @@ namespace SSEngine
         public virtual ForwardIteratorPointer<TValueType>,
         public virtual BidirectionalIterator<TValueType>
     {
+        using SizeT = sizet;
         using ThisT = BidirectionalIteratorPointer<TValueType>;
         using BaseT = ForwardIteratorPointer<TValueType>;
         using IteratorT = BidirectionalIterator<TValueType>;
 
-    public:
-
-        /// @brief construct iterator within IteratorPointer
-        /// @tparam TIterator type of iterator
-        /// @tparam ...TArgs type of arguments to construct iterator
-        /// @param ...args arguments to construct iterator
-        template <typename TIterator, typename... TArgs>
-        static ThisT Create(TArgs rref... args) noexcept
-        {
-            ThisT itPtr;
-            itPtr.Construct<TIterator>(forward<TArgs>(args)...);
-
-            return itPtr;
-        }
-
-    protected:
-        template <typename TIterator, typename... TArgs>
-        void Construct(TArgs rref... args) noexcept
-        {
-            BaseT:: template Construct<TIterator>(forward<TArgs>(args)...);
-
-            _iterator = dynamic_cast<IteratorT ptr>(BaseT::_iterator);
-        }
+        using BaseT::_iterator;
 
     public:
 
         /// @brief default constructor initializes impl iterator with null
-        BidirectionalIteratorPointer() : BaseT(), _iterator(nullptr) { }
+        BidirectionalIteratorPointer() noexcept :
+            BaseT() { }
+
+        template <typename TIterator>
+        BidirectionalIteratorPointer(const TIterator lref iterator) noexcept :
+            ThisT(lref iterator, sizeof(TIterator)) { }
+
+        BidirectionalIteratorPointer(const IteratorT ptr iterator, const SizeT size) noexcept :
+            BaseT(iterator, size) { }
+
+        BidirectionalIteratorPointer(const ThisT lref other) noexcept :
+            BaseT(other) { }
+
+        BidirectionalIteratorPointer(ThisT rref other) noexcept :
+            BaseT(other) { }
+
+        ThisT lref operator = (const ThisT lref other) noexcept
+        {
+            BaseT::operator = (other);
+        }
+
+        ThisT lref operator = (ThisT rref other) noexcept
+        {
+            BaseT::operator = (other);
+        }
 
         // *******************************************************************
 
         virtual void MoveBwd() const noexcept override
         {
-            _iterator->MoveBwd();
+            dynamic_cast<IteratorT ptr>(_iterator)->MoveBwd();
         }
 
         // *******************************************************************
 
         IteratorT lref operator -> () noexcept
         {
-            return ptr _iterator;
+            return ptr dynamic_cast<IteratorT ptr>(_iterator);
         }
 
         const IteratorT lref operator -> () const noexcept
         {
-            return ptr _iterator;
+            return ptr dynamic_cast<IteratorT ptr>(_iterator);
         }
 
         // *******************************************************************
 
-    protected:
-
-        IteratorT ptr _iterator;
+        operator BaseT () const noexcept
+        {
+            return BaseT(ptr this);
+        }
     };
 
-    /// @extends ForwardIteratorPointer
+    /// @extends BidirectionalIteratorPointer
     template <typename TValueType>
     class RandomAccessIteratorPointer :
         public virtual BidirectionalIteratorPointer<TValueType>,
@@ -240,63 +302,66 @@ namespace SSEngine
         using BaseT = BidirectionalIteratorPointer<TValueType>;
         using IteratorT = RandomAccessIterator<TValueType>;
 
-    public:
-
-        /// @brief construct iterator within IteratorPointer
-        /// @tparam TIterator type of iterator
-        /// @tparam ...TArgs type of arguments to construct iterator
-        /// @param ...args arguments to construct iterator
-        template <typename TIterator, typename... TArgs>
-        static ThisT Create(TArgs rref... args) noexcept
-        {
-            ThisT itPtr;
-            itPtr.Construct<TIterator>(forward<TArgs>(args)...);
-
-            return itPtr;
-        }
-
-    protected:
-        template <typename TIterator, typename... TArgs>
-        void Construct(TArgs rref... args) noexcept
-        {
-            BaseT:: template Construct<TIterator>(forward<TArgs>(args)...);
-
-            _iterator = dynamic_cast<IteratorT ptr>(BaseT::_iterator);
-        }
+        using BaseT::_iterator;
 
     public:
 
         /// @brief default constructor initializes impl iterator with null
-        RandomAccessIteratorPointer() : BaseT(), _iterator(nullptr) { }
+        RandomAccessIteratorPointer() noexcept :
+            BaseT() { }
+
+        template <typename TIterator>
+        RandomAccessIteratorPointer(const TIterator lref iterator) noexcept :
+            ThisT(lref iterator, sizeof(TIterator)) { }
+
+        RandomAccessIteratorPointer(const IteratorT ptr iterator, const SizeT size) noexcept :
+            BaseT(iterator, size) { }
+
+        RandomAccessIteratorPointer(const ThisT lref other) noexcept :
+            BaseT(other) { }
+
+        RandomAccessIteratorPointer(ThisT rref other) noexcept :
+            BaseT(other) { }
+
+        ThisT lref operator = (const ThisT lref other) noexcept
+        {
+            BaseT::operator = (other);
+        }
+
+        ThisT lref operator = (ThisT rref other) noexcept
+        {
+            BaseT::operator = (other);
+        }
 
         // *******************************************************************
 
         virtual void MoveFwdBy(const SizeT steps) const noexcept override
         {
-            _iterator->MoveFwdBy(steps);
+            dynamic_cast<IteratorT ptr>(_iterator)->MoveFwdBy(steps);
         }
 
         virtual void MoveBwdBy(const SizeT steps) const noexcept override
         {
-            _iterator->MoveBwdBy(steps);
+            dynamic_cast<IteratorT ptr>(_iterator)->MoveBwdBy(steps);
         }
 
         // *******************************************************************
 
         IteratorT lref operator -> () noexcept
         {
-            return ptr _iterator;
+            return ptr dynamic_cast<IteratorT ptr>(_iterator);
         }
 
         const IteratorT lref operator -> () const noexcept
         {
-            return ptr _iterator;
+            return ptr dynamic_cast<IteratorT ptr>(_iterator);
         }
 
         // *******************************************************************
 
-    protected:
-
-        IteratorT ptr _iterator;
+        operator BaseT () const noexcept
+        {
+            return BaseT(ptr this);
+        }
     };
 }

@@ -123,22 +123,22 @@ namespace SSEngine
     protected:
         virtual const IteratorPointerT Iterable_begin() const noexcept override
         {
-            return IteratorPointerT:: template Create<IteratorT>(Begin());
+            return IteratorPointerT(Begin());
         }
 
         virtual IteratorPointerT Iterable_begin() noexcept override
         {
-            return IteratorPointerT:: template Create<IteratorT>(Begin());
+            return IteratorPointerT(Begin());
         }
 
         virtual const IteratorPointerT Iterable_end() const noexcept override
         {
-            return IteratorPointerT:: template Create<IteratorT>(End());
+            return IteratorPointerT(End());
         }
 
         virtual IteratorPointerT Iterable_end() noexcept override
         {
-            return IteratorPointerT:: template Create<IteratorT>(End());
+            return IteratorPointerT(End());
         }
     };
 }
