@@ -21,6 +21,12 @@ namespace SSEngine
         virtual TResult operator () (TArgs rref ... args) const abstract;
     };
 
+    template <typename... TArgs>
+    using Predicate = Callable<bool(TArgs...)>;
+
+    template <typename... TArgs>
+    using Action = Callable<void(TArgs...)>;
+
     template <typename TFunc, typename TResult, typename... TArgs>
     class CallableFunctor : public Callable<TResult(TArgs...)>
     {
