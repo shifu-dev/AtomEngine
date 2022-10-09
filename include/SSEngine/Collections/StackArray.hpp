@@ -21,10 +21,15 @@ namespace SSEngine
         using InitializerListT = std::initializer_list<ValueTypeT>;
 
     public:
-        constexpr StackArray() : ArrayT() { }
+        StackArray() : ArrayT()
+        {
+            ArrayT::_array = _stackArray;
+            ArrayT::_capacity = TSize;
+            ArrayT::_count = 0;
+        }
 
     protected:
-        TValueType _stackArray[TSize];
+        ValueTypeT _stackArray[TSize];
     };
 }
 

@@ -58,6 +58,22 @@ namespace SSEngine
 
         // *******************************************************************
 
+        virtual void ForEach(const Callable<void(const ValueTypeT lref)> lref callback) const final override
+        {
+            for (SizeT i = 0; i < _count; i++)
+            {
+                callback(_array[i]);
+            }
+        }
+
+        virtual void ForEach(const Callable<void(ValueTypeT lref)> lref callback) final override
+        {
+            for (SizeT i = 0; i < _count; i++)
+            {
+                callback(_array[i]);
+            }
+        }
+
         virtual IteratorT Begin() noexcept override
         {
             return IteratorT(_array + 0);

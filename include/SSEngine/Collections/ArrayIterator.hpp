@@ -43,12 +43,12 @@ namespace SSEngine
 
         virtual void MoveFwdBy(const SizeT steps) const noexcept override
         {
-            _ptr + steps;
+            _ptr = _ptr + steps;
         }
 
         virtual void MoveBwdBy(const SizeT steps) const noexcept override
         {
-            _ptr - steps;
+            _ptr = _ptr - steps;
         }
 
         virtual int Compare(const IteratorT lref rhs) const noexcept override
@@ -68,6 +68,6 @@ namespace SSEngine
         }
 
     protected:
-        ValueTypeT ptr _ptr;
+        mutable ValueTypeT ptr _ptr;
     };
 }

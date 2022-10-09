@@ -41,6 +41,8 @@ namespace SSEngine
             _iteratorSize = size;
             _iterator = static_cast<IteratorT ptr>(
                 _allocator.AllocateRaw(_iteratorSize, false));
+
+            mempcpy(_iterator, iterator, size);
         }
 
         IteratorPointer(const ThisT lref other) noexcept
@@ -127,6 +129,33 @@ namespace SSEngine
         virtual int Compare(const IteratorT lref rhs) const noexcept final override
         {
             return _iterator->Compare(rhs);
+        }
+
+        // *******************************************************************
+
+        /// @brief compares with other iterator pointer
+        /// @param rhs other iterator pointer to compare with
+        /// @return true if both impl iterators represent same value
+        virtual bool operator ==(const ThisT lref rhs) const noexcept
+        {
+            return Compare(rhs) iseq 0;
+        }
+
+        /// @brief compares with other iterator pointer
+        /// @param rhs other iterator pointer to compare with
+        /// @return false if both iterators represent same value
+        /// 
+        /// @note this operator is used by c++ range-based for loop
+        /// to check the end of iteration
+        virtual bool operator !=(const ThisT lref rhs) const noexcept
+        {
+            return Compare(rhs) isnot 0;
+        }
+
+        // this overload is necessary to avoid comparing iterator with iterator pointer 
+        virtual int Compare(const ThisT lref rhs) const noexcept
+        {
+            return _iterator->Compare(ptr rhs._iterator);
         }
 
         // *******************************************************************

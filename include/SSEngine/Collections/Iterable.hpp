@@ -1,5 +1,6 @@
 #pragma once
 #include "SSEngine/Core.hpp"
+#include "SSEngine/Core/Callable.hpp"
 #include "SSEngine/Memory.hpp"
 #include "SSEngine/Collections/IteratorPointer.hpp"
 
@@ -47,6 +48,22 @@ namespace SSEngine
         static constexpr SizeT NPOS = -1;
 
     public:
+
+        template <typename TCallable>
+        void ForEachT(const TCallable lref callable) const
+        {
+            ForEach(Callable<void(const ValueTypeT lref)>::Create(callable));
+        }
+
+        template <typename TCallable>
+        void ForEachT(const TCallable lref callable)
+        {
+            ForEach(Callable<void(ValueTypeT lref)>::Create(callable));
+        }
+
+        virtual void ForEach(const Callable<void(const ValueTypeT lref)> lref callback) const abstract;
+        virtual void ForEach(const Callable<void(ValueTypeT lref)> lref callback) abstract;
+
         IteratorPointerT Begin() noexcept
         {
             return Iterable_begin();
