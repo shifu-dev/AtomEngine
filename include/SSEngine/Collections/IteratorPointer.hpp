@@ -1,5 +1,6 @@
 #pragma once
 #include "SSEngine/Core.hpp"
+#include "SSEngine/Collections/Iterator.hpp"
 
 namespace SSEngine
 {
@@ -10,18 +11,16 @@ namespace SSEngine
     class IteratorPointer :
         public virtual Iterator<TElement>
     {
-        using SizeType = sizet;
         using ThisT = IteratorPointer<TElement>;
+        using ContainerDefinationT = ContainerDefination<TElement>;
+        using SizeT = typename ContainerDefinationT::SizeT;
+        using ElementT = typename ContainerDefinationT::ElementT;
+        using IteratorT = typename ContainerDefinationT::IteratorT;
+        using AllocatorT = typename ContainerDefinationT::AllocatorT;
 
     public:
-        /// @brief type of impl iterator
-        using IteratorT = Iterator<TElement>;
-
-        /// @todo inherit doc from base class
-        using ElementType = typename IteratorT::ElementType;
-
-        /// @brief allocator type used to manage iterator ptr
-        using AllocatorT = Allocator;
+        using ElementType = ElementT;
+        using AllocatorType = AllocatorT;
 
     public:
 
@@ -29,47 +28,47 @@ namespace SSEngine
 
         /// @brief default constructor initializes impl iterator with null
         IteratorPointer() noexcept :
-            _allocator(), _iterator(nullptr) { }
+            mAllocator(), mIterator(nullptr) { }
 
         template <typename TIterator>
         IteratorPointer(const TIterator lref iterator) noexcept :
             ThisT(lref iterator, sizeof(TIterator)) { }
 
-        IteratorPointer(const IteratorT ptr iterator, const SizeType size) noexcept
+        IteratorPointer(const IteratorT ptr iterator, const SizeT size) noexcept
         {
-            _allocator = AllocatorT();
-            _iteratorSize = size;
-            _iterator = static_cast<IteratorT ptr>(
-                _allocator.AllocateRaw(_iteratorSize, false));
+            mAllocator = AllocatorT();
+            mIteratorSize = size;
+            mIterator = static_cast<IteratorT ptr>(
+                mAllocator.AllocateRaw(mIteratorSize, false));
 
-            mempcpy(_iterator, iterator, size);
+            mempcpy(mIterator, iterator, size);
         }
 
         IteratorPointer(const ThisT lref other) noexcept
         {
-            _allocator = AllocatorT();
-            _iteratorSize = other._iteratorSize;
-            _iterator = static_cast<IteratorT ptr>(
-                _allocator.AllocateRaw(_iteratorSize, false));
+            mAllocator = AllocatorT();
+            mIteratorSize = other.mIteratorSize;
+            mIterator = static_cast<IteratorT ptr>(
+                mAllocator.AllocateRaw(mIteratorSize, false));
 
-            mempcpy(_iterator, other._iterator, _iteratorSize);
+            mempcpy(mIterator, other.mIterator, mIteratorSize);
         }
 
         IteratorPointer(ThisT rref other) noexcept
         {
             if (other isnot ptr this)
             {
-                _allocator.DeallocateRaw(_iterator, _iteratorSize);
+                mAllocator.DeallocateRaw(mIterator, mIteratorSize);
 
-                _iteratorSize = other._iteratorSize;
-                _iterator = static_cast<IteratorT ptr>(
-                    _allocator.AllocateRaw(other._iteratorSize, false));
+                mIteratorSize = other.mIteratorSize;
+                mIterator = static_cast<IteratorT ptr>(
+                    mAllocator.AllocateRaw(other.mIteratorSize, false));
 
-                memcpy(_iterator, other._iterator, other._iteratorSize);
+                memcpy(mIterator, other.mIterator, other.mIteratorSize);
 
-                memset(_iterator, 0, other._iteratorSize);
-                other._iterator = nullptr;
-                other._iteratorSize = 0;
+                memset(mIterator, 0, other.mIteratorSize);
+                other.mIterator = nullptr;
+                other.mIteratorSize = 0;
             }
         }
 
@@ -77,13 +76,13 @@ namespace SSEngine
         {
             if (other isnot ptr this)
             {
-                _allocator.DeallocateRaw(_iterator, _iteratorSize);
+                mAllocator.DeallocateRaw(mIterator, mIteratorSize);
 
-                _iteratorSize = other._iteratorSize;
-                _iterator = static_cast<IteratorT ptr>(
-                    _allocator.AllocateRaw(other._iteratorSize, false));
+                mIteratorSize = other.mIteratorSize;
+                mIterator = static_cast<IteratorT ptr>(
+                    mAllocator.AllocateRaw(other.mIteratorSize, false));
 
-                mempcpy(_iterator, other._iterator, _iteratorSize);
+                mempcpy(mIterator, other.mIterator, mIteratorSize);
             }
 
             return ptr this;
@@ -93,42 +92,42 @@ namespace SSEngine
         {
             if (other isnot ptr this)
             {
-                _allocator.DeallocateRaw(_iterator, _iteratorSize);
+                mAllocator.DeallocateRaw(mIterator, mIteratorSize);
 
-                _iterator = static_cast<IteratorT ptr>(
-                    _allocator.AllocateRaw(other._iteratorSize, false));
-                _iteratorSize = other._iteratorSize;
-                memcpy(_iterator, other._iterator, other._iteratorSize);
+                mIterator = static_cast<IteratorT ptr>(
+                    mAllocator.AllocateRaw(other.mIteratorSize, false));
+                mIteratorSize = other.mIteratorSize;
+                memcpy(mIterator, other.mIterator, other.mIteratorSize);
 
-                memset(_iterator, 0, other._iteratorSize);
-                other._iterator = nullptr;
-                other._iteratorSize = 0;
+                memset(mIterator, 0, other.mIteratorSize);
+                other.mIterator = nullptr;
+                other.mIteratorSize = 0;
             }
 
             return ptr this;
         }
 
-        /// @brief destructor destroys impl iterator using @param _allocator 
+        /// @brief destructor destroys impl iterator using @param mAllocator 
         dtor IteratorPointer()
         {
-            _allocator.DeallocateRaw(_iterator, _iteratorSize);
+            mAllocator.DeallocateRaw(mIterator, mIteratorSize);
         }
 
         // *******************************************************************
 
-        virtual ElementType lref Value() noexcept final override
+        virtual ElementT lref Value() noexcept final override
         {
-            return _iterator->Value();
+            return mIterator->Value();
         }
 
-        virtual const ElementType lref Value() const noexcept final override
+        virtual const ElementT lref Value() const noexcept final override
         {
-            return _iterator->Value();
+            return mIterator->Value();
         }
 
         virtual int Compare(const IteratorT lref rhs) const noexcept final override
         {
-            return _iterator->Compare(rhs);
+            return mIterator->Compare(rhs);
         }
 
         // *******************************************************************
@@ -155,31 +154,31 @@ namespace SSEngine
         // this overload is necessary to avoid comparing iterator with iterator pointer 
         virtual int Compare(const ThisT lref rhs) const noexcept
         {
-            return _iterator->Compare(ptr rhs._iterator);
+            return mIterator->Compare(ptr rhs.mIterator);
         }
 
         // *******************************************************************
 
         IteratorT lref operator -> () noexcept
         {
-            return ptr _iterator;
+            return ptr mIterator;
         }
 
         const IteratorT lref operator -> () const noexcept
         {
-            return ptr _iterator;
+            return ptr mIterator;
         }
 
         // *******************************************************************
 
     protected:
         /// @brief pointer to the implementation iterator
-        IteratorT ptr _iterator;
+        IteratorT ptr mIterator;
 
         /// @brief alloctor to manage impl iterator reference
-        AllocatorT _allocator;
+        AllocatorT mAllocator;
 
-        SizeType _iteratorSize;
+        SizeT mIteratorSize;
     };
 
     /// @extends IteratorPointer
@@ -188,12 +187,12 @@ namespace SSEngine
         public virtual IteratorPointer<TElement>,
         public virtual ForwardIterator<TElement>
     {
-        using SizeType = sizet;
+        using SizeT = sizet;
         using ThisT = ForwardIteratorPointer<TElement>;
         using BaseT = IteratorPointer<TElement>;
         using IteratorT = ForwardIterator<TElement>;
 
-        using BaseT::_iterator;
+        using BaseT::mIterator;
 
     public:
 
@@ -205,7 +204,7 @@ namespace SSEngine
         ForwardIteratorPointer(const TIterator lref iterator) noexcept :
             ThisT(lref iterator, sizeof(TIterator)) { }
 
-        ForwardIteratorPointer(const IteratorT ptr iterator, const SizeType size) noexcept :
+        ForwardIteratorPointer(const IteratorT ptr iterator, const SizeT size) noexcept :
             BaseT(iterator, size) { }
 
         ForwardIteratorPointer(const ThisT lref other) noexcept :
@@ -228,19 +227,19 @@ namespace SSEngine
 
         virtual void MoveFwd() const noexcept override
         {
-            dynamic_cast<IteratorT ptr>(_iterator)->MoveFwd();
+            dynamic_cast<IteratorT ptr>(mIterator)->MoveFwd();
         }
 
         // *******************************************************************
 
         IteratorT lref operator -> () noexcept
         {
-            return ptr dynamic_cast<IteratorT ptr>(_iterator);
+            return ptr dynamic_cast<IteratorT ptr>(mIterator);
         }
 
         const IteratorT lref operator -> () const noexcept
         {
-            return ptr dynamic_cast<IteratorT ptr>(_iterator);
+            return ptr dynamic_cast<IteratorT ptr>(mIterator);
         }
 
         // *******************************************************************
@@ -257,12 +256,12 @@ namespace SSEngine
         public virtual ForwardIteratorPointer<TElement>,
         public virtual BidirectionalIterator<TElement>
     {
-        using SizeType = sizet;
+        using SizeT = sizet;
         using ThisT = BidirectionalIteratorPointer<TElement>;
         using BaseT = ForwardIteratorPointer<TElement>;
         using IteratorT = BidirectionalIterator<TElement>;
 
-        using BaseT::_iterator;
+        using BaseT::mIterator;
 
     public:
 
@@ -274,7 +273,7 @@ namespace SSEngine
         BidirectionalIteratorPointer(const TIterator lref iterator) noexcept :
             ThisT(lref iterator, sizeof(TIterator)) { }
 
-        BidirectionalIteratorPointer(const IteratorT ptr iterator, const SizeType size) noexcept :
+        BidirectionalIteratorPointer(const IteratorT ptr iterator, const SizeT size) noexcept :
             BaseT(iterator, size) { }
 
         BidirectionalIteratorPointer(const ThisT lref other) noexcept :
@@ -297,19 +296,19 @@ namespace SSEngine
 
         virtual void MoveBwd() const noexcept override
         {
-            dynamic_cast<IteratorT ptr>(_iterator)->MoveBwd();
+            dynamic_cast<IteratorT ptr>(mIterator)->MoveBwd();
         }
 
         // *******************************************************************
 
         IteratorT lref operator -> () noexcept
         {
-            return ptr dynamic_cast<IteratorT ptr>(_iterator);
+            return ptr dynamic_cast<IteratorT ptr>(mIterator);
         }
 
         const IteratorT lref operator -> () const noexcept
         {
-            return ptr dynamic_cast<IteratorT ptr>(_iterator);
+            return ptr dynamic_cast<IteratorT ptr>(mIterator);
         }
 
         // *******************************************************************
@@ -326,12 +325,15 @@ namespace SSEngine
         public virtual BidirectionalIteratorPointer<TElement>,
         public virtual RandomAccessIterator<TElement>
     {
-        using SizeType = sizet;
         using ThisT = RandomAccessIteratorPointer<TElement>;
         using BaseT = BidirectionalIteratorPointer<TElement>;
-        using IteratorT = RandomAccessIterator<TElement>;
+        using ContainerDefinationT = ContainerDefination<TElement>;
+        using SizeT = typename ContainerDefinationT::SizeT;
+        using ElementT = typename ContainerDefinationT::ElementT;
+        using RandomAccessIteratorT = typename ContainerDefinationT::RandomAccessIteratorT;
+        using IteratorType = RandomAccessIteratorT;
 
-        using BaseT::_iterator;
+        using BaseT::mIterator;
 
     public:
 
@@ -343,7 +345,7 @@ namespace SSEngine
         RandomAccessIteratorPointer(const TIterator lref iterator) noexcept :
             ThisT(lref iterator, sizeof(TIterator)) { }
 
-        RandomAccessIteratorPointer(const IteratorT ptr iterator, const SizeType size) noexcept :
+        RandomAccessIteratorPointer(const IteratorType ptr iterator, const SizeT size) noexcept :
             BaseT(iterator, size) { }
 
         RandomAccessIteratorPointer(const ThisT lref other) noexcept :
@@ -364,26 +366,26 @@ namespace SSEngine
 
         // *******************************************************************
 
-        virtual void MoveFwdBy(const SizeType steps) const noexcept override
+        virtual void MoveFwdBy(const SizeT steps) const noexcept override
         {
-            dynamic_cast<IteratorT ptr>(_iterator)->MoveFwdBy(steps);
+            dynamic_cast<IteratorType ptr>(mIterator)->MoveFwdBy(steps);
         }
 
-        virtual void MoveBwdBy(const SizeType steps) const noexcept override
+        virtual void MoveBwdBy(const SizeT steps) const noexcept override
         {
-            dynamic_cast<IteratorT ptr>(_iterator)->MoveBwdBy(steps);
+            dynamic_cast<IteratorType ptr>(mIterator)->MoveBwdBy(steps);
         }
 
         // *******************************************************************
 
-        IteratorT lref operator -> () noexcept
+        IteratorType lref operator -> () noexcept
         {
-            return ptr dynamic_cast<IteratorT ptr>(_iterator);
+            return ptr dynamic_cast<IteratorType ptr>(mIterator);
         }
 
-        const IteratorT lref operator -> () const noexcept
+        const IteratorType lref operator -> () const noexcept
         {
-            return ptr dynamic_cast<IteratorT ptr>(_iterator);
+            return ptr dynamic_cast<IteratorType ptr>(mIterator);
         }
 
         // *******************************************************************

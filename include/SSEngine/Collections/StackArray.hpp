@@ -1,7 +1,7 @@
 #pragma once
 #include "SSEngine/Core.hpp"
-#include "SSEngine/Collections/Iterable.hpp"
-#include "SSEngine/Collections/Collection.hpp"
+#include "SSEngine/Collections/Array.hpp"
+#include "SSEngine/Collections/ContainerDefination.hpp"
 #include <stdexcept>
 
 namespace SSEngine
@@ -12,26 +12,28 @@ namespace SSEngine
     template <typename TElement, sizet TSize>
     class StackArray : public Array<TElement>
     {
-        using ArrayT = Array<TElement>;
+        using ContainerDefinationT = ContainerDefination<TElement>;
+        using ArrayT = typename ContainerDefinationT::ArrayT;
+        using SizeT = typename ContainerDefinationT::SizeT;
+        using ElementT = typename ContainerDefinationT::ElementT;
+        using IteratorT = typename ContainerDefinationT::IteratorT;
+        using InitializerListT = typename ContainerDefinationT::InitializerListT;
 
     public:
-        using SizeType = typename ArrayT::SizeType;
-        using ElementType = typename ArrayT::ElementType;
-        using IteratorT = typename ArrayT::IteratorT;
-        using InitializerListT = std::initializer_list<ElementType>;
+        using SizeType = SizeT;
+        using ElementType = ElementT;
+        using IteratorType = typename ArrayT::IteratorType;
+        static constexpr SizeT Size = TSize;
 
     public:
         StackArray() : ArrayT()
         {
-            ArrayT::_array = _stackArray;
-            ArrayT::_capacity = TSize;
-            ArrayT::_count = 0;
+            ArrayT::mArray = mStackArray;
+            ArrayT::mCapacity = Size;
+            ArrayT::mCount = 0;
         }
 
     protected:
-        ElementType _stackArray[TSize];
+        ElementT mStackArray[Size];
     };
 }
-
-template <typename TElement, sizet TSize>
-using SSStackArray = SSEngine::StackArray<TElement, TSize>;

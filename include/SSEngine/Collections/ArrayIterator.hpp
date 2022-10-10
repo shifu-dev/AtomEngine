@@ -13,13 +13,15 @@ namespace SSEngine
     template <typename TElement>
     class ArrayIterator : public virtual RandomAccessIterator<TElement>
     {
-        using SizeType = sizet;
         using ThisT = ArrayIterator<TElement>;
-        using BaseT = RandomAccessIterator<TElement>;
-        using IteratorT = Iterator<TElement>;
+        using ContainerDefinationT = ContainerDefination<TElement>;
+        using ElementT = typename ContainerDefinationT::ElementT;
+        using SizeT = typename ContainerDefinationT::SizeT;
+        using IteratorT = typename ContainerDefinationT::IteratorT;
 
     public:
-        using ElementType = TElement;
+        using SizeType = SizeT;
+        using ElementType = ElementT;
 
     public:
         ArrayIterator(TElement ptr elementPtr)
@@ -41,12 +43,12 @@ namespace SSEngine
             return ptr _ptr;
         }
 
-        virtual void MoveFwdBy(const SizeType steps) const noexcept override
+        virtual void MoveFwdBy(const SizeT steps) const noexcept override
         {
             _ptr = _ptr + steps;
         }
 
-        virtual void MoveBwdBy(const SizeType steps) const noexcept override
+        virtual void MoveBwdBy(const SizeT steps) const noexcept override
         {
             _ptr = _ptr - steps;
         }

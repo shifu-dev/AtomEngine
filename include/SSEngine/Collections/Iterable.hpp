@@ -6,110 +6,90 @@
 
 namespace SSEngine
 {
+    template <typename TElement>
+    class ContainerDefination;
+
     /// @brief base abstract class to implement basic iterable functionality
     /// just by implementing from this class, 
     /// extended class will be able to be used in range based for loop
     /// and funtions expecting an iterable type
     ///
     /// @tparam TElement type of value hold by this iterable
-    ///
-    /// @example
-    /// void GetMeListOfNames(const Iterable<string> ref names)
-    /// {
-    ///     for (const auto ref name : names)
-    ///     {
-    ///         cout << "Hi " + name << endl;
-    ///     }
-    /// }
-    ///
     template <typename TElement>
     class Iterable
     {
+        using ContatinerDefinationT = ContainerDefination<TElement>;
+        using SizeT = typename ContatinerDefinationT::SizeT;
+        using ElementT = typename ContatinerDefinationT::ElementT;
+        using ForwardIteratorPointerT = typename ContatinerDefinationT::ForwardIteratorPointerT;
+
     public:
-        /// @brief type to manage count
-        using SizeType = sizet;
-
-        /// @brief type of value stored by this iterable
-        using ElementType = TElement;
-
-        /// @brief type used to compare elements, typically during sort
-        using ComparerT = Comparer<ElementType>;
-
-        /// @brief type used to compare elements, typically during find
-        using EqualityComparerT = EqualityComparer<ElementType>;
-
-        using DefaultEqualityComparerT = DefaultEqualityComparer<ElementType>;
-
-        /// @brief iterator used by iterable to iterate through data
-        /// @note Iterable uses IteratorPointer which holds a pointer to acutal iterable
-        /// to provide interface like abilities
-        using IteratorPointerT = ForwardIteratorPointer<TElement>;
-
-        static constexpr SizeType NPOS = -1;
+        using SizeType = SizeT;
+        using ElementType = ElementT;
 
     public:
 
-        template <typename TCallable>
-        void ForEachT(const TCallable lref callable) const
+        template <typename TFunctor>
+        void ForEachT(const TFunctor lref functor) const
         {
-            ForEach(Callable<void(const ElementType lref)>::Create(callable));
+            ForEach(Callable<void(const ElementT lref)>::Create(functor));
         }
 
-        template <typename TCallable>
-        void ForEachT(const TCallable lref callable)
+        template <typename TFunctor>
+        void ForEachT(const TFunctor lref functor)
         {
-            ForEach(Callable<void(ElementType lref)>::Create(callable));
+            ForEach(Callable<void(ElementT lref)>::Create(functor));
         }
 
-        virtual void ForEach(const Callable<void(const ElementType lref)> lref callback) const abstract;
-        virtual void ForEach(const Callable<void(ElementType lref)> lref callback) abstract;
+        virtual void ForEach(const Callable<void(const ElementT lref)> lref callback) const abstract;
+        virtual void ForEach(const Callable<void(ElementT lref)> lref callback) abstract;
 
-        IteratorPointerT Begin() noexcept
-        {
-            return Iterable_begin();
-        }
-
-        const IteratorPointerT Begin() const noexcept
+        ForwardIteratorPointerT Begin() noexcept
         {
             return Iterable_begin();
         }
 
-        IteratorPointerT End() noexcept
+        const ForwardIteratorPointerT Begin() const noexcept
+        {
+            return Iterable_begin();
+        }
+
+        ForwardIteratorPointerT End() noexcept
         {
             return Iterable_end();
         }
 
-        const IteratorPointerT End() const noexcept
+        const ForwardIteratorPointerT End() const noexcept
         {
             return Iterable_end();
         }
 
-        IteratorPointerT begin() noexcept
+        ForwardIteratorPointerT begin() noexcept
         {
             return Iterable_begin();
         }
 
-        const IteratorPointerT begin() const noexcept
+        const ForwardIteratorPointerT begin() const noexcept
         {
             return Iterable_begin();
         }
 
-        IteratorPointerT end() noexcept
+        ForwardIteratorPointerT end() noexcept
         {
             return Iterable_end();
         }
 
-        const IteratorPointerT end() const noexcept
+        const ForwardIteratorPointerT end() const noexcept
         {
             return Iterable_end();
         }
 
     protected:
-        virtual IteratorPointerT Iterable_begin() noexcept abstract;
-        virtual IteratorPointerT Iterable_end() noexcept abstract;
+        virtual ForwardIteratorPointerT Iterable_begin() noexcept abstract;
+        virtual ForwardIteratorPointerT Iterable_end() noexcept abstract;
 
-        virtual const IteratorPointerT Iterable_begin() const noexcept abstract;
-        virtual const IteratorPointerT Iterable_end() const noexcept abstract;
+        virtual const ForwardIteratorPointerT Iterable_begin() const noexcept abstract;
+        virtual const ForwardIteratorPointerT Iterable_end() const noexcept abstract;
     };
 
     /// @brief Iterable helper class
@@ -117,45 +97,44 @@ namespace SSEngine
     template <typename TIterator>
     class IteratorIterable : public virtual Iterable<typename TIterator::ElementType>
     {
-    public:
-        using IteratorT = TIterator;
-        using AllocatorT = Allocator;
-        using ElementType = typename IteratorT::ElementType;
-        using IterableT = Iterable<ElementType>;
-        using IteratorPointerT = typename IterableT::IteratorPointerT;
+        using TElement = typename TIterator::ElementType;
+        using ContatinerDefinationT = ContainerDefination<TElement>;
+        using ForwardIteratorT = typename ContatinerDefinationT::ForwardIteratorT;
+        using ForwardIteratorPointerT = typename ContatinerDefinationT::ForwardIteratorPointerT;
+        using IteratorType = TIterator;
 
     public:
-        virtual IteratorT Begin() noexcept abstract;
-        virtual const IteratorT Begin() const noexcept abstract;
+        virtual IteratorType Begin() noexcept abstract;
+        virtual const IteratorType Begin() const noexcept abstract;
 
-        virtual IteratorT End() noexcept abstract;
-        virtual const IteratorT End() const noexcept abstract;
+        virtual IteratorType End() noexcept abstract;
+        virtual const IteratorType End() const noexcept abstract;
 
-        IteratorT begin() noexcept { return Begin(); }
-        const IteratorT begin() const noexcept { return Begin(); }
+        IteratorType begin() noexcept { return Begin(); }
+        const IteratorType begin() const noexcept { return Begin(); }
 
-        IteratorT end() noexcept { return End(); }
-        const IteratorT end() const noexcept { return End(); }
+        IteratorType end() noexcept { return End(); }
+        const IteratorType end() const noexcept { return End(); }
 
     protected:
-        virtual const IteratorPointerT Iterable_begin() const noexcept override
+        virtual const ForwardIteratorPointerT Iterable_begin() const noexcept override
         {
-            return IteratorPointerT(Begin());
+            return ForwardIteratorPointerT(Begin());
         }
 
-        virtual IteratorPointerT Iterable_begin() noexcept override
+        virtual ForwardIteratorPointerT Iterable_begin() noexcept override
         {
-            return IteratorPointerT(Begin());
+            return ForwardIteratorPointerT(Begin());
         }
 
-        virtual const IteratorPointerT Iterable_end() const noexcept override
+        virtual const ForwardIteratorPointerT Iterable_end() const noexcept override
         {
-            return IteratorPointerT(End());
+            return ForwardIteratorPointerT(End());
         }
 
-        virtual IteratorPointerT Iterable_end() noexcept override
+        virtual ForwardIteratorPointerT Iterable_end() noexcept override
         {
-            return IteratorPointerT(End());
+            return ForwardIteratorPointerT(End());
         }
     };
 }

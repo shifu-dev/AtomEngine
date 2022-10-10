@@ -4,6 +4,9 @@
 namespace SSEngine
 {
     template <typename TElement>
+    class ContainerDefination;
+
+    template <typename TElement>
     class InputIterator {};
 
     template <typename TElement>
@@ -13,9 +16,11 @@ namespace SSEngine
     class Iterator : public virtual InputIterator<TElement>, public virtual OutputIterator<TElement>
     {
         using ThisT = Iterator<TElement>;
+        using ContainerDefinationT = ContainerDefination<TElement>;
+        using ElementT = typename ContainerDefinationT::ElementT;
 
     public:
-        using ElementType = TElement;
+        using ElementType = ElementT;
 
     public:
 
@@ -23,22 +28,22 @@ namespace SSEngine
 
         /// @brief current element value
         /// @return return current element value by const ref
-        virtual const ElementType lref Value() const noexcept abstract;
+        virtual const ElementT lref Value() const noexcept abstract;
 
         /// @brief current element value
         /// @return return current element value by ref
-        virtual ElementType lref Value() noexcept abstract;
+        virtual ElementT lref Value() noexcept abstract;
 
         /// @brief ptr operator to return current iteration value by const ref
         /// @return value of current iteration
-        const ElementType lref operator *() const noexcept
+        const ElementT lref operator *() const noexcept
         {
             return Value();
         }
 
         /// @brief ptr operator to return current iteration value by ref
         /// @return value of current iteration
-        ElementType lref operator *() noexcept
+        ElementT lref operator *() noexcept
         {
             return Value();
         }
@@ -169,37 +174,38 @@ namespace SSEngine
     class RandomAccessIterator : public virtual BidirectionalIterator<TElement>
     {
         using ThisT = BidirectionalIterator<TElement>;
-        using SizeType = sizet;
+        using ContainerDefinationT = ContainerDefination<TElement>;
+        using SizeT = typename ContainerDefinationT::SizeT;
 
     public:
 
         // **************************************************************
 
-        virtual void MoveBwdBy(const SizeType steps) const noexcept abstract;
-        virtual void MoveFwdBy(const SizeType steps) const noexcept abstract;
+        virtual void MoveBwdBy(const SizeT steps) const noexcept abstract;
+        virtual void MoveFwdBy(const SizeT steps) const noexcept abstract;
 
         virtual void MoveFwd() const noexcept override { MoveFwdBy(1); }
         virtual void MoveBwd() const noexcept override { MoveBwdBy(1); }
 
-        ThisT lref operator + (const SizeType steps) noexcept
+        ThisT lref operator + (const SizeT steps) noexcept
         {
             MoveFwdBy(steps);
             return ptr this;
         }
 
-        const ThisT lref operator + (const SizeType steps) const noexcept
+        const ThisT lref operator + (const SizeT steps) const noexcept
         {
             MoveFwdBy(steps);
             return ptr this;
         }
 
-        ThisT lref operator - (const SizeType steps) noexcept
+        ThisT lref operator - (const SizeT steps) noexcept
         {
             MoveBwdBy(steps);
             return ptr this;
         }
 
-        const ThisT lref operator - (const SizeType steps) const noexcept
+        const ThisT lref operator - (const SizeT steps) const noexcept
         {
             MoveBwdBy(steps);
             return ptr this;
