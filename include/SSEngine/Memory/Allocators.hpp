@@ -13,16 +13,7 @@ namespace SSEngine
     /// like AllocateRaw and DeallocateRaw uses custom type to manage memory
     struct Allocator
     {
-    public:
-        /// @brief type used to represent memory unit
-        /// generally, void or byte
-        using memt = void;
-
-        /// @brief ptr to memt
-        using memptr = memt ptr;
-
-        /// @brief value type to represent count
-        using SizeType = sizet;
+        using memptr = void ptr;
 
     public:
         constexpr Allocator() = default;
@@ -45,7 +36,7 @@ namespace SSEngine
         /// @note calls underlying AllocateRaw to allocate memory
         /// @note if count == 0, this function does nothing
         template <typename Type, typename... Args>
-        Type ptr ConstructMultiple(const SizeType count, Args&&... args);
+        Type ptr ConstructMultiple(const sizet count, Args&&... args);
 
         /// @brief destroys object of type @tparam Type -> calls destructor and deallocates memory
         /// @tparam Type type of object to destruct
@@ -54,7 +45,7 @@ namespace SSEngine
         ///
         /// @note calls underlying DeallocateRaw to deallocate memory
         template <typename Type>
-        void Destruct(Type ptr objectPtr, const SizeType count = 1);
+        void Destruct(Type ptr objectPtr, const sizet count = 1);
 
         /// @brief allocates memory to specified type
         /// @tparam Type type for which to allocate memory
@@ -64,41 +55,41 @@ namespace SSEngine
         /// @note if count == 0, does not allocates memory.
         /// @note total memory allocated in bytes is equal to sizeof(Type) * count
         template <typename Type>
-        Type ptr Allocate(const SizeType count = 1);
+        Type ptr Allocate(const sizet count = 1);
 
         /// @brief dellocates memory for @tparam Type
         /// @tparam Type type of object to deallocate memory for
         /// @param src ptr to memory to deallocate
         /// @param count count of memory blocks to deallocate
         template <typename Type>
-        void Deallocate(Type ptr src, const SizeType count = 1);
+        void Deallocate(Type ptr src, const sizet count = 1);
 
         /// @brief allocates memory in bytes
         /// @param count count in bytes to allocate memory
         /// @param clear if true, writes memory with zeros
         /// @return ptr to allocated memory
-        virtual memptr AllocateRaw(const SizeType count, bool clear = true);
+        virtual memptr AllocateRaw(const sizet count, bool clear = true);
 
         /// @brief dellocates allocated memory
         /// @param src pointer to the memory space to dellocate
         /// @param count count of memory
-        virtual void DeallocateRaw(memptr src, const SizeType count);
+        virtual void DeallocateRaw(memptr src, const sizet count);
     };
 
     template <typename Type, typename... Args>
-    Type ptr Allocator::Construct(Args&&... args)
+    inline Type ptr Allocator::Construct(Args&&... args)
     {
         return ConstructMultiple<Type>(1, forward<Args>(args)...);
     }
 
     template <typename Type, typename... Args>
-    Type ptr Allocator::ConstructMultiple(const SizeType count, Args&&... args)
+    inline Type ptr Allocator::ConstructMultiple(const sizet count, Args&&... args)
     {
         Type ptr objectPtr = Allocate<Type>(count);
 
         if (objectPtr isnot null)
         {
-            for (SizeType i = 0; i < count; i++)
+            for (sizet i = 0; i < count; i++)
             {
                 new(objectPtr + i) Type(forward<Args>(args)...);
             }
@@ -108,11 +99,11 @@ namespace SSEngine
     }
 
     template <typename Type>
-    void Allocator::Destruct(Type ptr objectPtr, const SizeType count)
+    inline void Allocator::Destruct(Type ptr objectPtr, const sizet count)
     {
         if (objectPtr isnot null)
         {
-            for (SizeType i = 0; i < count; i++)
+            for (sizet i = 0; i < count; i++)
             {
                 objectPtr->Type::~Type();
             }
@@ -122,13 +113,13 @@ namespace SSEngine
     }
 
     template <typename Type>
-    Type ptr Allocator::Allocate(const SizeType count)
+    inline Type ptr Allocator::Allocate(const sizet count)
     {
         return (Type ptr) AllocateRaw(count * sizeof(Type));
     }
 
     template <>
-    inline void ptr Allocator::Allocate<void>(const SizeType count)
+    inline void ptr Allocator::Allocate<void>(const sizet count)
     {
         // explicit specialization for void type,
         // to avoid call to sizeof() operator on void type
@@ -137,13 +128,13 @@ namespace SSEngine
     }
 
     template <typename Type>
-    void Allocator::Deallocate(Type ptr src, const SizeType count)
+    inline void Allocator::Deallocate(Type ptr src, const sizet count)
     {
         DeallocateRaw(src, sizeof(Type) * count);
     }
 
     template <>
-    inline void Allocator::Deallocate(void ptr src, const SizeType count)
+    inline void Allocator::Deallocate(void ptr src, const sizet count)
     {
         // explicit specialization for void type,
         // to avoid call to sizeof() operator on void type
@@ -151,9 +142,9 @@ namespace SSEngine
         DeallocateRaw(src, count);
     }
 
-    inline Allocator::memptr Allocator::AllocateRaw(SizeType count, bool clear)
+    inline Allocator::memptr Allocator::AllocateRaw(sizet count, bool clear)
     {
-        count = std::max<SizeType>(0, count);
+        count = std::max<sizet>(0, count);
         memptr dest = null;
 
         if (count > 0)
@@ -172,7 +163,7 @@ namespace SSEngine
         return dest;
     }
 
-    inline void Allocator::DeallocateRaw(memptr src, const SizeType count)
+    inline void Allocator::DeallocateRaw(memptr src, const sizet count)
     {
         if (isnotnull(src))
         {
