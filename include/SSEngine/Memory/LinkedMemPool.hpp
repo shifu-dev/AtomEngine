@@ -6,6 +6,7 @@ namespace SSEngine
 {
     class LinkedMemPool : public MemPool
     {
+    protected:
         struct Block
         {
             memptr mem;
