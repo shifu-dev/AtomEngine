@@ -6,8 +6,6 @@ namespace SSEngine
 {
     class LinkedMemPool : public MemPool
     {
-        using memptr = void ptr;
-
         struct Block
         {
             memptr mem;
@@ -63,7 +61,7 @@ namespace SSEngine
         Block ptr mFreeBlock;
     };
 
-    inline LinkedMemPool::memptr LinkedMemPool::AllocateRaw(const sizet size, bool clear)
+    inline memptr LinkedMemPool::AllocateRaw(const sizet size, bool clear)
     {
         blockptr block = mFindBlock(size);
         if (block iseq nullptr)

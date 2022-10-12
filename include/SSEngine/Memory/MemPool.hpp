@@ -6,8 +6,6 @@ namespace SSEngine
 {
     class MemPool : public Allocator
     {
-        using memptr = void ptr;
-
     public:
 
         /// @return total memory managed in bytes 
@@ -16,8 +14,6 @@ namespace SSEngine
 
     class DynamicMemPool : public MemPool
     {
-        using memptr = void ptr;
-
     public:
 
         /// @brief resizes pool to specified size

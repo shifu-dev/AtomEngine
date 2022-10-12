@@ -13,8 +13,6 @@ namespace SSEngine
     /// like AllocateRaw and DeallocateRaw uses custom type to manage memory
     struct Allocator
     {
-        using memptr = void ptr;
-
     public:
         constexpr Allocator() = default;
         constexpr Allocator(const Allocator lref other) = default;
@@ -142,7 +140,7 @@ namespace SSEngine
         DeallocateRaw(src, count);
     }
 
-    inline Allocator::memptr Allocator::AllocateRaw(sizet count, bool clear)
+    inline memptr Allocator::AllocateRaw(sizet count, bool clear)
     {
         count = std::max<sizet>(0, count);
         memptr dest = null;

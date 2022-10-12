@@ -23,6 +23,8 @@ using sizet = size_t;
 using byte = std::byte;
 // enum class byte : uchar {};
 
+using memptr = void*;
+
 // ****************************************************
 // * macros (keywords) to improve code readibility
 
