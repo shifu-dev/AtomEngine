@@ -11,7 +11,7 @@ namespace SSEngine
     public:
 
         /// @return total memory managed in bytes 
-        virtual sizet Size() const noexcept;
+        virtual sizet Size() const noexcept abstract;
     };
 
     class DynamicMemPool : public MemPool
@@ -21,9 +21,9 @@ namespace SSEngine
     public:
 
         /// @brief resizes pool to specified size
-        virtual void Resize(const sizet size);
+        virtual void Resize(const sizet size) abstract;
 
         /// @brief reserves specified memory
-        virtual void Reserve(const sizet size);
+        virtual void Reserve(const sizet size) abstract;
     };
 }
