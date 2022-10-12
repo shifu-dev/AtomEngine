@@ -19,10 +19,30 @@ namespace SSEngine
         using blockptr = Block ptr;
 
     public:
+        LinkedMemPool() noexcept;
+
+    public:
         virtual memptr AllocateRaw(const sizet size, bool clear = true) override;
         virtual void DeallocateRaw(memptr src, const sizet size) override;
 
-        virtual sizet Size() const noexcept override abstract;
+        /// @return amount of memory in use from the pool
+        virtual sizet UsedCount() const noexcept;
+
+        /// @return amount of free memory in the pool
+        virtual sizet FreeCount() const noexcept;
+
+        /// @brief checks if block of enough size is available for allocation
+        /// @param size size of block the check for
+        /// @return true if block exists, false otherwise
+        virtual bool HasBlockFor(const sizet size) const noexcept;
+
+        /// @brief checks if block of [sizeof(Type) * count] is available
+        /// @note looks for contiguous block of memory
+        /// @tparam Type type of object to check blocks for
+        /// @param count count of objects
+        /// @return true if block exists, false otherwise
+        template <typename Type>
+        bool HasBlockFor(const sizet count) const noexcept;
 
     protected:
 
@@ -58,9 +78,15 @@ namespace SSEngine
         virtual void mDeallocateBlocks(blockptr blocks, const sizet count = 1);
 
     protected:
-        Block ptr mFirstBlock;
-        Block ptr mFreeBlock;
+        blockptr mFirstBlock;
+        blockptr mFreeBlock;
+        sizet mMemoryUsed;
     };
+
+    LinkedMemPool::LinkedMemPool() noexcept :
+        mFirstBlock(nullptr),
+        mFreeBlock(nullptr),
+        mMemoryUsed(0) { }
 
     inline memptr LinkedMemPool::AllocateRaw(const sizet size, bool clear)
     {
@@ -76,6 +102,7 @@ namespace SSEngine
         }
 
         block->isFree = false;
+        mMemoryUsed += size;
         return block->mem;
     }
 
@@ -128,6 +155,33 @@ namespace SSEngine
 
             block->isFree = true;
         }
+    }
+
+    inline sizet LinkedMemPool::UsedCount() const noexcept
+    {
+        return mMemoryUsed;
+    }
+
+    inline sizet LinkedMemPool::FreeCount() const noexcept
+    {
+        return Size() - UsedCount();
+    }
+
+    inline bool LinkedMemPool::HasBlockFor(const sizet size) const noexcept
+    {
+        return mFindBlock(size) isnot nullptr;
+    }
+
+    template <typename Type>
+    inline bool LinkedMemPool::HasBlockFor(const sizet count) const noexcept
+    {
+        return mFindBlock(sizeof(Type) * count) isnot nullptr;
+    }
+
+    template <>
+    inline bool LinkedMemPool::HasBlockFor<void>(const sizet count) const noexcept
+    {
+        return mFindBlock(count) isnot nullptr;
     }
 
     inline LinkedMemPool::blockptr LinkedMemPool::mFindBlock(const sizet size) const noexcept
@@ -207,4 +261,6 @@ namespace SSEngine
     {
         delete[] blocks;
     }
+
+    class DynamicLinkedMemPool : public virtual LinkedMemPool, public virtual DynamicMemPool {};
 }

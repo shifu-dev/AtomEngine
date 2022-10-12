@@ -14,11 +14,11 @@ namespace SSEngine
         static constexpr sizet SIZE = TSize;
 
     public:
-        constexpr StackMemPool() noexcept
+        StackMemPool() noexcept
         {
             mFirstBlock = mAllocateBlocks(1);
             mFirstBlock->mem = mMemory;
-            mFirstBlock->size = Size;
+            mFirstBlock->size = SIZE;
             mFirstBlock->isFree = true;
             mFirstBlock->next = nullptr;
 
