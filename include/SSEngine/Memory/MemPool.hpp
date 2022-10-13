@@ -16,10 +16,13 @@ namespace SSEngine
     {
     public:
 
-        /// @brief resizes pool to specified size
-        virtual void Resize(const sizet size) abstract;
+        virtual void Shrink() abstract;
 
         /// @brief reserves specified memory
         virtual void Reserve(const sizet size) abstract;
+
+        /// @brief reserves specified memory,
+        /// without checking currently reserved memory
+        virtual void ReserveMore(const sizet size) abstract;
     };
 }

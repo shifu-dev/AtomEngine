@@ -11,9 +11,8 @@ namespace SSEngine
 
         virtual sizet Size() const noexcept final override;
 
-        virtual void Resize(const sizet size) override;
-
-        virtual void Reserve(const sizet size) override;
+        virtual memptr mAllocateMemory(const sizet size) override;
+        virtual void mDeallocateMemory(memptr mem, const sizet size) override;
 
     protected:
         sizet mMemorySize;
@@ -39,17 +38,13 @@ namespace SSEngine
         return mMemorySize;
     }
 
-    void HeapMemPool::Resize(const sizet size)
+    memptr HeapMemPool::mAllocateMemory(const sizet size)
     {
-        // todo implement this
+        return new byte[size];
     }
 
-    void HeapMemPool::Reserve(const sizet size)
+    void HeapMemPool::mDeallocateMemory(memptr mem, const sizet size)
     {
-        const sizet freeCount = FreeCount();
-        if (freeCount < size)
-        {
-            Resize(Size() - freeCount + size);
-        }
+        delete[](byte ptr)mem;
     }
 }

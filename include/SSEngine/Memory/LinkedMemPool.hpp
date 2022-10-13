@@ -98,6 +98,7 @@ namespace SSEngine
 
     protected:
         blockptr mRootBlock;            // root block of memory layout
+        blockptr mEndBlock;             // end block of memory layout
         blockptr mFirstBlock;           // first block with available memory
         sizet mMemoryUsed;              // count of memory used in bytes
 
@@ -107,7 +108,7 @@ namespace SSEngine
     };
 
     LinkedMemPool::LinkedMemPool() noexcept :
-        mRootBlock(nullptr), mFirstBlock(nullptr), mMemoryUsed(0),
+        mRootBlock(nullptr), mEndBlock(nullptr), mFirstBlock(nullptr), mMemoryUsed(0),
         mFreeBlock(nullptr), mReservedBlockCount(0), mMaxReservedBlockCount(-1) { }
 
     inline memptr LinkedMemPool::AllocateRaw(const sizet size, bool clear)
@@ -242,7 +243,7 @@ namespace SSEngine
                 blockptr nextBlock = block->next;
                 if (nextBlock iseq nullptr || nextBlock->isFree isnot true)
                 {
-                    nextBlock = new Block();
+                    nextBlock = mCreateBlock();
                     nextBlock->next = block->next;
                     nextBlock->isFree = true;
                 }
@@ -265,9 +266,11 @@ namespace SSEngine
         if (block isnot nullptr and block->isFree iseq false and
             block->next isnot nullptr and block->next->isFree iseq false)
         {
-            block->size += block->next->size;
-            block->next = block->next->next;
+            blockptr nextBlock = block->next;
+            block->size += nextBlock->size;
+            block->next = nextBlock->next;
 
+            mDestroyBlock(nextBlock);
             return true;
         }
 
@@ -347,5 +350,47 @@ namespace SSEngine
         delete[] blocks;
     }
 
-    class DynamicLinkedMemPool : public virtual LinkedMemPool, public virtual DynamicMemPool {};
+    class DynamicLinkedMemPool : public virtual LinkedMemPool, public virtual DynamicMemPool
+    {
+    public:
+        virtual void Shrink() override;
+        virtual void Reserve(const sizet size) override;
+        virtual void ReserveMore(const sizet size) override;
+
+    protected:
+        virtual memptr mAllocateMemory(const sizet count) abstract;
+        virtual void mDeallocateMemory(memptr mem, const sizet count) abstract;
+    };
+
+    inline void DynamicLinkedMemPool::Shrink()
+    {
+    }
+
+    inline void DynamicLinkedMemPool::Reserve(const sizet size)
+    {
+        const sizet freeCount = FreeCount();
+        if (size > freeCount)
+        {
+            ReserveMore(size - freeCount);
+        }
+    }
+
+    inline void DynamicLinkedMemPool::ReserveMore(const sizet size)
+    {
+        memptr mem = mAllocateMemory(size);
+        if (mem iseq nullptr)
+        {
+            // todo: throw exception
+            // out of memory
+
+            return;
+        }
+
+        blockptr block = mCreateBlock();
+        block->mem = mem;
+        block->size = size;
+        block->isFree = true;
+        block->isRoot = true;
+        block->next = nullptr;
+    }
 }
