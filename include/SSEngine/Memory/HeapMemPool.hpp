@@ -16,25 +16,27 @@ namespace SSEngine
         virtual void Reserve(const sizet size) override;
 
     protected:
-        sizet mSize;
+        sizet mMemorySize;
     };
 
     HeapMemPool::HeapMemPool(const sizet size) noexcept
     {
-        void ptr heapMem = malloc(size);
+        mReserveMoreBlocks(size);
 
-        mFirstBlock = mAllocateBlocks(1);
-        mFirstBlock->mem = heapMem;
-        mFirstBlock->size = size;
-        mFirstBlock->isFree = true;
-        mFirstBlock->next = nullptr;
+        mRootBlock = mCreateBlock();
+        mRootBlock->mem = malloc(size);
+        mRootBlock->size = size;
+        mRootBlock->isFree = true;
+        mRootBlock->next = nullptr;
 
-        mFreeBlock = mFirstBlock;
+        mFirstBlock = mFirstBlock;
+
+        mMemorySize = size;
     }
 
     sizet HeapMemPool::Size() const noexcept
     {
-        return mSize;
+        return mMemorySize;
     }
 
     void HeapMemPool::Resize(const sizet size)

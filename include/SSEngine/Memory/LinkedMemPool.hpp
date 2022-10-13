@@ -97,18 +97,18 @@ namespace SSEngine
         virtual void mDeallocateBlock(blockptr block);
 
     protected:
-        blockptr mRootBlock;        // root block of memory layout
-        blockptr mFirstBlock;       // first block with available memory
-        sizet mMemoryUsed;          // count of memory used in bytes
+        blockptr mRootBlock;            // root block of memory layout
+        blockptr mFirstBlock;           // first block with available memory
+        sizet mMemoryUsed;              // count of memory used in bytes
 
-        blockptr mFreeBlock;        // first free block (block allocation cache)
-        sizet mBlockCacheCount;     // current count of cached block allocations
-        sizet mMaxBlockCacheCount;  // max count of block allocations to cache
+        blockptr mFreeBlock;            // first free block (block allocation cache)
+        sizet mReservedBlockCount;      // current count of reserved block allocations
+        sizet mMaxReservedBlockCount;   // max count of block allocations to reserve
     };
 
     LinkedMemPool::LinkedMemPool() noexcept :
         mRootBlock(nullptr), mFirstBlock(nullptr), mMemoryUsed(0),
-        mFreeBlock(nullptr), mBlockCacheCount(0), mMaxBlockCacheCount(-1) { }
+        mFreeBlock(nullptr), mReservedBlockCount(0), mMaxReservedBlockCount(-1) { }
 
     inline memptr LinkedMemPool::AllocateRaw(const sizet size, bool clear)
     {
@@ -284,7 +284,7 @@ namespace SSEngine
             mFreeBlock = mFreeBlock->next;
 
             ptr block = Block();
-            mBlockCacheCount--;
+            mReservedBlockCount--;
         }
         else
         {
@@ -296,7 +296,7 @@ namespace SSEngine
 
     inline void LinkedMemPool::mDestroyBlock(blockptr block)
     {
-        if (mBlockCacheCount < mMaxBlockCacheCount)
+        if (mReservedBlockCount < mMaxReservedBlockCount)
         {
             ptr block = Block();
             block->next = mFreeBlock;
@@ -311,9 +311,9 @@ namespace SSEngine
 
     inline void LinkedMemPool::mReserveBlocks(const sizet count)
     {
-        if (mBlockCacheCount < count)
+        if (mReservedBlockCount < count)
         {
-            mReserveMoreBlocks(count - mBlockCacheCount);
+            mReserveMoreBlocks(count - mReservedBlockCount);
         }
     }
 
@@ -325,7 +325,7 @@ namespace SSEngine
             blockptr endBlock = rootBlock;
             for (; endBlock->next isnot nullptr; endBlock = endBlock->next)
             {
-                mBlockCacheCount++;
+                mReservedBlockCount++;
             }
 
             if (mFreeBlock isnot nullptr)
