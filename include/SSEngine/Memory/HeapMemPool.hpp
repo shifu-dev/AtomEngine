@@ -6,13 +6,10 @@ namespace SSEngine
 {
     class HeapMemPool : public virtual DynamicLinkedMemPool
     {
-        using LinkedMemPool::mFirstBlock;
-        using LinkedMemPool::mFreeBlock;
-
     public:
         HeapMemPool(const sizet size) noexcept;
 
-        virtual sizet Size() const noexcept override;
+        virtual sizet Size() const noexcept final override;
 
         virtual void Resize(const sizet size) override;
 

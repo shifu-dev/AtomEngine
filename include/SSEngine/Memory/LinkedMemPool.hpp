@@ -9,11 +9,12 @@ namespace SSEngine
     protected:
         struct Block
         {
-            memptr mem;
-            sizet size;
-            bool isFree = true;
+            memptr mem = nullptr;   // ptr to memory
+            sizet size = 0;         // size of this memory block
+            bool isFree = true;     // is this memory available to use?
+            bool isRoot = false;    // is this ptr used to manage memory block?
 
-            Block ptr next;
+            Block ptr next = nullptr;
         };
 
         using blockptr = Block ptr;
@@ -67,26 +68,38 @@ namespace SSEngine
         /// @return true if sucessfull, false otherwise
         virtual bool mJoinBlock(blockptr block);
 
-        /// @brief allocates block used to manage memory
+        /// @brief allocates or uses cache to create single block
+        /// @return ptr to the block
+        virtual blockptr mCreateBlock();
+
+        /// @brief deallocates or caches blocks
+        /// @param blocks ptr to blocks
+        /// @param count count of blocks
+        virtual void mDestroyBlock(blockptr block);
+
+        /// @brief allocates blocks used to manage memory
         /// @param count count of blocks to allocate
         /// @return ptr to array of blocks
-        virtual blockptr mAllocateBlocks(const sizet count = 1);
+        virtual blockptr mAllocateBlocks(const sizet count);
 
         /// @brief deallocates blocks used to manage memory
         /// @param blocks ptr to blocks
         /// @param count count of blocks
-        virtual void mDeallocateBlocks(blockptr blocks, const sizet count = 1);
+        virtual void mDeallocateBlock(blockptr block);
 
     protected:
-        blockptr mFirstBlock;
-        blockptr mFreeBlock;
-        sizet mMemoryUsed;
+        blockptr mRootBlock;        // root block of memory layout
+        blockptr mFirstBlock;       // first block with available memory
+        sizet mMemoryUsed;          // count of memory used in bytes
+
+        blockptr mFreeBlock;        // first free block (block allocation cache)
+        sizet mBlockCacheCount;     // current count of cached block allocations
+        sizet mMaxBlockCacheCount;  // max count of block allocations to cache
     };
 
     LinkedMemPool::LinkedMemPool() noexcept :
-        mFirstBlock(nullptr),
-        mFreeBlock(nullptr),
-        mMemoryUsed(0) { }
+        mRootBlock(nullptr), mFirstBlock(nullptr), mMemoryUsed(0),
+        mFreeBlock(nullptr), mBlockCacheCount(0), mMaxBlockCacheCount(-1) { }
 
     inline memptr LinkedMemPool::AllocateRaw(const sizet size, bool clear)
     {
@@ -186,7 +199,7 @@ namespace SSEngine
 
     inline LinkedMemPool::blockptr LinkedMemPool::mFindBlock(const sizet size) const noexcept
     {
-        for (auto block = mFreeBlock; block isnot nullptr; block = block->next)
+        for (auto block = mFirstBlock; block isnot nullptr; block = block->next)
         {
             if (block->isFree && block->size >= size)
             {
@@ -199,7 +212,7 @@ namespace SSEngine
 
     inline LinkedMemPool::blockptr LinkedMemPool::mFindBlockFor(memptr mem) const noexcept
     {
-        for (auto block = mFirstBlock; block isnot nullptr; block = block->next)
+        for (auto block = mRootBlock; block isnot nullptr; block = block->next)
         {
             if (mem > block->mem and mem < (byte ptr)block->mem + block->size)
             {
@@ -252,12 +265,47 @@ namespace SSEngine
         return false;
     }
 
+    inline LinkedMemPool::blockptr LinkedMemPool::mCreateBlock()
+    {
+        blockptr block = nullptr;
+
+        if (mFreeBlock isnot nullptr)
+        {
+            block = mFreeBlock;
+            mFreeBlock = mFreeBlock->next;
+
+            ptr block = Block();
+            mBlockCacheCount--;
+        }
+        else
+        {
+            block->next = mAllocateBlocks(1);
+        }
+
+        return block;
+    }
+
+    inline void LinkedMemPool::mDestroyBlock(blockptr block)
+    {
+        if (mBlockCacheCount < mMaxBlockCacheCount)
+        {
+            ptr block = Block();
+            block->next = mFreeBlock;
+
+            mFreeBlock = block;
+        }
+        else
+        {
+            mDeallocateBlock(block);
+        }
+    }
+
     inline LinkedMemPool::blockptr LinkedMemPool::mAllocateBlocks(const sizet count)
     {
         return new Block[count];
     }
 
-    inline void LinkedMemPool::mDeallocateBlocks(blockptr blocks, const sizet count)
+    inline void LinkedMemPool::mDeallocateBlock(blockptr blocks)
     {
         delete[] blocks;
     }
