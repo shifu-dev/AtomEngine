@@ -77,6 +77,15 @@ namespace SSEngine
         /// @param count count of blocks
         virtual void mDestroyBlock(blockptr block);
 
+        /// @brief reserves count blocks used to manage memory
+        /// @param count count of blocks to reserve
+        virtual void mReserveBlocks(const sizet count);
+
+        /// @brief reserves count blocks used to manage memory,
+        /// does not checks already reserved count
+        /// @param count count of blocks to reserve
+        virtual void mReserveMoreBlocks(const sizet count);
+
         /// @brief allocates blocks used to manage memory
         /// @param count count of blocks to allocate
         /// @return ptr to array of blocks
@@ -297,6 +306,34 @@ namespace SSEngine
         else
         {
             mDeallocateBlock(block);
+        }
+    }
+
+    inline void LinkedMemPool::mReserveBlocks(const sizet count)
+    {
+        if (mBlockCacheCount < count)
+        {
+            mReserveMoreBlocks(count - mBlockCacheCount);
+        }
+    }
+
+    inline void LinkedMemPool::mReserveMoreBlocks(const sizet count)
+    {
+        if (count isnot 0)
+        {
+            blockptr rootBlock = mAllocateBlocks(count);
+            blockptr endBlock = rootBlock;
+            for (; endBlock->next isnot nullptr; endBlock = endBlock->next)
+            {
+                mBlockCacheCount++;
+            }
+
+            if (mFreeBlock isnot nullptr)
+            {
+                endBlock->next = mFreeBlock;
+            }
+
+            mFreeBlock = rootBlock;
         }
     }
 
