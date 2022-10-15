@@ -234,7 +234,7 @@ namespace SSEngine
     {
         blockptr block = nullptr;
 
-        if (mem isnot nullptr)
+        if (mem isnot nullptr && size isnot 0)
         {
             block = mCreateBlock();
             block->mem = mem;
@@ -520,6 +520,8 @@ namespace SSEngine
 
     inline DynamicLinkedMemPool::blockptr DynamicLinkedMemPool::mAddMemory(const sizet size, bool isRoot)
     {
+        if (size iseq 0) return nullptr;
+
         memptr mem = mAllocateMemory(size);
         if (mem iseq nullptr)
         {

@@ -7,6 +7,7 @@ namespace SSEngine
     template<sizet TBlockStackSize = 10>
     class HeapMemPool : public virtual FastDynamicLinkedMemPool<TBlockStackSize>
     {
+    protected:
         using BaseT = FastDynamicLinkedMemPool<TBlockStackSize>;
         using BaseT::mAddMemory;
 
