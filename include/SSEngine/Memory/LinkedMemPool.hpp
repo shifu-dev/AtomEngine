@@ -26,6 +26,8 @@ namespace SSEngine
         virtual memptr AllocateRaw(const sizet size, bool clear = true) override;
         virtual void DeallocateRaw(memptr src, const sizet size) override;
 
+        virtual sizet Size() const noexcept final override;
+
         /// @return amount of memory in use from the pool
         virtual sizet UsedCount() const noexcept;
 
@@ -46,6 +48,21 @@ namespace SSEngine
         bool HasBlockFor(const sizet count) const noexcept;
 
     protected:
+
+        /// @brief adds memory to be managed by this memory pool
+        /// @param mem ptr to memory, does not do anything if null
+        /// @param isRoot is this memory ptr the root of memory block
+        /// @param size size of memory block
+        /// @return ptr to the block representing memory, null is memory not added
+        virtual blockptr mAddMemory(memptr mem, const sizet size, bool isRoot = true);
+
+        /// @brief removes memory from this memory pool
+        /// @param mem ptr to memory, does not do anything if null
+        /// @param size size of memory block to remove
+        /// @param tillHit if true, remove till first hit (in use memory)
+        /// @return size of memory block removed from the pool
+        /// @note this does not deallocates the memory
+        virtual sizet mTryRemoveMemory(memptr mem, const sizet size, const bool tillHit = true);
 
         /// @brief finds the first block for the specified size
         /// @param size size to search block for
@@ -101,6 +118,7 @@ namespace SSEngine
         blockptr mEndBlock;             // end block of memory layout
         blockptr mFirstBlock;           // first block with available memory
         sizet mMemoryUsed;              // count of memory used in bytes
+        sizet mMemoryTotal;             // total memory managed by this pool
 
         blockptr mFreeBlock;            // first free block (block allocation cache)
         sizet mReservedBlockCount;      // current count of reserved block allocations
@@ -180,6 +198,11 @@ namespace SSEngine
         }
     }
 
+    inline sizet LinkedMemPool::Size() const noexcept
+    {
+        return mMemoryTotal;
+    }
+
     inline sizet LinkedMemPool::UsedCount() const noexcept
     {
         return mMemoryUsed;
@@ -205,6 +228,92 @@ namespace SSEngine
     inline bool LinkedMemPool::HasBlockFor<void>(const sizet count) const noexcept
     {
         return mFindBlock(count) isnot nullptr;
+    }
+
+    inline LinkedMemPool::blockptr LinkedMemPool::mAddMemory(memptr mem, const sizet size, bool isRoot)
+    {
+        blockptr block = nullptr;
+
+        if (mem isnot nullptr)
+        {
+            block = mCreateBlock();
+            block->mem = mem;
+            block->size = size;
+            block->isRoot = isRoot;
+            block->isFree = true;
+            block->next = nullptr;
+
+            mEndBlock->next = block;
+            mEndBlock = block;
+
+            mMemoryTotal += size;
+        }
+
+        return block;
+    }
+
+    inline sizet LinkedMemPool::mTryRemoveMemory(memptr mem, const sizet size, const bool tillHit)
+    {
+        if (mem iseq nullptr) return 0;
+        if (size iseq 0) return 0;
+
+        blockptr rootBlock = nullptr;   // root block of memory to remove
+        blockptr endBlock = nullptr;    // end block of memory to remove
+        sizet memOffset = 0;            // offset from the root block
+        sizet memInset = 0;             // offset from the end block
+        sizet memCount = 0;             // mem count we can remove
+
+        // find the block managing this memory
+        rootBlock = mFindBlockFor(mem);
+
+        // this memory is not managed by this pool
+        if (rootBlock iseq nullptr) return 0;
+
+        // process root for memOffset
+        memOffset = (byte ptr)mem - (byte ptr)rootBlock->mem;
+        memCount = rootBlock->size - memOffset;
+
+        for (blockptr block = rootBlock->next; block isnot nullptr; block = block->next)
+        {
+            // stop at first hit
+            if (block->isFree isnot true)
+            {
+                if (tillHit) break;
+
+                return 0;
+            }
+
+            memCount += block->size;
+
+            if (memCount >= size)
+            {
+                endBlock = block;
+                break;
+            }
+        }
+
+        memInset = memCount - size;
+
+        // start removing blocks now
+
+        if (memOffset isnot 0)
+        {
+            mDivideBlock(rootBlock, memOffset);
+            rootBlock = rootBlock->next;
+        }
+
+        if (memInset isnot 0)
+        {
+            mDivideBlock(endBlock, endBlock->size - memInset);
+        }
+
+        for (blockptr block = rootBlock; block isnot endBlock; block = block->next)
+        {
+            mJoinBlock(block);
+        }
+
+        mMemoryTotal -= memCount;
+        return 0;
     }
 
     inline LinkedMemPool::blockptr LinkedMemPool::mFindBlock(const sizet size) const noexcept
@@ -263,15 +372,17 @@ namespace SSEngine
 
     inline bool LinkedMemPool::mJoinBlock(blockptr block)
     {
-        if (block isnot nullptr and block->isFree iseq false and
-            block->next isnot nullptr and block->next->isFree iseq false)
+        if (block isnot nullptr and block->isFree iseq true)
         {
             blockptr nextBlock = block->next;
-            block->size += nextBlock->size;
-            block->next = nextBlock->next;
+            if (nextBlock isnot nullptr and nextBlock->isFree iseq true)
+            {
+                block->size += nextBlock->size;
+                block->next = nextBlock->next;
 
-            mDestroyBlock(nextBlock);
-            return true;
+                mDestroyBlock(nextBlock);
+                return true;
+            }
         }
 
         return false;
