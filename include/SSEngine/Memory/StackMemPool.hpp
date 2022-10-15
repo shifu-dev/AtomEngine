@@ -8,9 +8,7 @@ namespace SSEngine
     class StackMemPool : public virtual FastLinkedMemPool<TBlockStackSize>
     {
         using BaseT = FastLinkedMemPool<TBlockStackSize>;
-        using BaseT::mRootBlock;
-        using BaseT::mFirstBlock;
-        using BaseT::mCreateBlock;
+        using BaseT::mAddMemory;
 
     public:
         static constexpr sizet SIZE = TSize;
@@ -18,22 +16,10 @@ namespace SSEngine
     public:
         StackMemPool() noexcept
         {
-            mRootBlock = mCreateBlock();
-            mRootBlock->mem = mMemory;
-            mRootBlock->size = SIZE;
-            mRootBlock->isFree = true;
-            mRootBlock->isRoot = false;
-            mRootBlock->next = nullptr;
-
-            mFirstBlock = mFirstBlock;
-        }
-
-        virtual sizet Size() const noexcept override
-        {
-            return SIZE;
+            mAddMemory(mStackMemory, SIZE);
         }
 
     protected:
-        byte mMemory[SIZE];
+        byte mStackMemory[SIZE];
     };
 }

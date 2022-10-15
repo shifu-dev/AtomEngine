@@ -4,7 +4,7 @@
 
 namespace SSEngine
 {
-    class MemPool : public Allocator
+    class MemPool : public virtual Allocator
     {
     public:
 
@@ -12,7 +12,7 @@ namespace SSEngine
         virtual sizet Size() const noexcept abstract;
     };
 
-    class DynamicMemPool : public MemPool
+    class DynamicMemPool : public virtual MemPool
     {
     public:
 

@@ -4,7 +4,7 @@
 
 namespace SSEngine
 {
-    class LinkedMemPool : public MemPool
+    class LinkedMemPool : public virtual MemPool
     {
     protected:
         struct Block
@@ -243,8 +243,16 @@ namespace SSEngine
             block->isFree = true;
             block->next = nullptr;
 
-            mEndBlock->next = block;
-            mEndBlock = block;
+            if (mRootBlock iseq nullptr)
+            {
+                mRootBlock = block;
+                mEndBlock = block;
+            }
+            else
+            {
+                mEndBlock->next = block;
+                mEndBlock = block;
+            }
 
             mMemoryTotal += size;
         }
@@ -461,7 +469,9 @@ namespace SSEngine
         delete[] blocks;
     }
 
-    class DynamicLinkedMemPool : public virtual LinkedMemPool, public virtual DynamicMemPool
+    class DynamicLinkedMemPool :
+        public virtual LinkedMemPool,
+        public virtual DynamicMemPool
     {
     public:
         virtual void Shrink() override;
@@ -471,6 +481,9 @@ namespace SSEngine
     protected:
         virtual memptr mAllocateMemory(const sizet count) abstract;
         virtual void mDeallocateMemory(memptr mem, const sizet count) abstract;
+
+        /// @brief calls mAllocateMemory, and passes it to mAddMemory(mem, size, isRoot);
+        blockptr mAddMemory(const sizet size, bool isRoot = true);
     };
 
     inline void DynamicLinkedMemPool::Shrink()
@@ -503,5 +516,16 @@ namespace SSEngine
         block->isFree = true;
         block->isRoot = true;
         block->next = nullptr;
+    }
+
+    inline DynamicLinkedMemPool::blockptr DynamicLinkedMemPool::mAddMemory(const sizet size, bool isRoot)
+    {
+        memptr mem = mAllocateMemory(size);
+        if (mem iseq nullptr)
+        {
+            return nullptr;
+        }
+
+        return LinkedMemPool::mAddMemory(mem, size, isRoot);
     }
 }
