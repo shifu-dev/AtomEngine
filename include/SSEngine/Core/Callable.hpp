@@ -20,7 +20,12 @@ namespace SSEngine
         }
 
     public:
-        virtual TResult operator () (TArgs rref ... args) const abstract;
+        TResult operator () (TArgs rref ... args) const
+        {
+            return Invoke(forward<TArgs>(args)...);
+        }
+
+        virtual TResult Invoke(TArgs rref ... args) const abstract;
     };
 
     template <typename... TArgs>
@@ -36,7 +41,7 @@ namespace SSEngine
         CallableFunctor(const TFunctor lref func) : func(func) { }
 
     public:
-        virtual TResult operator () (TArgs rref ... args) const override
+        virtual TResult Invoke(TArgs rref ... args) const override
         {
             return func(forward<TArgs>(args)...);
         }

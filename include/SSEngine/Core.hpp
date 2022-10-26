@@ -3,7 +3,8 @@
 #include <memory>
 #include <iostream>
 #include <cstring>
-#include <bits/c++config.h>
+#pragma warning(disable: 4250)
+// #include <bits/c++config.h>
 
 #define SS_NAME SoulSphere
 #define SS_ENGINE_NAME SoulSphereEngine
@@ -60,17 +61,17 @@ namespace SSEngine
     }
 
     template <typename T>
-    constexpr auto move(T value) noexcept
+    auto move(T value) noexcept
     {
         return std::move(value);
     }
 
-    constexpr void memcpy(void ptr dest, void ptr src, const sizet size) noexcept
+    inline void memcpy(void ptr dest, void ptr src, const sizet size) noexcept
     {
         std::memcpy(dest, src, size);
     }
 
-    constexpr void memset(void ptr dest, const int value, const sizet count) noexcept
+    inline void memset(void ptr dest, const int value, const sizet count) noexcept
     {
         std::memset(dest, value, count);
     }

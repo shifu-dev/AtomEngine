@@ -192,6 +192,7 @@ namespace SSEngine
         using BaseT = IteratorPointer<TElement>;
         using IteratorT = ForwardIterator<TElement>;
 
+    protected:
         using BaseT::mIterator;
 
     public:
@@ -261,6 +262,7 @@ namespace SSEngine
         using BaseT = ForwardIteratorPointer<TElement>;
         using IteratorT = BidirectionalIterator<TElement>;
 
+    protected:
         using BaseT::mIterator;
 
     public:
@@ -333,6 +335,7 @@ namespace SSEngine
         using RandomAccessIteratorT = typename ContainerDefinationT::RandomAccessIteratorT;
         using IteratorType = RandomAccessIteratorT;
 
+    protected:
         using BaseT::mIterator;
 
     public:
