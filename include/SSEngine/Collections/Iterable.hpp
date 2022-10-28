@@ -1,6 +1,6 @@
 #pragma once
 #include "SSEngine/Core.hpp"
-#include "SSEngine/Core/Callable.hpp"
+#include "SSEngine/Callable/Callable.hpp"
 #include "SSEngine/Memory.hpp"
 #include "SSEngine/Collections/IteratorPointer.hpp"
 

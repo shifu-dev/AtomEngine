@@ -5,8 +5,6 @@
 
 namespace SSEngine
 {
-#pragma region Ptr
-
     /// @brief base class for pointers
     /// @tparam TType pointer type
     template <typename TType>
@@ -39,10 +37,6 @@ namespace SSEngine
         TType ptr _ptr;
     };
 
-#pragma endregion
-
-#pragma region UniquePtr
-
     template <typename TType, typename TAllocator = DefaultAllocator>
     struct UniquePtr : public Ptr<TType>
     {
@@ -70,7 +64,7 @@ namespace SSEngine
                 return UniquePtr();
             }
 
-            valueptr->TType(std::forward(args...));
+            valueptr->TType(forward(args...));
             return UniquePtr(valueptr, allocator);
         }
 
@@ -97,16 +91,7 @@ namespace SSEngine
     {
         if (TThis::isNull() iseq false)
         {
-            std::unique_ptr<int> uptr;
             _allocator.Deallocate(TThis::_ptr, 1);
         }
     };
-
-#pragma endregion
 }
-
-template <typename TType>
-SS_CREATE_NAME_ALIAS(Ptr) = SSEngine::Ptr<TType>;
-
-template <typename TType, typename TAllocator = SSDefaultAllocator>
-SS_CREATE_NAME_ALIAS(UniquePtr) = SSEngine::UniquePtr<TType, TAllocator>;

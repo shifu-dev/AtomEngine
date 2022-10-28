@@ -1,5 +1,6 @@
 #pragma once
 #include "SSEngine/Core.hpp"
+#include "SSEngine/Memory/Core.hpp"
 #include <cstdlib>
 #include <cstring>
 
@@ -142,7 +143,7 @@ namespace SSEngine
 
     inline memptr Allocator::AllocateRaw(sizet count, bool clear)
     {
-        count = std::max<sizet>(0, count);
+        count = max<sizet>(0, count);
         memptr dest = null;
 
         if (count > 0)
@@ -153,7 +154,7 @@ namespace SSEngine
             {
                 if (clear)
                 {
-                    std::memset(dest, 0, count);
+                    memset(dest, 0, count);
                 }
             }
         }
@@ -170,8 +171,5 @@ namespace SSEngine
     }
 
     using DefaultAllocator = SSEngine::Allocator;
-    inline constexpr Allocator defaultAllocator = Allocator();
+    constexpr Allocator defaultAllocator = Allocator();
 }
-
-SS_CREATE_NAME_ALIAS(Allocator) = SSEngine::Allocator;
-SS_CREATE_NAME_ALIAS(DefaultAllocator) = SSEngine::DefaultAllocator;
