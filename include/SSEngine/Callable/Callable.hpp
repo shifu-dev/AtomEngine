@@ -47,6 +47,6 @@ namespace SSEngine
         }
 
     public:
-        const TFunctor func;
+        TFunctor func;
     };
 }
