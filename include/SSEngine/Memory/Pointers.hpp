@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 #include "SSEngine/Core.hpp"
-#include "SSEngine/Memory/Allocators.hpp"
+#include "SSEngine/Memory/Allocator.hpp"
 #include "SSEngine/Memory/LegacyAllocator.hpp"
 
 namespace SSEngine

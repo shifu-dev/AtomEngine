@@ -1,5 +1,5 @@
 #pragma once
-#include "SSEngine/Memory/Allocators.hpp"
+#include "SSEngine/Memory/Allocator.hpp"
 
 namespace SSEngine
 {
