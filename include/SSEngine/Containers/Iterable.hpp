@@ -2,7 +2,7 @@
 #include "SSEngine/Core.hpp"
 #include "SSEngine/Callable/Callable.hpp"
 #include "SSEngine/Memory.hpp"
-#include "SSEngine/Collections/IteratorPointer.hpp"
+#include "SSEngine/Containers/IteratorPointer.hpp"
 
 namespace SSEngine
 {

@@ -1,7 +1,7 @@
 #pragma once
 #include "SSEngine/Core.hpp"
-#include "SSEngine/Collections/Array.hpp"
-#include "SSEngine/Collections/ContainerDefination.hpp"
+#include "SSEngine/Containers/Array.hpp"
+#include "SSEngine/Containers/ContainerDefination.hpp"
 #include <stdexcept>
 
 namespace SSEngine

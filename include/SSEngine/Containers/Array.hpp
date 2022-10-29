@@ -1,9 +1,9 @@
 #pragma once
 #include "SSEngine/Core.hpp"
-#include "SSEngine/Collections/Comparer.hpp"
-#include "SSEngine/Collections/Iterable.hpp"
-#include "SSEngine/Collections/Collection.hpp"
-#include "SSEngine/Collections/ArrayIterator.hpp"
+#include "SSEngine/Containers/Comparer.hpp"
+#include "SSEngine/Containers/Iterable.hpp"
+#include "SSEngine/Containers/Collection.hpp"
+#include "SSEngine/Containers/ArrayIterator.hpp"
 #include <stdexcept>
 
 namespace SSEngine

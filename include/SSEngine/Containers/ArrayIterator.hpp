@@ -1,6 +1,6 @@
 #pragma once
 #include "SSEngine/Core.hpp"
-#include "SSEngine/Collections/Iterator.hpp"
+#include "SSEngine/Containers/Iterator.hpp"
 #include <stdexcept>
 
 namespace SSEngine

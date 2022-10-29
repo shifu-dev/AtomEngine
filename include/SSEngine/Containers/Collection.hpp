@@ -1,6 +1,6 @@
 #pragma once
 #include "SSEngine/Core.hpp"
-#include "SSEngine/Collections/Iterable.hpp"
+#include "SSEngine/Containers/Iterable.hpp"
 
 namespace SSEngine
 {

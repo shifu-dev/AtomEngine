@@ -1,6 +1,6 @@
 #pragma once
 #include "SSEngine/Core.hpp"
-#include "SSEngine/Collections/Collection.hpp"
+#include "SSEngine/Containers/Collection.hpp"
 
 namespace SSEngine
 {
