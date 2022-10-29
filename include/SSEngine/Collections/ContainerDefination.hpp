@@ -30,7 +30,7 @@ namespace SSEngine
         using EqualityComparerT = EqualityComparer<ElementT>;
         using DefaultEqualityComparerT = DefaultEqualityComparer<ElementT>;
 
-        using AllocatorT = Allocator;
+        using AllocatorT = LegacyAllocator;
 
         using InitializerListT = std::initializer_list<ElementT>;
 

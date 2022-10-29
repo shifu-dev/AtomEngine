@@ -1,6 +1,7 @@
 #pragma once
 #include "SSEngine/Core.hpp"
 #include "SSEngine/Memory/LinkedMemPool.hpp"
+#include "SSEngine/Memory/GlobalAllocation.hpp"
 
 namespace SSEngine
 {
@@ -19,12 +20,12 @@ namespace SSEngine
 
         virtual memptr mAllocateMemory(const sizet size) override
         {
-            return malloc(size);
+            return alloc(size);
         }
 
         virtual void mDeallocateMemory(memptr mem, const sizet size) override
         {
-            free(mem);
+            return dealloc(mem, size);
         }
     };
 }

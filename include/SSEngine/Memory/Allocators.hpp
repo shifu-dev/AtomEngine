@@ -67,12 +67,12 @@ namespace SSEngine
         /// @param count count in bytes to allocate memory
         /// @param clear if true, writes memory with zeros
         /// @return ptr to allocated memory
-        virtual memptr AllocateRaw(const sizet count, bool clear = true);
+        virtual memptr AllocateRaw(const sizet count, bool clear = true) abstract;
 
         /// @brief dellocates allocated memory
         /// @param src pointer to the memory space to dellocate
         /// @param count count of memory
-        virtual void DeallocateRaw(memptr src, const sizet count);
+        virtual void DeallocateRaw(memptr src, const sizet count) abstract;
     };
 
     template <typename Type, typename... Args>
@@ -140,36 +140,4 @@ namespace SSEngine
 
         DeallocateRaw(src, count);
     }
-
-    inline memptr Allocator::AllocateRaw(sizet count, bool clear)
-    {
-        count = max<sizet>(0, count);
-        memptr dest = null;
-
-        if (count > 0)
-        {
-            dest = malloc(count);
-
-            if (dest isnot null)
-            {
-                if (clear)
-                {
-                    memset(dest, 0, count);
-                }
-            }
-        }
-
-        return dest;
-    }
-
-    inline void Allocator::DeallocateRaw(memptr src, const sizet count)
-    {
-        if (isnotnull(src))
-        {
-            free(src);
-        }
-    }
-
-    using DefaultAllocator = SSEngine::Allocator;
-    constexpr Allocator defaultAllocator = Allocator();
 }

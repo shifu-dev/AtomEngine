@@ -2,6 +2,7 @@
 #include <memory>
 #include "SSEngine/Core.hpp"
 #include "SSEngine/Memory/Allocators.hpp"
+#include "SSEngine/Memory/LegacyAllocator.hpp"
 
 namespace SSEngine
 {
@@ -37,7 +38,7 @@ namespace SSEngine
         TType ptr _ptr;
     };
 
-    template <typename TType, typename TAllocator = DefaultAllocator>
+    template <typename TType, typename TAllocator = LegacyAllocator>
     struct UniquePtr : public Ptr<TType>
     {
     public:
@@ -52,7 +53,7 @@ namespace SSEngine
         template <typename... Args>
         static TThis Create(Args... args)
         {
-            return Create(DefaultAllocator(), forward(args...));
+            return Create(LegacyAllocator(), forward(args...));
         }
 
         template <typename... Args>

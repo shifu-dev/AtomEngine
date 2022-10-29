@@ -125,7 +125,7 @@ namespace SSEngine
         sizet mMaxReservedBlockCount;   // max count of block allocations to reserve
     };
 
-    LinkedMemPool::LinkedMemPool() noexcept :
+    inline LinkedMemPool::LinkedMemPool() noexcept :
         mRootBlock(nullptr), mEndBlock(nullptr), mFirstBlock(nullptr), mMemoryUsed(0),
         mFreeBlock(nullptr), mReservedBlockCount(0), mMaxReservedBlockCount(-1) { }
 
