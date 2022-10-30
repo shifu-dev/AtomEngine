@@ -158,7 +158,7 @@ namespace SSEngine
 
         virtual void InsertAt(const SizeT index, const CollectionT lref elements)
         {
-            InsertAt(index, static_cast<const IterableT lref>(elements), elements.Count());
+            InsertAt(index, scast<const IterableT lref>(elements), elements.Count());
         }
 
         template <ElementT... TElements>

@@ -55,7 +55,7 @@ namespace SSEngine
 
         virtual int Compare(const IteratorT lref rhs) const noexcept override
         {
-            const ThisT ptr rhsPtr = dynamic_cast<const ThisT ptr>(lref rhs);
+            const ThisT ptr rhsPtr = dcast<const ThisT ptr>(lref rhs);
             if (rhsPtr isnot null)
             {
                 return Compare(ptr rhsPtr);

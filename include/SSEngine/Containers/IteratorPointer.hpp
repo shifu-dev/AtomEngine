@@ -38,7 +38,7 @@ namespace SSEngine
         {
             mAllocator = AllocatorT();
             mIteratorSize = size;
-            mIterator = static_cast<IteratorT ptr>(
+            mIterator = scast<IteratorT ptr>(
                 mAllocator.AllocateRaw(mIteratorSize, false));
 
             mempcpy(mIterator, iterator, size);
@@ -48,7 +48,7 @@ namespace SSEngine
         {
             mAllocator = AllocatorT();
             mIteratorSize = other.mIteratorSize;
-            mIterator = static_cast<IteratorT ptr>(
+            mIterator = scast<IteratorT ptr>(
                 mAllocator.AllocateRaw(mIteratorSize, false));
 
             mempcpy(mIterator, other.mIterator, mIteratorSize);
@@ -61,7 +61,7 @@ namespace SSEngine
                 mAllocator.DeallocateRaw(mIterator, mIteratorSize);
 
                 mIteratorSize = other.mIteratorSize;
-                mIterator = static_cast<IteratorT ptr>(
+                mIterator = scast<IteratorT ptr>(
                     mAllocator.AllocateRaw(other.mIteratorSize, false));
 
                 memcpy(mIterator, other.mIterator, other.mIteratorSize);
@@ -79,7 +79,7 @@ namespace SSEngine
                 mAllocator.DeallocateRaw(mIterator, mIteratorSize);
 
                 mIteratorSize = other.mIteratorSize;
-                mIterator = static_cast<IteratorT ptr>(
+                mIterator = scast<IteratorT ptr>(
                     mAllocator.AllocateRaw(other.mIteratorSize, false));
 
                 mempcpy(mIterator, other.mIterator, mIteratorSize);
@@ -94,7 +94,7 @@ namespace SSEngine
             {
                 mAllocator.DeallocateRaw(mIterator, mIteratorSize);
 
-                mIterator = static_cast<IteratorT ptr>(
+                mIterator = scast<IteratorT ptr>(
                     mAllocator.AllocateRaw(other.mIteratorSize, false));
                 mIteratorSize = other.mIteratorSize;
                 memcpy(mIterator, other.mIterator, other.mIteratorSize);
@@ -228,19 +228,19 @@ namespace SSEngine
 
         virtual void MoveFwd() const noexcept override
         {
-            dynamic_cast<IteratorT ptr>(mIterator)->MoveFwd();
+            dcast<IteratorT ptr>(mIterator)->MoveFwd();
         }
 
         // *******************************************************************
 
         IteratorT lref operator -> () noexcept
         {
-            return ptr dynamic_cast<IteratorT ptr>(mIterator);
+            return ptr dcast<IteratorT ptr>(mIterator);
         }
 
         const IteratorT lref operator -> () const noexcept
         {
-            return ptr dynamic_cast<IteratorT ptr>(mIterator);
+            return ptr dcast<IteratorT ptr>(mIterator);
         }
 
         // *******************************************************************
@@ -298,19 +298,19 @@ namespace SSEngine
 
         virtual void MoveBwd() const noexcept override
         {
-            dynamic_cast<IteratorT ptr>(mIterator)->MoveBwd();
+            dcast<IteratorT ptr>(mIterator)->MoveBwd();
         }
 
         // *******************************************************************
 
         IteratorT lref operator -> () noexcept
         {
-            return ptr dynamic_cast<IteratorT ptr>(mIterator);
+            return ptr dcast<IteratorT ptr>(mIterator);
         }
 
         const IteratorT lref operator -> () const noexcept
         {
-            return ptr dynamic_cast<IteratorT ptr>(mIterator);
+            return ptr dcast<IteratorT ptr>(mIterator);
         }
 
         // *******************************************************************
@@ -371,24 +371,24 @@ namespace SSEngine
 
         virtual void MoveFwdBy(const SizeT steps) const noexcept override
         {
-            dynamic_cast<IteratorType ptr>(mIterator)->MoveFwdBy(steps);
+            dcast<IteratorType ptr>(mIterator)->MoveFwdBy(steps);
         }
 
         virtual void MoveBwdBy(const SizeT steps) const noexcept override
         {
-            dynamic_cast<IteratorType ptr>(mIterator)->MoveBwdBy(steps);
+            dcast<IteratorType ptr>(mIterator)->MoveBwdBy(steps);
         }
 
         // *******************************************************************
 
         IteratorType lref operator -> () noexcept
         {
-            return ptr dynamic_cast<IteratorType ptr>(mIterator);
+            return ptr dcast<IteratorType ptr>(mIterator);
         }
 
         const IteratorType lref operator -> () const noexcept
         {
-            return ptr dynamic_cast<IteratorType ptr>(mIterator);
+            return ptr dcast<IteratorType ptr>(mIterator);
         }
 
         // *******************************************************************
