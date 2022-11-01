@@ -24,7 +24,7 @@ namespace SSEngine
         using IteratorPointerT = typename ContainerDefinationT::IteratorPointerT;
         using ComparerT = typename ContainerDefinationT::ComparerT;
         using EqualityComparerT = typename ContainerDefinationT::EqualityComparerT;
-        static const auto NPOS = ContainerDefinationT::NPOS;
+        static const sizet NPOS = ContainerDefinationT::NPOS;
 
         using PredicateT = Predicate<const ElementT lref, SizeT>;
 
@@ -283,6 +283,3 @@ namespace SSEngine
         SizeT mCount;
     };
 }
-
-template <typename TElement>
-using SSArray = SSEngine::Array<TElement>;

@@ -138,6 +138,3 @@ namespace SSEngine
         }
     };
 }
-
-template <typename TElement>
-using SSIterable = SSEngine::Iterable<TElement>;

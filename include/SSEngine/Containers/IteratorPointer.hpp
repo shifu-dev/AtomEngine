@@ -1,6 +1,7 @@
 #pragma once
 #include "SSEngine/Core.hpp"
 #include "SSEngine/Containers/Iterator.hpp"
+#include "SSEngine/Memory/ObjectPointer.hpp"
 
 namespace SSEngine
 {
@@ -9,9 +10,11 @@ namespace SSEngine
     /// @tparam TElement type of value iterator points to
     template <typename TElement>
     class IteratorPointer :
+        protected ObjectPointer<Iterator<TElement>, Allocator, 50>,
         public virtual Iterator<TElement>
     {
         using ThisT = IteratorPointer<TElement>;
+        using BaseT = ObjectPointer<Iterator<TElement>, Allocator, 50>;
         using ContainerDefinationT = ContainerDefination<TElement>;
         using SizeT = typename ContainerDefinationT::SizeT;
         using ElementT = typename ContainerDefinationT::ElementT;
@@ -24,94 +27,21 @@ namespace SSEngine
 
     public:
 
-        // *******************************************************************
-
         /// @brief default constructor initializes impl iterator with null
-        IteratorPointer() noexcept :
-            mAllocator(), mIterator(nullptr) { }
+        IteratorPointer() noexcept : BaseT() { }
 
         template <typename TIterator>
         IteratorPointer(const TIterator lref iterator) noexcept :
-            ThisT(lref iterator, sizeof(TIterator)) { }
+            BaseT(lref iterator, sizeof(TIterator)) { }
 
-        IteratorPointer(const IteratorT ptr iterator, const SizeT size) noexcept
-        {
-            mAllocator = AllocatorT();
-            mIteratorSize = size;
-            mIterator = scast<IteratorT ptr>(
-                mAllocator.AllocateRaw(mIteratorSize, false));
+        IteratorPointer(const IteratorT ptr iterator, const SizeT size) noexcept :
+            BaseT(iterator, size) { }
 
-            mempcpy(mIterator, iterator, size);
-        }
+        IteratorPointer(const ThisT lref other) noexcept :
+            BaseT(other) { }
 
-        IteratorPointer(const ThisT lref other) noexcept
-        {
-            mAllocator = AllocatorT();
-            mIteratorSize = other.mIteratorSize;
-            mIterator = scast<IteratorT ptr>(
-                mAllocator.AllocateRaw(mIteratorSize, false));
-
-            mempcpy(mIterator, other.mIterator, mIteratorSize);
-        }
-
-        IteratorPointer(ThisT rref other) noexcept
-        {
-            if (other isnot ptr this)
-            {
-                mAllocator.DeallocateRaw(mIterator, mIteratorSize);
-
-                mIteratorSize = other.mIteratorSize;
-                mIterator = scast<IteratorT ptr>(
-                    mAllocator.AllocateRaw(other.mIteratorSize, false));
-
-                memcpy(mIterator, other.mIterator, other.mIteratorSize);
-
-                memset(mIterator, 0, other.mIteratorSize);
-                other.mIterator = nullptr;
-                other.mIteratorSize = 0;
-            }
-        }
-
-        ThisT lref operator = (const ThisT lref other) noexcept
-        {
-            if (other isnot ptr this)
-            {
-                mAllocator.DeallocateRaw(mIterator, mIteratorSize);
-
-                mIteratorSize = other.mIteratorSize;
-                mIterator = scast<IteratorT ptr>(
-                    mAllocator.AllocateRaw(other.mIteratorSize, false));
-
-                mempcpy(mIterator, other.mIterator, mIteratorSize);
-            }
-
-            return ptr this;
-        }
-
-        ThisT lref operator = (ThisT rref other) noexcept
-        {
-            if (other isnot ptr this)
-            {
-                mAllocator.DeallocateRaw(mIterator, mIteratorSize);
-
-                mIterator = scast<IteratorT ptr>(
-                    mAllocator.AllocateRaw(other.mIteratorSize, false));
-                mIteratorSize = other.mIteratorSize;
-                memcpy(mIterator, other.mIterator, other.mIteratorSize);
-
-                memset(mIterator, 0, other.mIteratorSize);
-                other.mIterator = nullptr;
-                other.mIteratorSize = 0;
-            }
-
-            return ptr this;
-        }
-
-        /// @brief destructor destroys impl iterator using @param mAllocator 
-        dtor IteratorPointer()
-        {
-            mAllocator.DeallocateRaw(mIterator, mIteratorSize);
-        }
+        IteratorPointer(ThisT rref other) noexcept :
+            BaseT(other) { }
 
         // *******************************************************************
 
@@ -143,9 +73,6 @@ namespace SSEngine
         /// @brief compares with other iterator pointer
         /// @param rhs other iterator pointer to compare with
         /// @return false if both iterators represent same value
-        /// 
-        /// @note this operator is used by c++ range-based for loop
-        /// to check the end of iteration
         virtual bool operator !=(const ThisT lref rhs) const noexcept
         {
             return Compare(rhs) isnot 0;
@@ -156,29 +83,6 @@ namespace SSEngine
         {
             return mIterator->Compare(ptr rhs.mIterator);
         }
-
-        // *******************************************************************
-
-        IteratorT lref operator -> () noexcept
-        {
-            return ptr mIterator;
-        }
-
-        const IteratorT lref operator -> () const noexcept
-        {
-            return ptr mIterator;
-        }
-
-        // *******************************************************************
-
-    protected:
-        /// @brief pointer to the implementation iterator
-        IteratorT ptr mIterator;
-
-        /// @brief alloctor to manage impl iterator reference
-        AllocatorT mAllocator;
-
-        SizeT mIteratorSize;
     };
 
     /// @extends IteratorPointer
@@ -198,12 +102,11 @@ namespace SSEngine
     public:
 
         /// @brief default constructor initializes impl iterator with null
-        ForwardIteratorPointer() noexcept :
-            BaseT() { }
+        ForwardIteratorPointer() noexcept : BaseT() { }
 
         template <typename TIterator>
         ForwardIteratorPointer(const TIterator lref iterator) noexcept :
-            ThisT(lref iterator, sizeof(TIterator)) { }
+            BaseT(lref iterator, sizeof(TIterator)) { }
 
         ForwardIteratorPointer(const IteratorT ptr iterator, const SizeT size) noexcept :
             BaseT(iterator, size) { }
@@ -213,16 +116,6 @@ namespace SSEngine
 
         ForwardIteratorPointer(ThisT rref other) noexcept :
             BaseT(other) { }
-
-        ThisT lref operator = (const ThisT lref other) noexcept
-        {
-            BaseT::operator = (other);
-        }
-
-        ThisT lref operator = (ThisT rref other) noexcept
-        {
-            BaseT::operator = (other);
-        }
 
         // *******************************************************************
 
@@ -268,12 +161,11 @@ namespace SSEngine
     public:
 
         /// @brief default constructor initializes impl iterator with null
-        BidirectionalIteratorPointer() noexcept :
-            BaseT() { }
+        BidirectionalIteratorPointer() noexcept : BaseT() { }
 
         template <typename TIterator>
         BidirectionalIteratorPointer(const TIterator lref iterator) noexcept :
-            ThisT(lref iterator, sizeof(TIterator)) { }
+            BaseT(lref iterator, sizeof(TIterator)) { }
 
         BidirectionalIteratorPointer(const IteratorT ptr iterator, const SizeT size) noexcept :
             BaseT(iterator, size) { }
@@ -283,16 +175,6 @@ namespace SSEngine
 
         BidirectionalIteratorPointer(ThisT rref other) noexcept :
             BaseT(other) { }
-
-        ThisT lref operator = (const ThisT lref other) noexcept
-        {
-            BaseT::operator = (other);
-        }
-
-        ThisT lref operator = (ThisT rref other) noexcept
-        {
-            BaseT::operator = (other);
-        }
 
         // *******************************************************************
 
@@ -341,12 +223,11 @@ namespace SSEngine
     public:
 
         /// @brief default constructor initializes impl iterator with null
-        RandomAccessIteratorPointer() noexcept :
-            BaseT() { }
+        RandomAccessIteratorPointer() noexcept : BaseT() { }
 
         template <typename TIterator>
         RandomAccessIteratorPointer(const TIterator lref iterator) noexcept :
-            ThisT(lref iterator, sizeof(TIterator)) { }
+            BaseT(lref iterator, sizeof(TIterator)) { }
 
         RandomAccessIteratorPointer(const IteratorType ptr iterator, const SizeT size) noexcept :
             BaseT(iterator, size) { }
@@ -356,16 +237,6 @@ namespace SSEngine
 
         RandomAccessIteratorPointer(ThisT rref other) noexcept :
             BaseT(other) { }
-
-        ThisT lref operator = (const ThisT lref other) noexcept
-        {
-            BaseT::operator = (other);
-        }
-
-        ThisT lref operator = (ThisT rref other) noexcept
-        {
-            BaseT::operator = (other);
-        }
 
         // *******************************************************************
 

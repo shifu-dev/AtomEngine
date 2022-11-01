@@ -1,6 +1,7 @@
 #pragma once
 #include "SSEngine/Core.hpp"
 #include "SSEngine/Memory/MemPool.hpp"
+#include "SSEngine/Memory/GlobalAllocation.hpp"
 
 namespace SSEngine
 {
@@ -461,12 +462,12 @@ namespace SSEngine
 
     inline LinkedMemPool::blockptr LinkedMemPool::mAllocateBlocks(const sizet count)
     {
-        return new Block[count];
+        return createArr<Block>(count);
     }
 
-    inline void LinkedMemPool::mDeallocateBlock(blockptr blocks)
+    inline void LinkedMemPool::mDeallocateBlock(blockptr block)
     {
-        delete[] blocks;
+        destroy(block);
     }
 
     class DynamicLinkedMemPool :
@@ -488,6 +489,7 @@ namespace SSEngine
 
     inline void DynamicLinkedMemPool::Shrink()
     {
+        // TODO: implement
     }
 
     inline void DynamicLinkedMemPool::Reserve(const sizet size)

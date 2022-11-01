@@ -1,4 +1,5 @@
 #pragma once
+#include "SSEngine/Memory/ObjectPointer.hpp"
 #include "SSEngine/Memory/Core.hpp"
 #include "SSEngine/Memory/Allocator.hpp"
 #include "SSEngine/Memory/MemPool.hpp"

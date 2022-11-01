@@ -18,12 +18,24 @@ namespace SSEngine
     template <typename TType, typename... TArgs>
     inline TType ptr create(TArgs... args)
     {
-        globalAllocator->Construct(sizeof(TType));
+        return globalAllocator->Construct<TType>(forward<TArgs>(args)...);
+    }
+
+    template <typename TType, typename... TArgs>
+    inline TType ptr createArr(const sizet count, TArgs... args)
+    {
+        return globalAllocator->ConstructMultiple<TType>(count, forward<TArgs>(args)...);
     }
 
     template <typename TType>
     inline void destroy(TType ptr obj)
     {
-        globalAllocator->Destruct(obj);
+        globalAllocator->Destruct<TType>(obj);
+    }
+
+    template <typename TType>
+    inline void destroyArr(const sizet count, TType ptr obj)
+    {
+        globalAllocator->Destruct<TType>(obj, count);
     }
 }

@@ -9,6 +9,7 @@ namespace SSEngine
     template <sizet TBlockStackSize>
     class FastLinkedMemPool : public virtual LinkedMemPool
     {
+        using BaseT = LinkedMemPool;
         static constexpr sizet BLOCK_STACK_COUNT = TBlockStackSize;
 
     public:
@@ -39,7 +40,7 @@ namespace SSEngine
                 return block;
             }
 
-            return mAllocateBlocksHeap(count);
+            return BaseT::mAllocateBlocks(count);
         }
 
         virtual void mDeallocateBlock(blockptr block) final override
@@ -57,17 +58,7 @@ namespace SSEngine
                 return;
             }
 
-            mDeallocateBlockHeap(block);
-        }
-
-        virtual blockptr mAllocateBlocksHeap(const sizet count)
-        {
-            return new Block[count];
-        }
-
-        virtual void mDeallocateBlockHeap(blockptr block)
-        {
-            delete block;
+            return BaseT::mDeallocateBlock(block);
         }
 
     protected:

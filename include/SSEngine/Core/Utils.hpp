@@ -140,4 +140,12 @@ namespace SSEngine
     {
         return std::move(value);
     }
+
+    template <typename TType>
+    void swap(TType lref lhs, TType lref rhs) noexcept
+    {
+        TType lref tmp = lhs;
+        lhs = rhs;
+        rhs = tmp;
+    }
 }
