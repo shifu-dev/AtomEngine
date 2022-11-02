@@ -61,3 +61,15 @@
 #endif
 
 ////////////////////////////////////////////////////////
+
+#ifdef SS_PLATFORM_WIN
+
+#ifdef SS_ENGINE_BUILD_DLL
+#define SS_ENGINE_API __declspec(dllexport)
+#else
+#define SS_ENGINE_API __declspec(dllimport)
+#endif
+
+#else
+#error SoulSphere supports only Windows for now.
+#endif

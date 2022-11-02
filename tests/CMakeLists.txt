@@ -9,10 +9,10 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(Catch2)
 
-file (GLOB_RECURSE TEST_SOURCES "*.cpp")
-set (TEST_NAME "Tests")
+file(GLOB_RECURSE TEST_SOURCES "*.cpp")
+set(TEST_NAME "Tests")
 add_executable(${TEST_NAME} ${TEST_SOURCES})
-target_include_directories(${TEST_NAME} PRIVATE "../include")
+target_link_libraries(${TEST_NAME} ${SS_ENGINE_NAME})
 target_link_libraries(${TEST_NAME} Catch2::Catch2WithMain)
 add_test(${TEST_NAME} ${TEST_NAME})
 set_property(TARGET ${TEST_NAME} PROPERTY CXX_STANDARD 20)

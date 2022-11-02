@@ -3,7 +3,7 @@
 
 namespace SSEngine
 {
-    extern Allocator ptr globalAllocator;
+    SS_ENGINE_API extern Allocator ptr globalAllocator;
 
     inline memptr alloc(const sizet size)
     {

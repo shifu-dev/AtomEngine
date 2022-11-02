@@ -23,5 +23,5 @@ namespace SSEngine
         }
     };
 
-    Allocator ptr globalAllocator = new GlobalRootMemPool(0);
+    SS_ENGINE_API Allocator ptr globalAllocator = new GlobalRootMemPool(0);
 }

@@ -24,5 +24,6 @@ add_library(${SS_ENGINE_NAME} ${SS_ENGINE_LIB_TYPE}
 
 # SoulSphereEngine properties
 target_include_directories(${SS_ENGINE_NAME} PUBLIC ${SS_ENGINE_INCLUDE_DIR})
+target_compile_definitions(${SS_ENGINE_NAME} PRIVATE SS_ENGINE_BUILD_DLL=1)
 set_property(TARGET ${SS_ENGINE_NAME} PROPERTY LINKER_LANGUAGE CXX)
 set_property(TARGET ${SS_ENGINE_NAME} PROPERTY CXX_STANDARD 17)
