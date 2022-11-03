@@ -1,132 +1,159 @@
 #pragma once
 #include "SSEngine/Core.hpp"
 #include "SSEngine/Memory/Core.hpp"
+#include "SSEngine/Reflection/Core.hpp"
 
 namespace SSEngine
 {
-    template <typename TObject, typename TAllocator, sizet TStackSize>
-    class ObjectPointer
+    namespace Core
     {
-        using ThisT = ObjectPointer<TObject, TAllocator, TStackSize>;
-        using ObjectT = TObject;
-        using AllocatorT = TAllocator;
-        constexpr static sizet StackSize = TStackSize;
-
-    public:
-
-        template <typename TOtherObject>
-        ObjectPointer(const TOtherObject lref object) noexcept
+        template <typename TObject, typename TAllocator, sizet TStackSize>
+        class ObjectPointer
         {
-            mSetObject(lref object, sizeof(TOtherObject));
-            new (mObject) TOtherObject(object);
-        }
+            using ThisT = ObjectPointer<TObject, TAllocator, TStackSize>;
+            using ObjectT = TObject;
+            using AllocatorT = TAllocator;
+            constexpr static sizet StackSize = TStackSize;
 
-        template <typename TOtherObject>
-        ObjectPointer(TOtherObject rref object) noexcept
-        {
-            mSetObject(lref object, sizeof(TOtherObject));
-            new (mObject) TOtherObject(move(object));
-        }
+        public:
 
-        template <typename TOtherObject, sizet TOtherStackSize>
-        ObjectPointer(const ObjectPointer<TOtherObject, TAllocator, TOtherStackSize> lref objPointer) noexcept
-        {
-            mSetObject(objPointer.mObject, objPointer.mObjectSize);
-            new (mObject) TOtherObject(objPointer.mObject);
-        }
+            ObjectPointer() : mObject(nullptr), mObjectSize(0) { }
 
-        template <typename TOtherObject, sizet TOtherStackSize>
-        ObjectPointer(ObjectPointer<TOtherObject, TAllocator, TOtherStackSize> rref objPointer) noexcept
-        {
-            swap(mObjectSize, objPointer.mObjectSize);
-            swap(mAllocator, objPointer.mAllocator);
-
-            // if obj is allocated on stack memory
-            if (objPointer.mObject iseq objPointer.mStackMemory)
+            template <typename TOtherObject>
+            ObjectPointer(const TOtherObject lref object) noexcept
             {
-                mObject = dcast<ObjectT ptr>(mStackMemory);
-                new (mObject) TOtherObject(move(objPointer.mObject));
-            }
-            else
-            {
-                mObject = objPointer.mObject;
-            }
-        }
+                StaticAssertSubClass<ObjectT, TOtherObject>();
 
-        template <typename TOtherObject, sizet TOtherStackSize>
-        ThisT lref operator = (const ObjectPointer<TOtherObject, TAllocator, TOtherStackSize> lref objPointer) noexcept
-        {
-            mSetObject(objPointer.mObject, objPointer.mObjectSize);
-            new (mObject) TOtherObject(objPointer.mObject);
-
-            return ptr this;
-        }
-
-        template <typename TOtherObject, sizet TOtherStackSize>
-        ThisT lref operator = (ObjectPointer<TOtherObject, TAllocator, TOtherStackSize> rref objPointer) noexcept
-        {
-            swap(mObjectSize, objPointer.mObjectSize);
-            swap(mAllocator, objPointer.mAllocator);
-
-            // if obj is allocated on stack memory
-            if (objPointer.mObject iseq objPointer.mStackMemory)
-            {
-                mObject = dcast<ObjectT ptr>(mStackMemory);
-                new (mObject) TOtherObject(move(objPointer.mObject));
-            }
-            else
-            {
-                mObject = objPointer.mObject;
+                mAllocObject(sizeof(TOtherObject));
+                new (mObject) TOtherObject(object);
             }
 
-            return ptr this;
-        }
-
-        dtor ObjectPointer()
-        {
-            if (mObject isnot nullptr)
+            template <typename TOtherObject>
+            ObjectPointer(TOtherObject rref object) noexcept
             {
-                object->ObjecT::dtor ObjecT();
+                StaticAssertSubClass<ObjectT, TOtherObject>();
 
-                if (mObject isnot mStackMemory)
+                mAllocObject(sizeof(TOtherObject));
+                new (mObject) TOtherObject(move(object));
+            }
+
+            template <typename TOtherObject, sizet TOtherStackSize>
+            ObjectPointer(const ObjectPointer<TOtherObject, TAllocator, TOtherStackSize> lref other) noexcept
+            {
+                StaticAssertSubClass<ObjectT, TOtherObject>();
+
+                if (other.mObject isnot nullptr)
                 {
-                    mAllocator.DeallocateRaw(mObject, mObjectSize);
+                    mAllocObject(other.mObjectSize);
+                    new (mObject) TOtherObject(other.mObject);
                 }
             }
-        }
 
-    public:
-
-        // *******************************************************************
-
-        ObjectT lref operator -> () noexcept
-        {
-            return ptr mObject;
-        }
-
-        const ObjectT lref operator -> () const noexcept
-        {
-            return ptr mObject;
-        }
-
-    protected:
-        void mSetObject(const ObjectT ptr object, const sizet size) noexcept
-        {
-            mObjectSize = size;
-            if (mObjectSize <= StackSize)
+            template <typename TOtherObject, sizet TOtherStackSize>
+            ObjectPointer(ObjectPointer<TOtherObject, TAllocator, TOtherStackSize> rref other) noexcept
             {
-                object = dcast<ObjectT ptr>(mStackMemory);
-                return;
+                StaticAssertSubClass<ObjectT, TOtherObject>();
+
+                mSwap(other);
             }
 
-            object = dcast<ObjectT ptr>(mAllocator.AllocateRaw(mObjectSize));
-        }
+            template <typename TOtherObject, sizet TOtherStackSize>
+            ThisT lref operator = (const ObjectPointer<TOtherObject, TAllocator, TOtherStackSize> lref other) noexcept
+            {
+                StaticAssertSubClass<ObjectT, TOtherObject>();
 
-    protected:
-        byte mStackMemory[StackSize];
-        AllocatorT mAllocator;
+                ThisT tmp(other);
+                mSwap(tmp);
 
-        ObjectT ptr mObject;
-        sizet mObjectSize;
-    };
+                return ptr this;
+            }
+
+            template <typename TOtherObject, sizet TOtherStackSize>
+            ThisT lref operator = (ObjectPointer<TOtherObject, TAllocator, TOtherStackSize> rref other) noexcept
+            {
+                StaticAssertSubClass<ObjectT, TOtherObject>();
+
+                ThisT tmp(move(other));
+                mSwap(tmp);
+
+                return ptr this;
+            }
+
+            dtor ObjectPointer()
+            {
+                if (mObject isnot nullptr)
+                {
+                    mObject->ObjecT::dtor ObjectT();
+
+                    if (mObject isnot mStackMem)
+                    {
+                        mAllocator.DeallocateRaw(mObject, mObjectSize);
+                    }
+                }
+            }
+
+        public:
+
+            // *******************************************************************
+
+            ObjectT lref operator -> () noexcept
+            {
+                return ptr mObject;
+            }
+
+            const ObjectT lref operator -> () const noexcept
+            {
+                return ptr mObject;
+            }
+
+        protected:
+            void mAllocObject(const sizet size) noexcept
+            {
+                mObjectSize = size;
+                if (mObjectSize <= StackSize)
+                {
+                    mObject = dcast<ObjectT ptr>(mStackMem);
+                    return;
+                }
+
+                memptr mem = mAllocator.AllocateRaw(mObjectSize);
+                mObject = dcast<ObjectT ptr>(mem);
+            }
+
+            template <typename TOtherObject, sizet TOtherStackSize>
+            void mSwap(ObjectPointer<TOtherObject, TAllocator, TOtherStackSize> lref other) noexcept
+            {
+                byte mStackMemTmp[StackSize];
+
+                // if our object is stored in stack memory, save if before swapping
+                if (mObject iseq mStackMem)
+                {
+                    memcpy(mStackMemTmp, mStackMem, mObjectSize);
+                }
+
+                swap(mAllocator, other.mAllocator);
+                swap(mObjectSize, other.mObjectSize);
+                swap(mObject, other.mObject);
+
+                if (mObject iseq other.mStackMem)
+                {
+                    mAllocObject(mObjectSize);
+                    new (mObject) ObjectT(move(other.mStackMem));
+                }
+
+                if (other.mObject iseq mStackMem)
+                {
+                    other.mAllocObject(other.mObjectSize);
+                    new (other.mObject) ObjectT(move(mStackMemTmp));
+                }
+            }
+
+        protected:
+            byte mStackMem[StackSize];
+            AllocatorT mAllocator;
+
+            ObjectT ptr mObject;
+            sizet mObjectSize;
+        };
+    }
 }

@@ -9,12 +9,11 @@ namespace SSEngine
     /// @note this class acts like a unique ptr with functionality of iterators
     /// @tparam TElement type of value iterator points to
     template <typename TElement>
-    class IteratorPointer :
-        protected ObjectPointer<Iterator<TElement>, Allocator, 50>,
-        public virtual Iterator<TElement>
+    class IteratorPointer : public virtual Iterator<TElement>,
+        protected Core::ObjectPointer<Iterator<TElement>, Allocator, 50>
     {
         using ThisT = IteratorPointer<TElement>;
-        using BaseT = ObjectPointer<Iterator<TElement>, Allocator, 50>;
+        using BaseT = Core::ObjectPointer<Iterator<TElement>, Allocator, 50>;
         using ContainerDefinationT = ContainerDefination<TElement>;
         using SizeT = typename ContainerDefinationT::SizeT;
         using ElementT = typename ContainerDefinationT::ElementT;
