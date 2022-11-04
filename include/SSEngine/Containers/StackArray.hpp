@@ -1,7 +1,6 @@
 #pragma once
 #include "SSEngine/Core.hpp"
 #include "SSEngine/Containers/Array.hpp"
-#include "SSEngine/Containers/ContainerDefination.hpp"
 #include <stdexcept>
 
 namespace SSEngine
@@ -12,18 +11,11 @@ namespace SSEngine
     template <typename TElement, sizet TSize>
     class StackArray : public Array<TElement>
     {
-        using ContainerDefinationT = ContainerDefination<TElement>;
-        using ArrayT = typename ContainerDefinationT::ArrayT;
-        using SizeT = typename ContainerDefinationT::SizeT;
-        using ElementT = typename ContainerDefinationT::ElementT;
-        using IteratorT = typename ContainerDefinationT::IteratorT;
-        using InitializerListT = typename ContainerDefinationT::InitializerListT;
+        using ElementT = TElement;
+        using ArrayT = Array<TElement>;
 
     public:
-        using SizeType = SizeT;
-        using ElementType = ElementT;
-        using IteratorType = typename ArrayT::IteratorType;
-        static constexpr SizeT Size = TSize;
+        static constexpr sizet Size = TSize;
 
     public:
         StackArray() : ArrayT()

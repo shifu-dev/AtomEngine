@@ -11,40 +11,31 @@ namespace SSEngine
     class List : public virtual Collection<TElement>
     {
         using ThisT = List<TElement>;
-        using ContainerDefinationT = ContainerDefination<TElement>;
-        using SizeT = typename ContainerDefinationT::SizeT;
-        using ElementT = typename ContainerDefinationT::ElementT;
-        using IterableT = typename ContainerDefinationT::IterableT;
-        using CollectionT = typename ContainerDefinationT::CollectionT;
-        using ComparerT = typename ContainerDefinationT::ComparerT;
-        using EqualityComparerT = typename ContainerDefinationT::EqualityComparerT;
-        using DefaultEqualityComparerT = typename ContainerDefinationT::DefaultEqualityComparerT;
-        using IteratorT = typename ContainerDefinationT::IteratorT;
-        using ForwardIteratorT = typename ContainerDefinationT::ForwardIteratorT;
-        using PredicateT = Predicate<const ElementT lref, SizeT>;
-        static const auto NPOS = ContainerDefinationT::NPOS;
-
+        using ElementT = TElement;
+        using IterableT = Iterable<ElementT>;
+        using CollectionT = Collection<ElementT>;
+        using ComparerT = Comparer<ElementT>;
+        using EqualityComparerT = EqualityComparer<ElementT>;
+        using DefaultEqualityComparerT = DefaultEqualityComparer<ElementT>;
+        using ForwardIteratorT = ForwardIterator<ElementT>;
+        using PredicateT = Predicate<const ElementT lref, sizet>;
         using CollectionT::Count;
 
     public:
-        using SizeType = SizeT;
-        using ElementType = ElementT;
-
-    public:
-        virtual const ElementT lref operator[](const SizeT index) const noexcept abstract;
-        virtual ElementT lref operator[](const SizeT index) noexcept abstract;
+        virtual const ElementT lref operator[](const sizet index) const noexcept abstract;
+        virtual ElementT lref operator[](const sizet index) noexcept abstract;
 
         // **********************************************************************
 
         /// @brief access element by const ref at index
         /// @param index index of the element to access
         /// @return reference to element at index
-        virtual const ElementT lref ElementAt(const SizeT index) const abstract;
+        virtual const ElementT lref ElementAt(const sizet index) const abstract;
 
         /// @brief access element by ref at index
         /// @param index index of the element to access
         /// @return reference to element at index
-        virtual ElementT lref ElementAt(const SizeT index) abstract;
+        virtual ElementT lref ElementAt(const sizet index) abstract;
 
         /// @brief access element by const ref at index
         /// @return reference last element
@@ -79,19 +70,19 @@ namespace SSEngine
         /// @brief finds the first index of element
         /// @param element element to find
         /// @return index of element, NPOS if not found
-        virtual SizeT FirstIndexOf(const ElementT lref element, const EqualityComparerT lref comparer) const abstract;
+        virtual sizet FirstIndexOf(const ElementT lref element, const EqualityComparerT lref comparer) const abstract;
 
         /// @brief finds the last index of element
         /// @param element element to find
         /// @return index of element, NPOS if not found
-        virtual SizeT LastIndexOf(const ElementT lref element, const EqualityComparerT lref comparer) const abstract;
+        virtual sizet LastIndexOf(const ElementT lref element, const EqualityComparerT lref comparer) const abstract;
 
-        virtual SizeT FirstIndexOf(const ElementT lref element) const
+        virtual sizet FirstIndexOf(const ElementT lref element) const
         {
             return FirstIndexOf(element, DefaultEqualityComparerT());
         }
 
-        virtual SizeT LastIndexOf(const ElementT lref element) const
+        virtual sizet LastIndexOf(const ElementT lref element) const
         {
             return FirstIndexOf(element, DefaultEqualityComparerT());
         }
@@ -108,7 +99,7 @@ namespace SSEngine
         /// @brief insert element at given index
         /// @param index index to insert element at
         /// @param element element to insert
-        virtual void InsertAt(const SizeT index, const ElementT lref element) abstract;
+        virtual void InsertAt(const sizet index, const ElementT lref element) abstract;
 
         /// @brief inserts element at begining
         /// @param element element to insert
@@ -133,11 +124,11 @@ namespace SSEngine
 
         // **********************************************************************
 
-        virtual void InsertAt(const SizeT index, const ForwardIteratorT lref it, const SizeT count) abstract;
+        virtual void InsertAt(const sizet index, const ForwardIteratorT lref it, const sizet count) abstract;
 
-        virtual void InsertAt(const SizeT index, const ForwardIteratorT lref begin, const ForwardIteratorT lref end)
+        virtual void InsertAt(const sizet index, const ForwardIteratorT lref begin, const ForwardIteratorT lref end)
         {
-            SizeT count = 0;
+            sizet count = 0;
             for (auto lref it = begin; it isnot end; it++)
             {
                 count++;
@@ -146,29 +137,29 @@ namespace SSEngine
             InsertAt(index, begin, count);
         }
 
-        virtual void InsertAt(const SizeT index, const IterableT lref elements, const SizeT count)
+        virtual void InsertAt(const sizet index, const IterableT lref elements, const sizet count)
         {
             InsertAt(index, elements.Begin(), count);
         }
 
-        virtual void InsertAt(const SizeT index, const IterableT lref elements)
+        virtual void InsertAt(const sizet index, const IterableT lref elements)
         {
             InsertAt(index, elements.Begin(), elements.End());
         }
 
-        virtual void InsertAt(const SizeT index, const CollectionT lref elements)
+        virtual void InsertAt(const sizet index, const CollectionT lref elements)
         {
             InsertAt(index, scast<const IterableT lref>(elements), elements.Count());
         }
 
         template <ElementT... TElements>
-        void InsertAt(const SizeT index)
+        void InsertAt(const sizet index)
         {
             constexpr ElementT arr{ TElements... };
             InsertAt(ArrayIterator(arr), sizeof...(TElements));
         }
 
-        virtual void InsertFront(const ForwardIteratorT lref it, const SizeT count)
+        virtual void InsertFront(const ForwardIteratorT lref it, const sizet count)
         {
             InsertAt(0, it, count);
         }
@@ -178,7 +169,7 @@ namespace SSEngine
             InsertAt(0, begin, end);
         }
 
-        virtual void InsertFront(const IterableT lref elements, const SizeT count)
+        virtual void InsertFront(const IterableT lref elements, const sizet count)
         {
             InsertAt(0, elements, count);
         }
@@ -194,12 +185,12 @@ namespace SSEngine
         }
 
         template <ElementT... TElements>
-        void InsertFront(const SizeT index)
+        void InsertFront(const sizet index)
         {
             InsertAt<TElements...>(0);
         }
 
-        virtual void InsertBack(const ForwardIteratorT lref it, const SizeT count)
+        virtual void InsertBack(const ForwardIteratorT lref it, const sizet count)
         {
             InsertAt(Count() - 1, it, count);
         }
@@ -209,7 +200,7 @@ namespace SSEngine
             InsertAt(Count() - 1, begin, end);
         }
 
-        virtual void InsertBack(const IterableT lref elements, const SizeT count)
+        virtual void InsertBack(const IterableT lref elements, const sizet count)
         {
             InsertAt(Count() - 1, elements, count);
         }
@@ -225,7 +216,7 @@ namespace SSEngine
         }
 
         template <ElementT... TElements>
-        void InsertBack(const SizeT index)
+        void InsertBack(const sizet index)
         {
             InsertAt<TElements...>(Count() - 1);
         }
@@ -234,7 +225,7 @@ namespace SSEngine
 
         /// @brief remove element at index
         /// @param index index of element to remove
-        virtual void RemoveAt(const SizeT index) abstract;
+        virtual void RemoveAt(const sizet index) abstract;
 
         /// @brief remove element from begining
         /// @note calls RemoveAt(0)
@@ -252,7 +243,7 @@ namespace SSEngine
 
         virtual void RemoveFront(const ElementT lref element)
         {
-            if (SizeT index = FirstIndexOf(element) isnot NPOS)
+            if (sizet index = FirstIndexOf(element) isnot NPOS)
             {
                 RemoveAt(index);
             }
@@ -260,7 +251,7 @@ namespace SSEngine
 
         virtual void RemoveBack(const ElementT lref element)
         {
-            if (SizeT index = LastIndexOf(element) isnot NPOS)
+            if (sizet index = LastIndexOf(element) isnot NPOS)
             {
                 RemoveAt(index);
             }
@@ -273,9 +264,9 @@ namespace SSEngine
 
         // **********************************************************************
 
-        virtual void RemoveFrom(const SizeT indexFrom, const SizeT indexTo) abstract;
+        virtual void RemoveFrom(const sizet indexFrom, const sizet indexTo) abstract;
 
-        virtual void RemoveFrom(const SizeT indexFrom)
+        virtual void RemoveFrom(const sizet indexFrom)
         {
             RemoveFrom(indexFrom, Count() - 1);
         }

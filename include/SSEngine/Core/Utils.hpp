@@ -14,6 +14,7 @@ namespace SSEngine
     using usint = unsigned short int;
     using ulint = unsigned long int;
     using sizet = size_t;
+    constexpr sizet NPOS = -1;
 }
 
 namespace SSEngine

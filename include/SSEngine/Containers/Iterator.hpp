@@ -16,11 +16,7 @@ namespace SSEngine
     class Iterator : public virtual InputIterator<TElement>, public virtual OutputIterator<TElement>
     {
         using ThisT = Iterator<TElement>;
-        using ContainerDefinationT = ContainerDefination<TElement>;
-        using ElementT = typename ContainerDefinationT::ElementT;
-
-    public:
-        using ElementType = ElementT;
+        using ElementT = TElement;
 
     public:
 
@@ -174,38 +170,36 @@ namespace SSEngine
     class RandomAccessIterator : public virtual BidirectionalIterator<TElement>
     {
         using ThisT = BidirectionalIterator<TElement>;
-        using ContainerDefinationT = ContainerDefination<TElement>;
-        using SizeT = typename ContainerDefinationT::SizeT;
 
     public:
 
         // **************************************************************
 
-        virtual void MoveBwdBy(const SizeT steps) const noexcept abstract;
-        virtual void MoveFwdBy(const SizeT steps) const noexcept abstract;
+        virtual void MoveBwdBy(const sizet steps) const noexcept abstract;
+        virtual void MoveFwdBy(const sizet steps) const noexcept abstract;
 
         virtual void MoveFwd() const noexcept override { MoveFwdBy(1); }
         virtual void MoveBwd() const noexcept override { MoveBwdBy(1); }
 
-        ThisT lref operator + (const SizeT steps) noexcept
+        ThisT lref operator + (const sizet steps) noexcept
         {
             MoveFwdBy(steps);
             return ptr this;
         }
 
-        const ThisT lref operator + (const SizeT steps) const noexcept
+        const ThisT lref operator + (const sizet steps) const noexcept
         {
             MoveFwdBy(steps);
             return ptr this;
         }
 
-        ThisT lref operator - (const SizeT steps) noexcept
+        ThisT lref operator - (const sizet steps) noexcept
         {
             MoveBwdBy(steps);
             return ptr this;
         }
 
-        const ThisT lref operator - (const SizeT steps) const noexcept
+        const ThisT lref operator - (const sizet steps) const noexcept
         {
             MoveBwdBy(steps);
             return ptr this;

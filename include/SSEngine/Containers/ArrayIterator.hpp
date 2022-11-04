@@ -14,18 +14,12 @@ namespace SSEngine
     class ArrayIterator : public virtual RandomAccessIterator<TElement>
     {
         using ThisT = ArrayIterator<TElement>;
-        using ContainerDefinationT = ContainerDefination<TElement>;
-        using ElementT = typename ContainerDefinationT::ElementT;
-        using SizeT = typename ContainerDefinationT::SizeT;
-        using IteratorT = typename ContainerDefinationT::IteratorT;
+        using ElementT = TElement;
+        using IteratorT = Iterator<ElementT>;
 
     public:
-        using SizeType = SizeT;
-        using ElementType = ElementT;
-
-    public:
-        ArrayIterator(TElement ptr elementPtr)
-            : _ptr(elementPtr) { }
+        ArrayIterator(ElementT ptr elementPtr)
+            : mPtr(elementPtr) { }
 
         ArrayIterator(const ThisT lref other) = default;
         ArrayIterator(ThisT rref other) = default;
@@ -33,24 +27,24 @@ namespace SSEngine
         ThisT lref operator = (const ThisT lref other) = default;
         ThisT lref operator = (ThisT rref other) = default;
 
-        virtual TElement lref Value() noexcept override
+        virtual ElementT lref Value() noexcept override
         {
-            return ptr _ptr;
+            return ptr mPtr;
         }
 
-        virtual const TElement lref Value() const noexcept override
+        virtual const ElementT lref Value() const noexcept override
         {
-            return ptr _ptr;
+            return ptr mPtr;
         }
 
-        virtual void MoveFwdBy(const SizeT steps) const noexcept override
+        virtual void MoveFwdBy(const sizet steps) const noexcept override
         {
-            _ptr = _ptr + steps;
+            mPtr = mPtr + steps;
         }
 
-        virtual void MoveBwdBy(const SizeT steps) const noexcept override
+        virtual void MoveBwdBy(const sizet steps) const noexcept override
         {
-            _ptr = _ptr - steps;
+            mPtr = mPtr - steps;
         }
 
         virtual int Compare(const IteratorT lref rhs) const noexcept override
@@ -66,10 +60,10 @@ namespace SSEngine
 
         virtual int Compare(const ThisT lref rhs) const noexcept
         {
-            return _ptr - rhs._ptr;
+            return scast<int>(mPtr - rhs.mPtr);
         }
 
     protected:
-        mutable ElementType ptr _ptr;
+        mutable ElementT ptr mPtr;
     };
 }

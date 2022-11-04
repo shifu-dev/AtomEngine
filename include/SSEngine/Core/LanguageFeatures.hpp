@@ -25,6 +25,6 @@
 
 #define scast static_cast
 #define dcast dynamic_cast
-#define rcast reinteperet_cast
+#define rcast reinterpret_cast
 
 #define sassert static_assert

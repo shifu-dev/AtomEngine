@@ -19,24 +19,6 @@ namespace SSEngine
 
             ObjectPointer() : mObject(nullptr), mObjectSize(0) { }
 
-            template <typename TOtherObject>
-            ObjectPointer(const TOtherObject lref object) noexcept
-            {
-                StaticAssertSubClass<ObjectT, TOtherObject>();
-
-                mAllocObject(sizeof(TOtherObject));
-                new (mObject) TOtherObject(object);
-            }
-
-            template <typename TOtherObject>
-            ObjectPointer(TOtherObject rref object) noexcept
-            {
-                StaticAssertSubClass<ObjectT, TOtherObject>();
-
-                mAllocObject(sizeof(TOtherObject));
-                new (mObject) TOtherObject(move(object));
-            }
-
             template <typename TOtherObject, sizet TOtherStackSize>
             ObjectPointer(const ObjectPointer<TOtherObject, TAllocator, TOtherStackSize> lref other) noexcept
             {
@@ -83,13 +65,31 @@ namespace SSEngine
             {
                 if (mObject isnot nullptr)
                 {
-                    mObject->ObjecT::dtor ObjectT();
+                    mObject->ObjectT::dtor ObjectT();
 
-                    if (mObject isnot mStackMem)
+                    if (mObject isnot rcast<ObjectT ptr>(mStackMem))
                     {
                         mAllocator.DeallocateRaw(mObject, mObjectSize);
                     }
                 }
+            }
+
+            template <typename TOtherObject>
+            void SetObject(const TOtherObject lref object) noexcept
+            {
+                StaticAssertSubClass<ObjectT, TOtherObject>();
+
+                mAllocObject(sizeof(TOtherObject));
+                new (mObject) TOtherObject(object);
+            }
+
+            template <typename TOtherObject>
+            void SetObject(TOtherObject rref object) noexcept
+            {
+                StaticAssertSubClass<ObjectT, TOtherObject>();
+
+                mAllocObject(sizeof(TOtherObject));
+                new (mObject) TOtherObject(move(object));
             }
 
         public:
@@ -112,12 +112,12 @@ namespace SSEngine
                 mObjectSize = size;
                 if (mObjectSize <= StackSize)
                 {
-                    mObject = dcast<ObjectT ptr>(mStackMem);
+                    mObject = rcast<ObjectT ptr>(mStackMem);
                     return;
                 }
 
                 memptr mem = mAllocator.AllocateRaw(mObjectSize);
-                mObject = dcast<ObjectT ptr>(mem);
+                mObject = rcast<ObjectT ptr>(mem);
             }
 
             template <typename TOtherObject, sizet TOtherStackSize>
@@ -126,7 +126,7 @@ namespace SSEngine
                 byte mStackMemTmp[StackSize];
 
                 // if our object is stored in stack memory, save if before swapping
-                if (mObject iseq mStackMem)
+                if (mObject iseq rcast<ObjectT ptr>(mStackMem))
                 {
                     memcpy(mStackMemTmp, mStackMem, mObjectSize);
                 }
@@ -135,16 +135,16 @@ namespace SSEngine
                 swap(mObjectSize, other.mObjectSize);
                 swap(mObject, other.mObject);
 
-                if (mObject iseq other.mStackMem)
+                if (mObject iseq rcast<ObjectT ptr>(other.mStackMem))
                 {
                     mAllocObject(mObjectSize);
-                    new (mObject) ObjectT(move(other.mStackMem));
+                    memcpy(mObject, other.mStackMem, mObjectSize);
                 }
 
-                if (other.mObject iseq mStackMem)
+                if (other.mObject iseq rcast<ObjectT ptr>(mStackMem))
                 {
                     other.mAllocObject(other.mObjectSize);
-                    new (other.mObject) ObjectT(move(mStackMemTmp));
+                    memcpy(other.mObject, mStackMemTmp, other.mObjectSize);
                 }
             }
 

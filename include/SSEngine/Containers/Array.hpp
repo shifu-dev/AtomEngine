@@ -11,42 +11,24 @@ namespace SSEngine
     /// @brief represents a collection that holds memory in contiguous order
     /// @tparam TElement type of element stored in array
     template <typename TElement>
-    class Array : public virtual List<TElement>, public virtual IteratorIterable<ArrayIterator<TElement>>
+    class Array : public virtual List<TElement>
     {
-        using ContainerDefinationT = ContainerDefination<TElement>;
-        using SizeT = typename ContainerDefinationT::SizeT;
-        using ElementT = typename ContainerDefinationT::ElementT;
-        using IterableT = typename ContainerDefinationT::IterableT;
-        using CollectionT = typename ContainerDefinationT::CollectionT;
-        using ListT = typename ContainerDefinationT::ListT;
-        using ForwardIteratorT = typename ContainerDefinationT::ForwardIteratorT;
-        using ArrayIteratorT = typename ContainerDefinationT::ArrayIteratorT;
-        using IteratorPointerT = typename ContainerDefinationT::IteratorPointerT;
-        using ComparerT = typename ContainerDefinationT::ComparerT;
-        using EqualityComparerT = typename ContainerDefinationT::EqualityComparerT;
-        static const sizet NPOS = ContainerDefinationT::NPOS;
-
-        using PredicateT = Predicate<const ElementT lref, SizeT>;
-
-    public:
-        using SizeType = SizeT;
-        using ElementType = ElementT;
-        using IteratorType = ArrayIterator<TElement>;
+        using ElementT = TElement;
+        using ForwardIteratorT = ForwardIterator<ElementT>;
+        using EqualityComparerT = EqualityComparer<ElementT>;
+        using PredicateT = Predicate<const ElementT lref, sizet>;
+        using IteratorT = ArrayIterator<ElementT>;
 
     public:
 
         // *******************************************************************
 
-    public:
-
-        // *******************************************************************
-
-        virtual const ElementT lref operator[](SizeT index) const noexcept final override
+        virtual const ElementT lref operator[](sizet index) const noexcept final override
         {
             return mArray[index];
         }
 
-        virtual ElementT lref operator[](SizeT index) noexcept final override
+        virtual ElementT lref operator[](sizet index) noexcept final override
         {
             return mArray[index];
         }
@@ -55,7 +37,7 @@ namespace SSEngine
 
         virtual void ForEach(const Callable<void(const ElementT lref)> lref callback) const final override
         {
-            for (SizeT i = 0; i < mCount; i++)
+            for (sizet i = 0; i < mCount; i++)
             {
                 callback(mArray[i]);
             }
@@ -63,42 +45,70 @@ namespace SSEngine
 
         virtual void ForEach(const Callable<void(ElementT lref)> lref callback) final override
         {
-            for (SizeT i = 0; i < mCount; i++)
+            for (sizet i = 0; i < mCount; i++)
             {
                 callback(mArray[i]);
             }
         }
 
-        virtual IteratorType Begin() noexcept final override
+        virtual IteratorT Begin() noexcept final override
         {
-            return IteratorType(mArray + 0);
+            return IteratorT(mArray + 0);
         }
 
-        virtual const IteratorType Begin() const noexcept final override
+        virtual const IteratorT Begin() const noexcept final override
         {
-            return IteratorType(mArray + 0);
+            return IteratorT(mArray + 0);
         }
 
-        virtual IteratorType End() noexcept final override
+        virtual IteratorT End() noexcept final override
         {
-            return IteratorType(mArray + mCount);
+            return IteratorT(mArray + mCount);
         }
 
-        virtual const IteratorType End() const noexcept final override
+        virtual const IteratorT End() const noexcept final override
         {
-            return IteratorType(mArray + mCount);
+            return IteratorT(mArray + mCount);
         }
 
+        IteratorT begin() noexcept { return Begin(); }
+        const IteratorT begin() const noexcept { return Begin(); }
+
+        IteratorT end() noexcept { return End(); }
+        const IteratorT end() const noexcept { return End(); }
+
+    protected:
+        virtual const ForwardIteratorPointerT Iterable_begin() const noexcept override
+        {
+            return ForwardIteratorPointerT(Begin());
+        }
+
+        virtual ForwardIteratorPointerT Iterable_begin() noexcept override
+        {
+            return ForwardIteratorPointerT(Begin());
+        }
+
+        virtual const ForwardIteratorPointerT Iterable_end() const noexcept override
+        {
+            return ForwardIteratorPointerT(End());
+        }
+
+        virtual ForwardIteratorPointerT Iterable_end() noexcept override
+        {
+            return ForwardIteratorPointerT(End());
+        }
+
+    public:
         // *******************************************************************
 
-        virtual ElementT lref ElementAt(const SizeT index) final override
+        virtual ElementT lref ElementAt(const sizet index) final override
         {
             AssertIndex(index);
 
             return mArray[index];
         }
 
-        virtual const ElementT lref ElementAt(const SizeT index) const final override
+        virtual const ElementT lref ElementAt(const sizet index) const final override
         {
             AssertIndex(index);
 
@@ -119,9 +129,9 @@ namespace SSEngine
 
         // *******************************************************************
 
-        virtual SizeT FirstIndexOf(const ElementT lref element, const EqualityComparerT lref comparer) const final override
+        virtual sizet FirstIndexOf(const ElementT lref element, const EqualityComparerT lref comparer) const final override
         {
-            for (SizeT i = 0; i < mCount; i++)
+            for (sizet i = 0; i < mCount; i++)
             {
                 if (comparer.Compare(mArray[i], element) iseq true)
                 {
@@ -132,9 +142,9 @@ namespace SSEngine
             return NPOS;
         }
 
-        virtual SizeT LastIndexOf(const ElementT lref element, const EqualityComparerT lref comparer) const final override
+        virtual sizet LastIndexOf(const ElementT lref element, const EqualityComparerT lref comparer) const final override
         {
-            for (SizeT i = mCount; i >= 0; i--)
+            for (sizet i = mCount; i >= 0; i--)
             {
                 if (comparer.Compare(mArray[i], element) iseq true)
                 {
@@ -147,19 +157,19 @@ namespace SSEngine
 
         // *******************************************************************
 
-        virtual SizeT Count() const noexcept final override
+        virtual sizet Count() const noexcept final override
         {
             return mCount;
         }
 
         // *******************************************************************
 
-        virtual void InsertAt(const SizeT index, const ElementT lref element) final override
+        virtual void InsertAt(const sizet index, const ElementT lref element) final override
         {
             AssertIndex(index);
             AssertCapacityFor(1);
 
-            for (SizeT i = mCount; i >= index; i--)
+            for (sizet i = mCount; i >= index; i--)
             {
                 std::swap(mArray[i], mArray[i - 1]);
             }
@@ -185,18 +195,18 @@ namespace SSEngine
 
         // *******************************************************************
 
-        virtual void InsertAt(const SizeT index, const ForwardIteratorT lref it, const SizeT count) final override
+        virtual void InsertAt(const sizet index, const ForwardIteratorT lref it, const sizet count) final override
         {
             AssertIndex(index);
             AssertCapacityFor(count);
 
-            for (SizeT i = mCount; i >= index; i--)
+            for (sizet i = mCount; i >= index; i--)
             {
                 std::swap(mArray[i], mArray[i + count]);
             }
 
             mCount += count;
-            for (SizeT i = index; i < count; i++)
+            for (sizet i = index; i < count; i++)
             {
                 mArray[index] = ptr it;
                 it++;
@@ -205,11 +215,11 @@ namespace SSEngine
 
         // *******************************************************************
 
-        virtual void RemoveAt(const SizeT index) final override
+        virtual void RemoveAt(const sizet index) final override
         {
             AssertIndex(index);
 
-            for (SizeT i = index; i < mCount; i++)
+            for (sizet i = index; i < mCount; i++)
             {
                 std::swap(mArray[i], mArray[i + 1]);
             }
@@ -220,15 +230,15 @@ namespace SSEngine
 
         // *******************************************************************
 
-        virtual void RemoveFrom(const SizeT from, const SizeT to) final override
+        virtual void RemoveFrom(const sizet from, const sizet to) final override
         {
-            const SizeT count = to - from;
-            for (SizeT i = from; i < (mCount - count); i++)
+            const sizet count = to - from;
+            for (sizet i = from; i < (mCount - count); i++)
             {
                 mArray[i] = mArray[i + count];
             }
 
-            for (SizeT i = (mCount - count); i < mCount; i++)
+            for (sizet i = (mCount - count); i < mCount; i++)
             {
                 mArray[i] = ElementT();
             }
@@ -239,10 +249,10 @@ namespace SSEngine
 
         virtual void RemoveIfCallable(const PredicateT lref pred) noexcept final override
         {
-            SizeT count = mCount;
-            for (SizeT i = 0; i < count; i++)
+            sizet count = mCount;
+            for (sizet i = 0; i < count; i++)
             {
-                if (pred(mArray[i], SizeT(i)) iseq true)
+                if (pred(mArray[i], sizet(i)) iseq true)
                 {
                     RemoveAt(i);
 
@@ -255,7 +265,7 @@ namespace SSEngine
         // *******************************************************************
     protected:
 
-        void AssertIndex(const SizeT index) const
+        void AssertIndex(const sizet index) const
         {
             if (index > (mCount - 1))
             {
@@ -267,7 +277,7 @@ namespace SSEngine
         /// @param count count of elements to insert
         /// @note this function is called every time any number
         /// of elements are to be inserted irrelevance of their position
-        void AssertCapacityFor(const SizeT count)
+        void AssertCapacityFor(const sizet count)
         {
             if (mCount >= mCapacity)
             {
@@ -279,7 +289,7 @@ namespace SSEngine
 
     protected:
         ElementT ptr mArray;
-        SizeT mCapacity;
-        SizeT mCount;
+        sizet mCapacity;
+        sizet mCount;
     };
 }

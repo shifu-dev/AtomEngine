@@ -9,20 +9,14 @@ namespace SSEngine
     template <typename TElement>
     class Collection : public virtual Iterable<TElement>
     {
-        using ContainerDefinationT = ContainerDefination<TElement>;
-        using SizeT = typename ContainerDefinationT::SizeT;
-        using ElementT = typename ContainerDefinationT::ElementT;
-        using EqualityComparerT = typename ContainerDefinationT::EqualityComparerT;
-
-    public:
-        using SizeType = SizeT;
-        using ElementType = ElementT;
+        using ElementT = TElement;
+        using EqualityComparerT = EqualityComparer<ElementT>;
 
     public:
 
         /// @brief current count of elements
         /// @return count of elements
-        virtual SizeT Count() const noexcept abstract;
+        virtual sizet Count() const noexcept abstract;
 
         virtual bool IsEmpty() const noexcept
         {
@@ -50,32 +44,24 @@ namespace SSEngine
     template <typename TElement>
     class DynamicCollection : public virtual Collection<TElement>
     {
-        using ContainerDefinationT = ContainerDefination<TElement>;
-        using SizeT = typename ContainerDefinationT::SizeT;
-        using ElementT = typename ContainerDefinationT::ElementT;
-
-    public:
-        using SizeType = SizeT;
-        using ElementType = ElementT;
-
     public:
 
         /// @brief resizes the underlying memory
         /// @param count count of objects to allocate memor for
         /// @note this does not change element count
-        virtual void Resize(const SizeT count) abstract;
+        virtual void Resize(const sizet count) abstract;
 
         /// @brief asks the collection to reserve memory for count elements
         /// @param count minimum count of elements to reserve memory for
         /// @return count of reserved memory for element
-        virtual SizeT Reserve(const SizeT count) abstract;
+        virtual sizet Reserve(const sizet count) abstract;
 
         /// @brief current allocated memory
         /// @return count of memory for element currently allocated
-        virtual SizeT Capacity() abstract;
+        virtual sizet Capacity() abstract;
 
         /// @brief resizes capacity equal to count
         /// @return count of memory for element currently allocated
-        virtual SizeT ShrinkToFit() abstract;
+        virtual sizet ShrinkToFit() abstract;
     };
 }
