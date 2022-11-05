@@ -1,6 +1,6 @@
-#include "SSEngine/Memory.hpp"
+#include "AtomEngine/Memory.hpp"
 
-namespace SSEngine
+namespace Atom
 {
     class GlobalRootMemPool : public HeapMemPool<>
     {
@@ -23,5 +23,5 @@ namespace SSEngine
         }
     };
 
-    SS_ENGINE_API Allocator ptr globalAllocator = new GlobalRootMemPool(0);
+    ATOM_API Allocator ptr globalAllocator = new GlobalRootMemPool(0);
 }
