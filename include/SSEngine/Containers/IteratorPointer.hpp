@@ -42,13 +42,13 @@ namespace SSEngine
             return ptr this;
         }
 
-        template <typename TIterator>
+        template <typename TIterator, EnableIf<IsSubClass<ThisT, TIterator> == false> = true>
         IteratorPointer(const TIterator lref iterator) noexcept
         {
             BaseT::SetObject(iterator);
         }
 
-        template <typename TIterator>
+        template <typename TIterator, EnableIf<IsSubClass<ThisT, TIterator> == false> = true>
         IteratorPointer(TIterator rref iterator) noexcept
         {
             BaseT::SetObject(move(iterator));
