@@ -13,18 +13,15 @@ namespace Atom
         using ElementT = TElement;
         using ArrayT = Array<TElement>;
 
-    public:
-        static constexpr sizet Size = TSize;
+        mpublic static constexpr sizet Size = TSize;
 
-    public:
-        StackArray() : ArrayT()
+        mpublic StackArray() : ArrayT()
         {
             ArrayT::mArray = mStackArray;
             ArrayT::mCapacity = Size;
             ArrayT::mCount = 0;
         }
 
-    protected:
-        ElementT mStackArray[Size];
+        mprotected ElementT mStackArray[Size];
     };
 }

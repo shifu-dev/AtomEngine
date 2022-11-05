@@ -6,17 +6,15 @@ namespace Atom
     {
         using BaseT = HeapMemPool<>;
 
-    public:
-        GlobalRootMemPool(const sizet size) : BaseT(size) { }
+        mpublic GlobalRootMemPool(const sizet size) : BaseT(size) { }
 
-    public:
-        virtual memptr mAllocateMemory(const sizet size) override
+        mpublic virtual memptr mAllocateMemory(const sizet size) override
         {
             // default implementation uses global mem pool
             return malloc(size);
         }
 
-        virtual void mDeallocateMemory(memptr mem, const sizet size) override
+        mpublic virtual void mDeallocateMemory(memptr mem, const sizet size) override
         {
             // default implementation uses global mem pool
             free(mem);

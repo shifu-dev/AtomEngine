@@ -21,46 +21,45 @@ namespace Atom
         using PredicateT = Predicate<const ElementT ref, sizet>;
         using CollectionT::Count;
 
-    public:
-        virtual const ElementT ref operator[](const sizet index) const noexcept abstract;
-        virtual ElementT ref operator[](const sizet index) noexcept abstract;
+        mpublic virtual const ElementT ref operator[](const sizet index) const noexcept abstract;
+        mpublic virtual ElementT ref operator[](const sizet index) noexcept abstract;
 
         // **********************************************************************
 
         /// @brief access element by const ref at index
         /// @param index index of the element to access
         /// @return reference to element at index
-        virtual const ElementT ref ElementAt(const sizet index) const abstract;
+        mpublic virtual const ElementT ref ElementAt(const sizet index) const abstract;
 
         /// @brief access element by ref at index
         /// @param index index of the element to access
         /// @return reference to element at index
-        virtual ElementT ref ElementAt(const sizet index) abstract;
+        mpublic virtual ElementT ref ElementAt(const sizet index) abstract;
 
         /// @brief access element by const ref at index
         /// @return reference last element
-        virtual const ElementT ref ElementFront() const
+        mpublic virtual const ElementT ref ElementFront() const
         {
             return ElementAt(0);
         }
 
         /// @brief access element by ref at index
         /// @return reference last element
-        virtual ElementT ref ElementFront()
+        mpublic virtual ElementT ref ElementFront()
         {
             return ElementAt(0);
         }
 
         /// @brief access element by const ref at index
         /// @return reference first element
-        virtual const ElementT ref ElementBack() const
+        mpublic virtual const ElementT ref ElementBack() const
         {
             return ElementAt(Count() - 1);
         }
 
         /// @brief access element by ref at index
         /// @return reference first element
-        virtual ElementT ref ElementBack()
+        mpublic virtual ElementT ref ElementBack()
         {
             return ElementAt(Count() - 1);
         }
@@ -70,26 +69,26 @@ namespace Atom
         /// @brief finds the first index of element
         /// @param element element to find
         /// @return index of element, NPOS if not found
-        virtual sizet FirstIndexOf(const ElementT ref element, const EqualityComparerT ref comparer) const abstract;
+        mpublic virtual sizet FirstIndexOf(const ElementT ref element, const EqualityComparerT ref comparer) const abstract;
 
         /// @brief finds the last index of element
         /// @param element element to find
         /// @return index of element, NPOS if not found
-        virtual sizet LastIndexOf(const ElementT ref element, const EqualityComparerT ref comparer) const abstract;
+        mpublic virtual sizet LastIndexOf(const ElementT ref element, const EqualityComparerT ref comparer) const abstract;
 
-        virtual sizet FirstIndexOf(const ElementT ref element) const
+        mpublic virtual sizet FirstIndexOf(const ElementT ref element) const
         {
             return FirstIndexOf(element, DefaultEqualityComparerT());
         }
 
-        virtual sizet LastIndexOf(const ElementT ref element) const
+        mpublic virtual sizet LastIndexOf(const ElementT ref element) const
         {
             return FirstIndexOf(element, DefaultEqualityComparerT());
         }
 
         // **********************************************************************
 
-        virtual bool Contains(const ElementT ref element, const EqualityComparerT ref comparer) const noexcept override
+        mpublic virtual bool Contains(const ElementT ref element, const EqualityComparerT ref comparer) const noexcept override
         {
             return FirstIndexOf(element, comparer) isnot NPOS;
         }
@@ -99,12 +98,12 @@ namespace Atom
         /// @brief insert element at given index
         /// @param index index to insert element at
         /// @param element element to insert
-        virtual void InsertAt(const sizet index, const ElementT ref element) abstract;
+        mpublic virtual void InsertAt(const sizet index, const ElementT ref element) abstract;
 
         /// @brief inserts element at begining
         /// @param element element to insert
         /// @note calls InsertAt(0, element)
-        virtual void InsertFront(const ElementT ref element)
+        mpublic virtual void InsertFront(const ElementT ref element)
         {
             InsertAt(0, element);
         }
@@ -112,21 +111,21 @@ namespace Atom
         /// @brief inserts element at las
         /// @param element element to insert
         /// @note calls InsertAt(Count() - 1, element)
-        virtual void InsertBack(const ElementT ref element)
+        mpublic virtual void InsertBack(const ElementT ref element)
         {
             InsertAt(Count() - 1, element);
         }
 
-        virtual void Insert(const ElementT ref element) override
+        mpublic virtual void Insert(const ElementT ref element) override
         {
             InsertBack(element);
         }
 
         // **********************************************************************
 
-        virtual void InsertAt(const sizet index, const ForwardIteratorT ref it, const sizet count) abstract;
+        mpublic virtual void InsertAt(const sizet index, const ForwardIteratorT ref it, const sizet count) abstract;
 
-        virtual void InsertAt(const sizet index, const ForwardIteratorT ref begin, const ForwardIteratorT ref end)
+        mpublic virtual void InsertAt(const sizet index, const ForwardIteratorT ref begin, const ForwardIteratorT ref end)
         {
             sizet count = 0;
             for (auto ref it = begin; it isnot end; it++)
@@ -137,86 +136,86 @@ namespace Atom
             InsertAt(index, begin, count);
         }
 
-        virtual void InsertAt(const sizet index, const IterableT ref elements, const sizet count)
+        mpublic virtual void InsertAt(const sizet index, const IterableT ref elements, const sizet count)
         {
             InsertAt(index, elements.Begin(), count);
         }
 
-        virtual void InsertAt(const sizet index, const IterableT ref elements)
+        mpublic virtual void InsertAt(const sizet index, const IterableT ref elements)
         {
             InsertAt(index, elements.Begin(), elements.End());
         }
 
-        virtual void InsertAt(const sizet index, const CollectionT ref elements)
+        mpublic virtual void InsertAt(const sizet index, const CollectionT ref elements)
         {
             InsertAt(index, scast<const IterableT ref>(elements), elements.Count());
         }
 
-        template <ElementT... TElements>
-        void InsertAt(const sizet index)
+        mpublic template <ElementT... TElements>
+            void InsertAt(const sizet index)
         {
             constexpr ElementT arr{ TElements... };
             InsertAt(ArrayIterator(arr), sizeof...(TElements));
         }
 
-        virtual void InsertFront(const ForwardIteratorT ref it, const sizet count)
+        mpublic virtual void InsertFront(const ForwardIteratorT ref it, const sizet count)
         {
             InsertAt(0, it, count);
         }
 
-        virtual void InsertFront(const ForwardIteratorT ref begin, const ForwardIteratorT ref end)
+        mpublic virtual void InsertFront(const ForwardIteratorT ref begin, const ForwardIteratorT ref end)
         {
             InsertAt(0, begin, end);
         }
 
-        virtual void InsertFront(const IterableT ref elements, const sizet count)
+        mpublic virtual void InsertFront(const IterableT ref elements, const sizet count)
         {
             InsertAt(0, elements, count);
         }
 
-        virtual void InsertFront(const IterableT ref elements)
+        mpublic virtual void InsertFront(const IterableT ref elements)
         {
             InsertAt(0, elements);
         }
 
-        virtual void InsertFront(const CollectionT ref elements)
+        mpublic virtual void InsertFront(const CollectionT ref elements)
         {
             InsertAt(0, elements);
         }
 
-        template <ElementT... TElements>
-        void InsertFront(const sizet index)
+        mpublic template <ElementT... TElements>
+            void InsertFront(const sizet index)
         {
             InsertAt<TElements...>(0);
         }
 
-        virtual void InsertBack(const ForwardIteratorT ref it, const sizet count)
+        mpublic virtual void InsertBack(const ForwardIteratorT ref it, const sizet count)
         {
             InsertAt(Count() - 1, it, count);
         }
 
-        virtual void InsertBack(const ForwardIteratorT ref begin, const ForwardIteratorT ref end)
+        mpublic virtual void InsertBack(const ForwardIteratorT ref begin, const ForwardIteratorT ref end)
         {
             InsertAt(Count() - 1, begin, end);
         }
 
-        virtual void InsertBack(const IterableT ref elements, const sizet count)
+        mpublic virtual void InsertBack(const IterableT ref elements, const sizet count)
         {
             InsertAt(Count() - 1, elements, count);
         }
 
-        virtual void InsertBack(const IterableT ref elements)
+        mpublic virtual void InsertBack(const IterableT ref elements)
         {
             InsertAt(Count() - 1, elements);
         }
 
-        virtual void InsertBack(const CollectionT ref elements)
+        mpublic virtual void InsertBack(const CollectionT ref elements)
         {
             InsertAt(Count() - 1, elements);
         }
 
-        template <ElementT... TElements>
-        void InsertBack(const sizet index)
+        mpublic template <ElementT... TElements>
+            void InsertBack(const sizet index)
         {
             InsertAt<TElements...>(Count() - 1);
         }
@@ -225,23 +224,23 @@ namespace Atom
 
         /// @brief remove element at index
         /// @param index index of element to remove
-        virtual void RemoveAt(const sizet index) abstract;
+        mpublic virtual void RemoveAt(const sizet index) abstract;
 
         /// @brief remove element from begining
         /// @note calls RemoveAt(0)
-        virtual void RemoveFront()
+        mpublic virtual void RemoveFront()
         {
             RemoveAt(0);
         }
 
         /// @brief remove element from begining
         /// @note calls RemoveAt(Count() - 1)
-        virtual void RemoveBack()
+        mpublic virtual void RemoveBack()
         {
             RemoveAt(Count() - 1);
         }
 
-        virtual void RemoveFront(const ElementT ref element)
+        mpublic virtual void RemoveFront(const ElementT ref element)
         {
             if (sizet index = FirstIndexOf(element) isnot NPOS)
             {
@@ -249,7 +248,7 @@ namespace Atom
             }
         }
 
-        virtual void RemoveBack(const ElementT ref element)
+        mpublic virtual void RemoveBack(const ElementT ref element)
         {
             if (sizet index = LastIndexOf(element) isnot NPOS)
             {
@@ -257,26 +256,26 @@ namespace Atom
             }
         }
 
-        virtual void Remove(const ElementT ref element) override
+        mpublic virtual void Remove(const ElementT ref element) override
         {
             RemoveFront(element);
         }
 
         // **********************************************************************
 
-        virtual void RemoveFrom(const sizet indexFrom, const sizet indexTo) abstract;
+        mpublic virtual void RemoveFrom(const sizet indexFrom, const sizet indexTo) abstract;
 
-        virtual void RemoveFrom(const sizet indexFrom)
+        mpublic virtual void RemoveFrom(const sizet indexFrom)
         {
             RemoveFrom(indexFrom, Count() - 1);
         }
 
         // **********************************************************************
 
-        virtual void RemoveIfCallable(const PredicateT ref pred) noexcept abstract;
+        mpublic virtual void RemoveIfCallable(const PredicateT ref pred) noexcept abstract;
 
-        template <typename TFunctor>
-        void RemoveIf(const TFunctor ref func) noexcept
+        mpublic template <typename TFunctor>
+            void RemoveIf(const TFunctor ref func) noexcept
         {
             RemoveIfCallable(PredicateT::Create(func));
         }

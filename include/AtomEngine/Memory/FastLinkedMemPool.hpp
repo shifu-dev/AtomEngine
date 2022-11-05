@@ -12,14 +12,13 @@ namespace Atom
         using BaseT = LinkedMemPool;
         static constexpr sizet BLOCK_STACK_COUNT = TBlockStackSize;
 
-    public:
-        FastLinkedMemPool() noexcept
+        mpublic FastLinkedMemPool() noexcept
         {
             mMaxReservedBlockCount = BLOCK_STACK_COUNT;
             mReserveMoreBlocks(BLOCK_STACK_COUNT);
         }
 
-        virtual blockptr mAllocateBlocks(const sizet count) final override
+        mpublic virtual blockptr mAllocateBlocks(const sizet count) final override
         {
             if (mStackReservedFreeBlock isnot nsize)
             {
@@ -43,7 +42,7 @@ namespace Atom
             return BaseT::mAllocateBlocks(count);
         }
 
-        virtual void mDeallocateBlock(blockptr block) final override
+        mpublic virtual void mDeallocateBlock(blockptr block) final override
         {
             if (block > mStackReservedBlocks and block < mStackReservedBlocks + BLOCK_STACK_COUNT)
             {
@@ -61,10 +60,9 @@ namespace Atom
             return BaseT::mDeallocateBlock(block);
         }
 
-    protected:
-        Block mStackReservedBlocks[BLOCK_STACK_COUNT];
-        bool mStackReservedBlocksUsage[BLOCK_STACK_COUNT];
-        sizet mStackReservedFreeBlock = 0;
+        mprotected Block mStackReservedBlocks[BLOCK_STACK_COUNT];
+        mprotected bool mStackReservedBlocksUsage[BLOCK_STACK_COUNT];
+        mprotected sizet mStackReservedFreeBlock = 0;
     };
 
     template <sizet TBlockStackSize>

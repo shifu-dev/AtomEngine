@@ -12,16 +12,15 @@ namespace Atom
     /// like AllocateRaw and DeallocateRaw uses custom type to manage memory
     struct Allocator
     {
-    public:
-        constexpr Allocator() = default;
-        constexpr Allocator(const Allocator ref other) = default;
-        constexpr Allocator(Allocator rref other) = default;
-        constexpr Allocator ref operator =(const Allocator ref other) = default;
-        constexpr Allocator ref operator =(Allocator rref other) = default;
+        mpublic constexpr Allocator() = default;
+        mpublic constexpr Allocator(const Allocator ref other) = default;
+        mpublic constexpr Allocator(Allocator rref other) = default;
+        mpublic constexpr Allocator ref operator =(const Allocator ref other) = default;
+        mpublic constexpr Allocator ref operator =(Allocator rref other) = default;
 
         /// @brief calls ConstructMultiple with count = 1
-        template <typename Type, typename... Args>
-        Type ptr Construct(Args&&... args);
+        mpublic template <typename Type, typename... Args>
+            Type ptr Construct(Args&&... args);
 
         /// @brief creates object of type @tparam Type -> allocates memory and calls constructor
         /// @tparam Type type of object to create
@@ -32,8 +31,8 @@ namespace Atom
         ///
         /// @note calls underlying AllocateRaw to allocate memory
         /// @note if count == 0, this function does nothing
-        template <typename Type, typename... Args>
-        Type ptr ConstructMultiple(const sizet count, Args&&... args);
+        mpublic template <typename Type, typename... Args>
+            Type ptr ConstructMultiple(const sizet count, Args&&... args);
 
         /// @brief destroys object of type @tparam Type -> calls destructor and deallocates memory
         /// @tparam Type type of object to destruct
@@ -41,8 +40,8 @@ namespace Atom
         /// @param count count of objects to destruct
         ///
         /// @note calls underlying DeallocateRaw to deallocate memory
-        template <typename Type>
-        void Destruct(Type ptr objectPtr, const sizet count = 1);
+        mpublic template <typename Type>
+            void Destruct(Type ptr objectPtr, const sizet count = 1);
 
         /// @brief allocates memory to specified type
         /// @tparam Type type for which to allocate memory
@@ -51,26 +50,26 @@ namespace Atom
         ///
         /// @note if count == 0, does not allocates memory.
         /// @note total memory allocated in bytes is equal to sizeof(Type) * count
-        template <typename Type>
-        Type ptr Allocate(const sizet count = 1);
+        mpublic template <typename Type>
+            Type ptr Allocate(const sizet count = 1);
 
         /// @brief dellocates memory for @tparam Type
         /// @tparam Type type of object to deallocate memory for
         /// @param src ptr to memory to deallocate
         /// @param count count of memory blocks to deallocate
-        template <typename Type>
-        void Deallocate(Type ptr src, const sizet count = 1);
+        mpublic template <typename Type>
+            void Deallocate(Type ptr src, const sizet count = 1);
 
         /// @brief allocates memory in bytes
         /// @param count count in bytes to allocate memory
         /// @param clear if true, writes memory with zeros
         /// @return ptr to allocated memory
-        virtual memptr AllocateRaw(const sizet count, bool clear = true) abstract;
+        mpublic virtual memptr AllocateRaw(const sizet count, bool clear = true) abstract;
 
         /// @brief dellocates allocated memory
         /// @param src pointer to the memory space to dellocate
         /// @param count count of memory
-        virtual void DeallocateRaw(memptr src, const sizet count) abstract;
+        mpublic virtual void DeallocateRaw(memptr src, const sizet count) abstract;
     };
 
     template <typename Type, typename... Args>

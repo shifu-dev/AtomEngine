@@ -18,28 +18,26 @@ namespace Atom
         using ThisT = Iterator<TElement>;
         using ElementT = TElement;
 
-    public:
-
         // **************************************************************
 
         /// @brief current element value
         /// @return return current element value by const ref
-        virtual const ElementT ref Value() const noexcept abstract;
+        mpublic virtual const ElementT ref Value() const noexcept abstract;
 
         /// @brief current element value
         /// @return return current element value by ref
-        virtual ElementT ref Value() noexcept abstract;
+        mpublic virtual ElementT ref Value() noexcept abstract;
 
         /// @brief ptr operator to return current iteration value by const ref
         /// @return value of current iteration
-        const ElementT ref operator *() const noexcept
+        mpublic const ElementT ref operator *() const noexcept
         {
             return Value();
         }
 
         /// @brief ptr operator to return current iteration value by ref
         /// @return value of current iteration
-        ElementT ref operator *() noexcept
+        mpublic ElementT ref operator *() noexcept
         {
             return Value();
         }
@@ -49,12 +47,12 @@ namespace Atom
         /// @brief compares with other iterator
         /// @param rhs other iterator to compare with
         /// @return 0 if equal, greater than 0 if this is greater else less than 0
-        virtual int Compare(const ThisT ref rhs) const noexcept abstract;
+        mpublic virtual int Compare(const ThisT ref rhs) const noexcept abstract;
 
         /// @brief compares with other iterator
         /// @param rhs other iterator to compare with
         /// @return true if both iterators represent same value
-        virtual bool operator ==(const ThisT ref rhs) const noexcept
+        mpublic virtual bool operator ==(const ThisT ref rhs) const noexcept
         {
             return Compare(rhs) is 0;
         }
@@ -65,12 +63,10 @@ namespace Atom
         /// 
         /// @note this operator is used by c++ range-based for loop
         /// to check the end of iteration
-        virtual bool operator !=(const ThisT ref rhs) const noexcept
+        mpublic virtual bool operator !=(const ThisT ref rhs) const noexcept
         {
             return Compare(rhs) isnot 0;
         }
-
-        // **************************************************************
     };
 
     template <typename TElement>
@@ -78,16 +74,12 @@ namespace Atom
     {
         using ThisT = ForwardIterator<TElement>;
 
-    public:
-
-        // **************************************************************
-
         /// @brief move iterator to point to next element
-        virtual void MoveFwd() const noexcept abstract;
+        mpublic virtual void MoveFwd() const noexcept abstract;
 
         /// @brief move iterator to point to next element
         /// @note calls MoveFwd()
-        const ThisT ref operator ++() const noexcept
+        mpublic const ThisT ref operator ++() const noexcept
         {
             MoveFwd();
             return ptr this;
@@ -95,7 +87,7 @@ namespace Atom
 
         /// @brief move iterator to point to next element
         /// @note calls MoveFwd()
-        ThisT ref operator ++() noexcept
+        mpublic ThisT ref operator ++() noexcept
         {
             MoveFwd();
             return ptr this;
@@ -103,7 +95,7 @@ namespace Atom
 
         /// @brief move iterator to point to next element
         /// @note calls MoveFwd()
-        const ThisT ref operator ++(int) const noexcept
+        mpublic const ThisT ref operator ++(int) const noexcept
         {
             MoveFwd();
             return ptr this;
@@ -111,13 +103,11 @@ namespace Atom
 
         /// @brief move iterator to point to next element
         /// @note calls MoveFwd()
-        ThisT ref operator ++(int) noexcept
+        mpublic ThisT ref operator ++(int) noexcept
         {
             MoveFwd();
             return ptr this;
         }
-
-        // **************************************************************
     };
 
     template <typename TElement>
@@ -125,15 +115,11 @@ namespace Atom
     {
         using ThisT = BidirectionalIterator<TElement>;
 
-    public:
-
-        // **************************************************************
-
-        virtual void MoveBwd() const noexcept abstract;
+        mpublic virtual void MoveBwd() const noexcept abstract;
 
         /// @brief move iterator to point to previous element
         /// @note calls MoveBwd()
-        const ThisT ref operator --() const noexcept
+        mpublic const ThisT ref operator --() const noexcept
         {
             MoveBwd();
             return ptr this;
@@ -141,7 +127,7 @@ namespace Atom
 
         /// @brief move iterator to point to previous element
         /// @note calls MoveBwd()
-        ThisT ref operator --() noexcept
+        mpublic ThisT ref operator --() noexcept
         {
             MoveBwd();
             return ptr this;
@@ -149,7 +135,7 @@ namespace Atom
 
         /// @brief move iterator to point to previous element
         /// @note calls MoveBwd()
-        const ThisT ref operator --(int) const noexcept
+        mpublic const ThisT ref operator --(int) const noexcept
         {
             MoveBwd();
             return ptr this;
@@ -157,13 +143,11 @@ namespace Atom
 
         /// @brief move iterator to point to previous element
         /// @note calls MoveBwd()
-        ThisT ref operator --(int) noexcept
+        mpublic ThisT ref operator --(int) noexcept
         {
             MoveBwd();
             return ptr this;
         }
-
-        // **************************************************************
     };
 
     template <typename TElement>
@@ -171,40 +155,34 @@ namespace Atom
     {
         using ThisT = BidirectionalIterator<TElement>;
 
-    public:
+        mpublic virtual void MoveBwdBy(const sizet steps) const noexcept abstract;
+        mpublic virtual void MoveFwdBy(const sizet steps) const noexcept abstract;
 
-        // **************************************************************
+        mpublic virtual void MoveFwd() const noexcept override { MoveFwdBy(1); }
+        mpublic virtual void MoveBwd() const noexcept override { MoveBwdBy(1); }
 
-        virtual void MoveBwdBy(const sizet steps) const noexcept abstract;
-        virtual void MoveFwdBy(const sizet steps) const noexcept abstract;
-
-        virtual void MoveFwd() const noexcept override { MoveFwdBy(1); }
-        virtual void MoveBwd() const noexcept override { MoveBwdBy(1); }
-
-        ThisT ref operator + (const sizet steps) noexcept
+        mpublic ThisT ref operator + (const sizet steps) noexcept
         {
             MoveFwdBy(steps);
             return ptr this;
         }
 
-        const ThisT ref operator + (const sizet steps) const noexcept
+        mpublic const ThisT ref operator + (const sizet steps) const noexcept
         {
             MoveFwdBy(steps);
             return ptr this;
         }
 
-        ThisT ref operator - (const sizet steps) noexcept
+        mpublic ThisT ref operator - (const sizet steps) noexcept
         {
             MoveBwdBy(steps);
             return ptr this;
         }
 
-        const ThisT ref operator - (const sizet steps) const noexcept
+        mpublic const ThisT ref operator - (const sizet steps) const noexcept
         {
             MoveBwdBy(steps);
             return ptr this;
         }
-
-        // **************************************************************
     };
 }

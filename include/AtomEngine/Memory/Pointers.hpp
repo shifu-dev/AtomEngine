@@ -10,53 +10,47 @@ namespace Atom
     template <typename TType>
     struct Ptr
     {
-    public:
-
         /// @brief default constructor, creates a null pointer
-        Ptr() : Ptr(nullptr) { }
+        mpublic Ptr() : Ptr(nullptr) { }
 
         /// @brief initializes underlying pointer with this @param valuePtr
         /// @param valuePtr pointer to initialize with
-        Ptr(TType ptr valuePtr) : _ptr(valuePtr) { }
+        mpublic Ptr(TType ptr valuePtr) : mPtr(valuePtr) { }
 
         /// @brief checks if pointer is null
         /// @note this does not calls == operator,
         /// instead checks for the memory address
         /// @return returns true if pointer is null
-        bool isNull() const noexcept
+        mpublic bool isNull() const noexcept
         {
-            return isnull(_ptr);
+            return isnull(mPtr);
         }
 
-        TType& operator->() const noexcept
+        mpublic TType& operator->() const noexcept
         {
-            return ptr _ptr;
+            return ptr mPtr;
         }
 
-    protected:
-        TType ptr _ptr;
+        mprotected TType ptr mPtr;
     };
 
     template <typename TType, typename TAllocator = LegacyAllocator>
     struct UniquePtr : public Ptr<TType>
     {
-    public:
         using TThis = UniquePtr<TType, TAllocator>;
         using TBase = Ptr<TType>;
         static const TThis Null;
 
-    protected:
-        const TBase ptr base = (TBase ptr) this;
+        mprotected const TBase ptr base = (TBase ptr) this;
 
-    public:
-        template <typename... Args>
-        static TThis Create(Args... args)
+        mpublic template <typename... Args>
+            static TThis Create(Args... args)
         {
             return Create(LegacyAllocator(), forward(args...));
         }
 
-        template <typename... Args>
-        static TThis Create(TAllocator allocator, Args... args)
+        mpublic template <typename... Args>
+            static TThis Create(TAllocator allocator, Args... args)
         {
             const TType ptr valueptr = nullptr;
             if (allocator.Allocate(valueptr) is false)
@@ -68,15 +62,13 @@ namespace Atom
             return UniquePtr(valueptr, allocator);
         }
 
-    public:
-        UniquePtr() = delete;
-        UniquePtr(const UniquePtr ref) = delete;
-        UniquePtr(UniquePtr rref) = delete;
-        UniquePtr(TType ptr value, const TAllocator ref allocator = TAllocator());
-        dtor UniquePtr();
+        mpublic UniquePtr() = delete;
+        mpublic UniquePtr(const UniquePtr ref) = delete;
+        mpublic UniquePtr(UniquePtr rref) = delete;
+        mpublic UniquePtr(TType ptr value, const TAllocator ref allocator = TAllocator());
+        mpublic dtor UniquePtr();
 
-    protected:
-        TAllocator _allocator;
+        mprotected TAllocator _allocator;
     };
 
     template <typename TType, typename TAllocator>
@@ -91,7 +83,7 @@ namespace Atom
     {
         if (TThis::isNull() is false)
         {
-            _allocator.Deallocate(TThis::_ptr, 1);
+            _allocator.Deallocate(TThis::mPtr, 1);
         }
     };
 }

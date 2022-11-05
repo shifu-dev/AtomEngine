@@ -13,19 +13,17 @@ namespace Atom
 
         static constexpr sizet SIZE = TStackSize;
 
-    public:
-        BufHeapMemPool() noexcept : BaseT(0)
+        mpublic BufHeapMemPool() noexcept : BaseT(0)
         {
             mAddMemory(mStackMemory, SIZE);
         }
 
-        BufHeapMemPool(const sizet heapSize) noexcept : BaseT(0)
+        mpublic BufHeapMemPool(const sizet heapSize) noexcept : BaseT(0)
         {
             mAddMemory(mStackMemory, SIZE);
             mAddMemory(heapSize);
         }
 
-    protected:
-        byte mStackMemory[SIZE];
+        mprotected byte mStackMemory[SIZE];
     };
 }

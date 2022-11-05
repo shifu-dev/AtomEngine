@@ -10,16 +10,13 @@ namespace Atom
         using BaseT = FastLinkedMemPool<TBlockStackSize>;
         using BaseT::mAddMemory;
 
-    public:
-        static constexpr sizet SIZE = TSize;
+        mpublic static constexpr sizet SIZE = TSize;
 
-    public:
-        StackMemPool() noexcept
+        mpublic StackMemPool() noexcept
         {
             mAddMemory(mStackMemory, SIZE);
         }
 
-    protected:
-        byte mStackMemory[SIZE];
+        mprotected byte mStackMemory[SIZE];
     };
 }

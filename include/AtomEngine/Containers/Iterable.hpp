@@ -21,68 +21,65 @@ namespace Atom
         using ElementT = TElement;
         using ForwardIteratorPointerT = ForwardIteratorPointer<ElementT>;
 
-    public:
-
-        template <typename TFunctor>
-        void ForEachT(const TFunctor ref functor) const
+        mpublic template <typename TFunctor>
+            void ForEachT(const TFunctor ref functor) const
         {
             ForEach(Callable<void(const ElementT ref)>::Create(functor));
         }
 
-        template <typename TFunctor>
-        void ForEachT(const TFunctor ref functor)
+        mpublic template <typename TFunctor>
+            void ForEachT(const TFunctor ref functor)
         {
             ForEach(Callable<void(ElementT ref)>::Create(functor));
         }
 
-        virtual void ForEach(const Callable<void(const ElementT ref)> ref callback) const abstract;
-        virtual void ForEach(const Callable<void(ElementT ref)> ref callback) abstract;
+        mpublic virtual void ForEach(const Callable<void(const ElementT ref)> ref callback) const abstract;
+        mpublic virtual void ForEach(const Callable<void(ElementT ref)> ref callback) abstract;
 
-        ForwardIteratorPointerT Begin() noexcept
+        mpublic ForwardIteratorPointerT Begin() noexcept
         {
             return Iterable_begin();
         }
 
-        const ForwardIteratorPointerT Begin() const noexcept
+        mpublic const ForwardIteratorPointerT Begin() const noexcept
         {
             return Iterable_begin();
         }
 
-        ForwardIteratorPointerT End() noexcept
+        mpublic ForwardIteratorPointerT End() noexcept
         {
             return Iterable_end();
         }
 
-        const ForwardIteratorPointerT End() const noexcept
+        mpublic const ForwardIteratorPointerT End() const noexcept
         {
             return Iterable_end();
         }
 
-        ForwardIteratorPointerT begin() noexcept
+        mpublic ForwardIteratorPointerT begin() noexcept
         {
             return Iterable_begin();
         }
 
-        const ForwardIteratorPointerT begin() const noexcept
+        mpublic const ForwardIteratorPointerT begin() const noexcept
         {
             return Iterable_begin();
         }
 
-        ForwardIteratorPointerT end() noexcept
+        mpublic ForwardIteratorPointerT end() noexcept
         {
             return Iterable_end();
         }
 
-        const ForwardIteratorPointerT end() const noexcept
+        mpublic const ForwardIteratorPointerT end() const noexcept
         {
             return Iterable_end();
         }
 
-    protected:
-        virtual ForwardIteratorPointerT Iterable_begin() noexcept abstract;
-        virtual ForwardIteratorPointerT Iterable_end() noexcept abstract;
+        mprotected virtual ForwardIteratorPointerT Iterable_begin() noexcept abstract;
+        mprotected virtual ForwardIteratorPointerT Iterable_end() noexcept abstract;
 
-        virtual const ForwardIteratorPointerT Iterable_begin() const noexcept abstract;
-        virtual const ForwardIteratorPointerT Iterable_end() const noexcept abstract;
+        mprotected virtual const ForwardIteratorPointerT Iterable_begin() const noexcept abstract;
+        mprotected virtual const ForwardIteratorPointerT Iterable_end() const noexcept abstract;
     };
 }

@@ -1,6 +1,10 @@
 #pragma once
 #include "AtomEngine/Core/Core.hpp"
 
+#define mpublic public:
+#define mprotected protected:
+#define mprivate private:
+
 #define nullt std::nullptr_t
 #define null nullptr
 

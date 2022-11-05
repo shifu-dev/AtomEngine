@@ -12,20 +12,18 @@ namespace Atom
     {
         using ThisT = Callable<TResult(TArgs...)>;
 
-    public:
-        template <typename TFunctor>
-        static CallableFunctor<TFunctor, TResult, TArgs...> Create(const TFunctor ref func)
+        mpublic template <typename TFunctor>
+            static CallableFunctor<TFunctor, TResult, TArgs...> Create(const TFunctor ref func)
         {
             return CallableFunctor<TFunctor, TResult, TArgs...>(func);
         }
 
-    public:
-        TResult operator () (TArgs rref ... args) const
+        mpublic TResult operator () (TArgs rref ... args) const
         {
             return Invoke(forward<TArgs>(args)...);
         }
 
-        virtual TResult Invoke(TArgs rref ... args) const abstract;
+        mpublic virtual TResult Invoke(TArgs rref ... args) const abstract;
     };
 
     template <typename... TArgs>
@@ -37,16 +35,13 @@ namespace Atom
     template <typename TFunctor, typename TResult, typename... TArgs>
     class CallableFunctor : public Callable<TResult(TArgs...)>
     {
-    public:
-        CallableFunctor(const TFunctor ref func) : func(func) { }
+        mpublic CallableFunctor(const TFunctor ref func) : func(func) { }
 
-    public:
-        virtual TResult Invoke(TArgs rref ... args) const override
+        mpublic virtual TResult Invoke(TArgs rref ... args) const override
         {
             return func(forward<TArgs>(args)...);
         }
 
-    public:
-        TFunctor func;
+        mpublic TFunctor func;
     };
 }
