@@ -20,7 +20,7 @@ namespace Atom
             ObjectPointer() : mObject(nullptr), mObjectSize(0) { }
 
             template <typename TOtherObject, sizet TOtherStackSize>
-            ObjectPointer(const ObjectPointer<TOtherObject, TAllocator, TOtherStackSize> lref other) noexcept
+            ObjectPointer(const ObjectPointer<TOtherObject, TAllocator, TOtherStackSize> ref other) noexcept
             {
                 StaticAssertSubClass<ObjectT, TOtherObject>();
 
@@ -40,7 +40,7 @@ namespace Atom
             }
 
             template <typename TOtherObject, sizet TOtherStackSize>
-            ThisT lref operator = (const ObjectPointer<TOtherObject, TAllocator, TOtherStackSize> lref other) noexcept
+            ThisT ref operator = (const ObjectPointer<TOtherObject, TAllocator, TOtherStackSize> ref other) noexcept
             {
                 StaticAssertSubClass<ObjectT, TOtherObject>();
 
@@ -51,7 +51,7 @@ namespace Atom
             }
 
             template <typename TOtherObject, sizet TOtherStackSize>
-            ThisT lref operator = (ObjectPointer<TOtherObject, TAllocator, TOtherStackSize> rref other) noexcept
+            ThisT ref operator = (ObjectPointer<TOtherObject, TAllocator, TOtherStackSize> rref other) noexcept
             {
                 StaticAssertSubClass<ObjectT, TOtherObject>();
 
@@ -75,7 +75,7 @@ namespace Atom
             }
 
             template <typename TOtherObject>
-            void SetObject(const TOtherObject lref object) noexcept
+            void SetObject(const TOtherObject ref object) noexcept
             {
                 StaticAssertSubClass<ObjectT, TOtherObject>();
 
@@ -96,12 +96,12 @@ namespace Atom
 
             // *******************************************************************
 
-            ObjectT lref operator -> () noexcept
+            ObjectT ref operator -> () noexcept
             {
                 return ptr mObject;
             }
 
-            const ObjectT lref operator -> () const noexcept
+            const ObjectT ref operator -> () const noexcept
             {
                 return ptr mObject;
             }
@@ -121,7 +121,7 @@ namespace Atom
             }
 
             template <typename TOtherObject, sizet TOtherStackSize>
-            void mSwap(ObjectPointer<TOtherObject, TAllocator, TOtherStackSize> lref other) noexcept
+            void mSwap(ObjectPointer<TOtherObject, TAllocator, TOtherStackSize> ref other) noexcept
             {
                 byte mStackMemTmp[StackSize];
 

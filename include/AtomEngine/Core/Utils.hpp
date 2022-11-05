@@ -1,4 +1,3 @@
-#include <type_traits>
 #include "AtomEngine/Core/LanguageFeatures.hpp"
 
 ////////////////////////////////////////////////////////
@@ -70,28 +69,28 @@ namespace Atom
     }
 
     template <typename TInt, std::enable_if_t<std::is_integral_v<TInt>, int> = 0>
-    constexpr byte lref operator <<= (byte lref value, const TInt shift) noexcept
+    constexpr byte ref operator <<= (byte ref value, const TInt shift) noexcept
     {
         return value = value << shift;
     }
 
     template <typename TInt, std::enable_if_t<std::is_integral_v<TInt>, int> = 0>
-    constexpr byte lref operator >>= (byte lref value, const TInt shift) noexcept
+    constexpr byte ref operator >>= (byte ref value, const TInt shift) noexcept
     {
         return value = value >> shift;
     }
 
-    constexpr byte lref operator |= (byte lref left, const byte right) noexcept
+    constexpr byte ref operator |= (byte ref left, const byte right) noexcept
     {
         return left = left | right;
     }
 
-    constexpr byte lref operator &= (byte lref left, const byte right) noexcept
+    constexpr byte ref operator &= (byte ref left, const byte right) noexcept
     {
         return left = left & right;
     }
 
-    constexpr byte lref operator ^= (byte lref left, const byte right) noexcept
+    constexpr byte ref operator ^= (byte ref left, const byte right) noexcept
     {
         return left = left ^ right;
     }
@@ -125,13 +124,13 @@ namespace Atom
 namespace Atom
 {
     template <typename TType>
-    const TType lref max(const TType lref left, const TType lref right)
+    const TType ref max(const TType ref left, const TType ref right)
     {
         return left >= right ? left : right;
     }
 
     template <typename TType>
-    constexpr TType rref forward(typename std::remove_reference<TType>::type lref arg) noexcept
+    constexpr TType rref forward(typename std::remove_reference<TType>::type ref arg) noexcept
     {
         return scast<TType rref>(arg);
     }
@@ -143,9 +142,9 @@ namespace Atom
     }
 
     template <typename TType>
-    void swap(TType lref lhs, TType lref rhs) noexcept
+    void swap(TType ref lhs, TType ref rhs) noexcept
     {
-        TType lref tmp = lhs;
+        TType ref tmp = lhs;
         lhs = rhs;
         rhs = tmp;
     }

@@ -1,5 +1,4 @@
 #pragma once
-#include <memory>
 #include "AtomEngine/Core.hpp"
 #include "AtomEngine/Memory/Allocator.hpp"
 #include "AtomEngine/Memory/LegacyAllocator.hpp"
@@ -71,9 +70,9 @@ namespace Atom
 
     public:
         UniquePtr() = delete;
-        UniquePtr(const UniquePtr lref) = delete;
+        UniquePtr(const UniquePtr ref) = delete;
         UniquePtr(UniquePtr rref) = delete;
-        UniquePtr(TType ptr value, const TAllocator lref allocator = TAllocator());
+        UniquePtr(TType ptr value, const TAllocator ref allocator = TAllocator());
         dtor UniquePtr();
 
     protected:
@@ -84,7 +83,7 @@ namespace Atom
     const UniquePtr<TType, TAllocator> UniquePtr<TType, TAllocator>::Null = UniquePtr(nullptr, TAllocator());
 
     template <typename TType, typename TAllocator>
-    UniquePtr<TType, TAllocator>::UniquePtr(TType ptr value, const TAllocator lref allocator)
+    UniquePtr<TType, TAllocator>::UniquePtr(TType ptr value, const TAllocator ref allocator)
         : TBase(value), _allocator(allocator) { }
 
     template <typename TType, typename TAllocator>

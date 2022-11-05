@@ -1,5 +1,4 @@
 #pragma once
-#include <cstring>
 #include "AtomEngine/Core.hpp"
 
 namespace Atom

@@ -23,7 +23,7 @@ namespace Atom
         {
             if (mStackReservedFreeBlock isnot nsize)
             {
-                blockptr block = lref mStackReservedBlocks[mStackReservedFreeBlock];
+                blockptr block = ref mStackReservedBlocks[mStackReservedFreeBlock];
 
                 // find next free block before hand
                 mStackReservedBlocksUsage[mStackReservedFreeBlock] = true;

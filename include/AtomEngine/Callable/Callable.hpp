@@ -14,7 +14,7 @@ namespace Atom
 
     public:
         template <typename TFunctor>
-        static CallableFunctor<TFunctor, TResult, TArgs...> Create(const TFunctor lref func)
+        static CallableFunctor<TFunctor, TResult, TArgs...> Create(const TFunctor ref func)
         {
             return CallableFunctor<TFunctor, TResult, TArgs...>(func);
         }
@@ -38,7 +38,7 @@ namespace Atom
     class CallableFunctor : public Callable<TResult(TArgs...)>
     {
     public:
-        CallableFunctor(const TFunctor lref func) : func(func) { }
+        CallableFunctor(const TFunctor ref func) : func(func) { }
 
     public:
         virtual TResult Invoke(TArgs rref ... args) const override

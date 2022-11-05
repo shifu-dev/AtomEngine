@@ -4,7 +4,6 @@
 #include "AtomEngine/Containers/Iterable.hpp"
 #include "AtomEngine/Containers/Collection.hpp"
 #include "AtomEngine/Containers/ArrayIterator.hpp"
-#include <stdexcept>
 
 namespace Atom
 {
@@ -16,26 +15,26 @@ namespace Atom
         using ElementT = TElement;
         using ForwardIteratorT = ForwardIterator<ElementT>;
         using EqualityComparerT = EqualityComparer<ElementT>;
-        using PredicateT = Predicate<const ElementT lref, sizet>;
+        using PredicateT = Predicate<const ElementT ref, sizet>;
         using IteratorT = ArrayIterator<ElementT>;
 
     public:
 
         // *******************************************************************
 
-        virtual const ElementT lref operator[](sizet index) const noexcept final override
+        virtual const ElementT ref operator[](sizet index) const noexcept final override
         {
             return mArray[index];
         }
 
-        virtual ElementT lref operator[](sizet index) noexcept final override
+        virtual ElementT ref operator[](sizet index) noexcept final override
         {
             return mArray[index];
         }
 
         // *******************************************************************
 
-        virtual void ForEach(const Callable<void(const ElementT lref)> lref callback) const final override
+        virtual void ForEach(const Callable<void(const ElementT ref)> ref callback) const final override
         {
             for (sizet i = 0; i < mCount; i++)
             {
@@ -43,7 +42,7 @@ namespace Atom
             }
         }
 
-        virtual void ForEach(const Callable<void(ElementT lref)> lref callback) final override
+        virtual void ForEach(const Callable<void(ElementT ref)> ref callback) final override
         {
             for (sizet i = 0; i < mCount; i++)
             {
@@ -101,14 +100,14 @@ namespace Atom
     public:
         // *******************************************************************
 
-        virtual ElementT lref ElementAt(const sizet index) final override
+        virtual ElementT ref ElementAt(const sizet index) final override
         {
             AssertIndex(index);
 
             return mArray[index];
         }
 
-        virtual const ElementT lref ElementAt(const sizet index) const final override
+        virtual const ElementT ref ElementAt(const sizet index) const final override
         {
             AssertIndex(index);
 
@@ -129,7 +128,7 @@ namespace Atom
 
         // *******************************************************************
 
-        virtual sizet FirstIndexOf(const ElementT lref element, const EqualityComparerT lref comparer) const final override
+        virtual sizet FirstIndexOf(const ElementT ref element, const EqualityComparerT ref comparer) const final override
         {
             for (sizet i = 0; i < mCount; i++)
             {
@@ -142,7 +141,7 @@ namespace Atom
             return NPOS;
         }
 
-        virtual sizet LastIndexOf(const ElementT lref element, const EqualityComparerT lref comparer) const final override
+        virtual sizet LastIndexOf(const ElementT ref element, const EqualityComparerT ref comparer) const final override
         {
             for (sizet i = mCount; i >= 0; i--)
             {
@@ -164,21 +163,21 @@ namespace Atom
 
         // *******************************************************************
 
-        virtual void InsertAt(const sizet index, const ElementT lref element) final override
+        virtual void InsertAt(const sizet index, const ElementT ref element) final override
         {
             AssertIndex(index);
             AssertCapacityFor(1);
 
             for (sizet i = mCount; i >= index; i--)
             {
-                std::swap(mArray[i], mArray[i - 1]);
+                swap(mArray[i], mArray[i - 1]);
             }
 
             mCount++;
             mArray[index] = element;
         }
 
-        virtual void InsertBack(const ElementT lref element) final override
+        virtual void InsertBack(const ElementT ref element) final override
         {
             AssertCapacityFor(1);
             mArray[mCount] = element;
@@ -195,14 +194,14 @@ namespace Atom
 
         // *******************************************************************
 
-        virtual void InsertAt(const sizet index, const ForwardIteratorT lref it, const sizet count) final override
+        virtual void InsertAt(const sizet index, const ForwardIteratorT ref it, const sizet count) final override
         {
             AssertIndex(index);
             AssertCapacityFor(count);
 
             for (sizet i = mCount; i >= index; i--)
             {
-                std::swap(mArray[i], mArray[i + count]);
+                swap(mArray[i], mArray[i + count]);
             }
 
             mCount += count;
@@ -221,7 +220,7 @@ namespace Atom
 
             for (sizet i = index; i < mCount; i++)
             {
-                std::swap(mArray[i], mArray[i + 1]);
+                swap(mArray[i], mArray[i + 1]);
             }
 
             mArray[mCount] = ElementT();
@@ -247,7 +246,7 @@ namespace Atom
 
         // *******************************************************************
 
-        virtual void RemoveIfCallable(const PredicateT lref pred) noexcept final override
+        virtual void RemoveIfCallable(const PredicateT ref pred) noexcept final override
         {
             sizet count = mCount;
             for (sizet i = 0; i < count; i++)

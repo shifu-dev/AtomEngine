@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 #include "catch2/catch_all.hpp"
 #include "AtomEngine/Callable/Callable.hpp"
 
@@ -24,11 +23,11 @@ TEST_CASE("Callable")
 {
     using CallableT = Callable<int(int, char, uint)>;
 
-    const CallableT lref functionCallable = CallableT::Create(lref testFunc);
+    const CallableT ref functionCallable = CallableT::Create(ref testFunc);
 
-    const CallableT lref functorCallable = CallableT::Create(lref testFunc);
+    const CallableT ref functorCallable = CallableT::Create(ref testFunc);
 
-    const CallableT lref lambdaCallable = CallableT::Create(
+    const CallableT ref lambdaCallable = CallableT::Create(
         [](int a, char b, uint c)
         {
             // std::cout << "Hi! I am lambda()" << std::endl;
@@ -36,7 +35,7 @@ TEST_CASE("Callable")
         }
     );
 
-    const CallableT lref captureLambdaCallable = CallableT::Create(
+    const CallableT ref captureLambdaCallable = CallableT::Create(
         [&](int a, char b, uint c)
         {
             // std::cout << "Hi! I am captureLambda()" << std::endl;

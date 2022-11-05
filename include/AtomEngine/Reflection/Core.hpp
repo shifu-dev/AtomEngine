@@ -1,5 +1,4 @@
 #pragma once
-#include <type_traits>
 #include "AtomEngine/Core.hpp"
 
 namespace Atom

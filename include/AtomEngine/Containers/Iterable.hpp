@@ -24,19 +24,19 @@ namespace Atom
     public:
 
         template <typename TFunctor>
-        void ForEachT(const TFunctor lref functor) const
+        void ForEachT(const TFunctor ref functor) const
         {
-            ForEach(Callable<void(const ElementT lref)>::Create(functor));
+            ForEach(Callable<void(const ElementT ref)>::Create(functor));
         }
 
         template <typename TFunctor>
-        void ForEachT(const TFunctor lref functor)
+        void ForEachT(const TFunctor ref functor)
         {
-            ForEach(Callable<void(ElementT lref)>::Create(functor));
+            ForEach(Callable<void(ElementT ref)>::Create(functor));
         }
 
-        virtual void ForEach(const Callable<void(const ElementT lref)> lref callback) const abstract;
-        virtual void ForEach(const Callable<void(ElementT lref)> lref callback) abstract;
+        virtual void ForEach(const Callable<void(const ElementT ref)> ref callback) const abstract;
+        virtual void ForEach(const Callable<void(ElementT ref)> ref callback) abstract;
 
         ForwardIteratorPointerT Begin() noexcept
         {

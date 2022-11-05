@@ -24,22 +24,22 @@ namespace Atom
 
         /// @brief current element value
         /// @return return current element value by const ref
-        virtual const ElementT lref Value() const noexcept abstract;
+        virtual const ElementT ref Value() const noexcept abstract;
 
         /// @brief current element value
         /// @return return current element value by ref
-        virtual ElementT lref Value() noexcept abstract;
+        virtual ElementT ref Value() noexcept abstract;
 
         /// @brief ptr operator to return current iteration value by const ref
         /// @return value of current iteration
-        const ElementT lref operator *() const noexcept
+        const ElementT ref operator *() const noexcept
         {
             return Value();
         }
 
         /// @brief ptr operator to return current iteration value by ref
         /// @return value of current iteration
-        ElementT lref operator *() noexcept
+        ElementT ref operator *() noexcept
         {
             return Value();
         }
@@ -49,12 +49,12 @@ namespace Atom
         /// @brief compares with other iterator
         /// @param rhs other iterator to compare with
         /// @return 0 if equal, greater than 0 if this is greater else less than 0
-        virtual int Compare(const ThisT lref rhs) const noexcept abstract;
+        virtual int Compare(const ThisT ref rhs) const noexcept abstract;
 
         /// @brief compares with other iterator
         /// @param rhs other iterator to compare with
         /// @return true if both iterators represent same value
-        virtual bool operator ==(const ThisT lref rhs) const noexcept
+        virtual bool operator ==(const ThisT ref rhs) const noexcept
         {
             return Compare(rhs) iseq 0;
         }
@@ -65,7 +65,7 @@ namespace Atom
         /// 
         /// @note this operator is used by c++ range-based for loop
         /// to check the end of iteration
-        virtual bool operator !=(const ThisT lref rhs) const noexcept
+        virtual bool operator !=(const ThisT ref rhs) const noexcept
         {
             return Compare(rhs) isnot 0;
         }
@@ -87,7 +87,7 @@ namespace Atom
 
         /// @brief move iterator to point to next element
         /// @note calls MoveFwd()
-        const ThisT lref operator ++() const noexcept
+        const ThisT ref operator ++() const noexcept
         {
             MoveFwd();
             return ptr this;
@@ -95,7 +95,7 @@ namespace Atom
 
         /// @brief move iterator to point to next element
         /// @note calls MoveFwd()
-        ThisT lref operator ++() noexcept
+        ThisT ref operator ++() noexcept
         {
             MoveFwd();
             return ptr this;
@@ -103,7 +103,7 @@ namespace Atom
 
         /// @brief move iterator to point to next element
         /// @note calls MoveFwd()
-        const ThisT lref operator ++(int) const noexcept
+        const ThisT ref operator ++(int) const noexcept
         {
             MoveFwd();
             return ptr this;
@@ -111,7 +111,7 @@ namespace Atom
 
         /// @brief move iterator to point to next element
         /// @note calls MoveFwd()
-        ThisT lref operator ++(int) noexcept
+        ThisT ref operator ++(int) noexcept
         {
             MoveFwd();
             return ptr this;
@@ -133,7 +133,7 @@ namespace Atom
 
         /// @brief move iterator to point to previous element
         /// @note calls MoveBwd()
-        const ThisT lref operator --() const noexcept
+        const ThisT ref operator --() const noexcept
         {
             MoveBwd();
             return ptr this;
@@ -141,7 +141,7 @@ namespace Atom
 
         /// @brief move iterator to point to previous element
         /// @note calls MoveBwd()
-        ThisT lref operator --() noexcept
+        ThisT ref operator --() noexcept
         {
             MoveBwd();
             return ptr this;
@@ -149,7 +149,7 @@ namespace Atom
 
         /// @brief move iterator to point to previous element
         /// @note calls MoveBwd()
-        const ThisT lref operator --(int) const noexcept
+        const ThisT ref operator --(int) const noexcept
         {
             MoveBwd();
             return ptr this;
@@ -157,7 +157,7 @@ namespace Atom
 
         /// @brief move iterator to point to previous element
         /// @note calls MoveBwd()
-        ThisT lref operator --(int) noexcept
+        ThisT ref operator --(int) noexcept
         {
             MoveBwd();
             return ptr this;
@@ -181,25 +181,25 @@ namespace Atom
         virtual void MoveFwd() const noexcept override { MoveFwdBy(1); }
         virtual void MoveBwd() const noexcept override { MoveBwdBy(1); }
 
-        ThisT lref operator + (const sizet steps) noexcept
+        ThisT ref operator + (const sizet steps) noexcept
         {
             MoveFwdBy(steps);
             return ptr this;
         }
 
-        const ThisT lref operator + (const sizet steps) const noexcept
+        const ThisT ref operator + (const sizet steps) const noexcept
         {
             MoveFwdBy(steps);
             return ptr this;
         }
 
-        ThisT lref operator - (const sizet steps) noexcept
+        ThisT ref operator - (const sizet steps) noexcept
         {
             MoveBwdBy(steps);
             return ptr this;
         }
 
-        const ThisT lref operator - (const sizet steps) const noexcept
+        const ThisT ref operator - (const sizet steps) const noexcept
         {
             MoveBwdBy(steps);
             return ptr this;

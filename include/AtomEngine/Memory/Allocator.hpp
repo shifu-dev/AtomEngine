@@ -1,8 +1,6 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
 #include "AtomEngine/Memory/Core.hpp"
-#include <cstdlib>
-#include <cstring>
 
 namespace Atom
 {
@@ -16,10 +14,10 @@ namespace Atom
     {
     public:
         constexpr Allocator() = default;
-        constexpr Allocator(const Allocator lref other) = default;
+        constexpr Allocator(const Allocator ref other) = default;
         constexpr Allocator(Allocator rref other) = default;
-        constexpr Allocator lref operator =(const Allocator lref other) = default;
-        constexpr Allocator lref operator =(Allocator rref other) = default;
+        constexpr Allocator ref operator =(const Allocator ref other) = default;
+        constexpr Allocator ref operator =(Allocator rref other) = default;
 
         /// @brief calls ConstructMultiple with count = 1
         template <typename Type, typename... Args>

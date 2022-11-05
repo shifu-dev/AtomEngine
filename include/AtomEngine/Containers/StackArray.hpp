@@ -1,7 +1,6 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
 #include "AtomEngine/Containers/Array.hpp"
-#include <stdexcept>
 
 namespace Atom
 {

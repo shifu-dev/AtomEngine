@@ -10,7 +10,7 @@
 #define isnotnull(ptr) (isnull(ptr) iseq false)
 
 #define ptr *
-#define lref &
+#define ref &
 #define rref &&
 #define dtor ~
 #define abstract = 0

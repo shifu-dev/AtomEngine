@@ -27,16 +27,16 @@ namespace Atom
         /// @param element element to compare with
         /// @param comparer comparer used to compare elements
         /// @return true if element is present in the collection
-        virtual bool Contains(const ElementT lref element, const EqualityComparerT lref comparer) const noexcept abstract;
+        virtual bool Contains(const ElementT ref element, const EqualityComparerT ref comparer) const noexcept abstract;
 
         /// @brief adds element to collection
         /// @param element element to store
         /// @note position of element is implementation dependent
-        virtual void Insert(const ElementT lref element) abstract;
+        virtual void Insert(const ElementT ref element) abstract;
 
         /// @brief removed element from collection
         /// @param element element to remove
-        virtual void Remove(const ElementT lref element) abstract;
+        virtual void Remove(const ElementT ref element) abstract;
     };
 
     /// @brief base class for collections which can manage memory dynamically

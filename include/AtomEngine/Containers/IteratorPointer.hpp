@@ -24,26 +24,26 @@ namespace Atom
         /// @brief default constructor initializes impl iterator with null
         IteratorPointer() noexcept : BaseT() { }
 
-        IteratorPointer(const ThisT lref other) noexcept :
+        IteratorPointer(const ThisT ref other) noexcept :
             BaseT(other) { }
 
         IteratorPointer(ThisT rref other) noexcept :
             BaseT(move(other)) { }
 
-        ThisT lref operator = (const ThisT lref other) noexcept
+        ThisT ref operator = (const ThisT ref other) noexcept
         {
             BaseT::operator = (other);
             return ptr this;
         }
 
-        ThisT lref operator = (ThisT rref other) noexcept
+        ThisT ref operator = (ThisT rref other) noexcept
         {
             BaseT::operator = (move(other));
             return ptr this;
         }
 
         template <typename TIterator, EnableIf<IsSubClass<ThisT, TIterator> == false> = true>
-        IteratorPointer(const TIterator lref iterator) noexcept
+        IteratorPointer(const TIterator ref iterator) noexcept
         {
             BaseT::SetObject(iterator);
         }
@@ -56,29 +56,29 @@ namespace Atom
 
         // *******************************************************************
 
-        IteratorT lref GetIterator() noexcept
+        IteratorT ref GetIterator() noexcept
         {
             return ptr BaseT::mObject;
         }
 
-        const IteratorT lref GetIterator() const noexcept
+        const IteratorT ref GetIterator() const noexcept
         {
             return ptr BaseT::mObject;
         }
 
         // *******************************************************************
 
-        virtual ElementT lref Value() noexcept final override
+        virtual ElementT ref Value() noexcept final override
         {
             return GetIterator().Value();
         }
 
-        virtual const ElementT lref Value() const noexcept final override
+        virtual const ElementT ref Value() const noexcept final override
         {
             return GetIterator().Value();
         }
 
-        virtual int Compare(const IteratorT lref rhs) const noexcept final override
+        virtual int Compare(const IteratorT ref rhs) const noexcept final override
         {
             return GetIterator().Compare(rhs);
         }
@@ -88,7 +88,7 @@ namespace Atom
         /// @brief compares with other iterator pointer
         /// @param rhs other iterator pointer to compare with
         /// @return true if both impl iterators represent same value
-        virtual bool operator ==(const ThisT lref rhs) const noexcept
+        virtual bool operator ==(const ThisT ref rhs) const noexcept
         {
             return Compare(rhs) iseq 0;
         }
@@ -96,13 +96,13 @@ namespace Atom
         /// @brief compares with other iterator pointer
         /// @param rhs other iterator pointer to compare with
         /// @return false if both iterators represent same value
-        virtual bool operator !=(const ThisT lref rhs) const noexcept
+        virtual bool operator !=(const ThisT ref rhs) const noexcept
         {
             return Compare(rhs) isnot 0;
         }
 
         // this overload is necessary to avoid comparing iterator with iterator pointer 
-        virtual int Compare(const ThisT lref rhs) const noexcept
+        virtual int Compare(const ThisT ref rhs) const noexcept
         {
             return GetIterator().Compare(rhs.GetIterator());
         }
@@ -124,13 +124,13 @@ namespace Atom
         ForwardIteratorPointer() noexcept : BaseT() { }
 
         template <typename TIterator>
-        ForwardIteratorPointer(const TIterator lref iterator) noexcept :
-            BaseT(lref iterator, sizeof(TIterator)) { }
+        ForwardIteratorPointer(const TIterator ref iterator) noexcept :
+            BaseT(ref iterator, sizeof(TIterator)) { }
 
         ForwardIteratorPointer(const IteratorT ptr iterator, const sizet size) noexcept :
             BaseT(iterator, size) { }
 
-        ForwardIteratorPointer(const ThisT lref other) noexcept :
+        ForwardIteratorPointer(const ThisT ref other) noexcept :
             BaseT(other) { }
 
         ForwardIteratorPointer(ThisT rref other) noexcept :
@@ -138,14 +138,14 @@ namespace Atom
 
         // *******************************************************************
 
-        IteratorT lref GetIterator() noexcept
+        IteratorT ref GetIterator() noexcept
         {
-            return rcast<IteratorT lref>(BaseT::GetIterator());
+            return rcast<IteratorT ref>(BaseT::GetIterator());
         }
 
-        const IteratorT lref GetIterator() const noexcept
+        const IteratorT ref GetIterator() const noexcept
         {
-            return rcast<const IteratorT lref>(BaseT::GetIterator());
+            return rcast<const IteratorT ref>(BaseT::GetIterator());
         }
 
         virtual void MoveFwd() const noexcept override
@@ -177,13 +177,13 @@ namespace Atom
         BidirectionalIteratorPointer() noexcept : BaseT() { }
 
         template <typename TIterator>
-        BidirectionalIteratorPointer(const TIterator lref iterator) noexcept :
-            BaseT(lref iterator, sizeof(TIterator)) { }
+        BidirectionalIteratorPointer(const TIterator ref iterator) noexcept :
+            BaseT(ref iterator, sizeof(TIterator)) { }
 
         BidirectionalIteratorPointer(const IteratorT ptr iterator, const sizet size) noexcept :
             BaseT(iterator, size) { }
 
-        BidirectionalIteratorPointer(const ThisT lref other) noexcept :
+        BidirectionalIteratorPointer(const ThisT ref other) noexcept :
             BaseT(other) { }
 
         BidirectionalIteratorPointer(ThisT rref other) noexcept :
@@ -191,14 +191,14 @@ namespace Atom
 
         // *******************************************************************
 
-        IteratorT lref GetIterator() noexcept
+        IteratorT ref GetIterator() noexcept
         {
-            return rcast<IteratorT lref>(BaseT::GetIterator());
+            return rcast<IteratorT ref>(BaseT::GetIterator());
         }
 
-        const IteratorT lref GetIterator() const noexcept
+        const IteratorT ref GetIterator() const noexcept
         {
-            return rcast<const IteratorT lref>(BaseT::GetIterator());
+            return rcast<const IteratorT ref>(BaseT::GetIterator());
         }
 
         virtual void MoveBwd() const noexcept override
@@ -231,13 +231,13 @@ namespace Atom
         RandomAccessIteratorPointer() noexcept : BaseT() { }
 
         template <typename TIterator>
-        RandomAccessIteratorPointer(const TIterator lref iterator) noexcept :
-            BaseT(lref iterator, sizeof(TIterator)) { }
+        RandomAccessIteratorPointer(const TIterator ref iterator) noexcept :
+            BaseT(ref iterator, sizeof(TIterator)) { }
 
         RandomAccessIteratorPointer(const IteratorT ptr iterator, const sizet size) noexcept :
             BaseT(iterator, size) { }
 
-        RandomAccessIteratorPointer(const ThisT lref other) noexcept :
+        RandomAccessIteratorPointer(const ThisT ref other) noexcept :
             BaseT(other) { }
 
         RandomAccessIteratorPointer(ThisT rref other) noexcept :
@@ -245,14 +245,14 @@ namespace Atom
 
         // *******************************************************************
 
-        IteratorT lref GetIterator() noexcept
+        IteratorT ref GetIterator() noexcept
         {
-            return rcast<IteratorT lref>(BaseT::GetIterator());
+            return rcast<IteratorT ref>(BaseT::GetIterator());
         }
 
-        const IteratorT lref GetIterator() const noexcept
+        const IteratorT ref GetIterator() const noexcept
         {
-            return rcast<const IteratorT lref>(BaseT::GetIterator());
+            return rcast<const IteratorT ref>(BaseT::GetIterator());
         }
 
         virtual void MoveFwdBy(const sizet steps) const noexcept override

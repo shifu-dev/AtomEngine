@@ -1,7 +1,6 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
 #include "AtomEngine/Containers/Iterator.hpp"
-#include <stdexcept>
 
 namespace Atom
 {
@@ -21,18 +20,18 @@ namespace Atom
         ArrayIterator(ElementT ptr elementPtr)
             : mPtr(elementPtr) { }
 
-        ArrayIterator(const ThisT lref other) = default;
+        ArrayIterator(const ThisT ref other) = default;
         ArrayIterator(ThisT rref other) = default;
 
-        ThisT lref operator = (const ThisT lref other) = default;
-        ThisT lref operator = (ThisT rref other) = default;
+        ThisT ref operator = (const ThisT ref other) = default;
+        ThisT ref operator = (ThisT rref other) = default;
 
-        virtual ElementT lref Value() noexcept override
+        virtual ElementT ref Value() noexcept override
         {
             return ptr mPtr;
         }
 
-        virtual const ElementT lref Value() const noexcept override
+        virtual const ElementT ref Value() const noexcept override
         {
             return ptr mPtr;
         }
@@ -47,9 +46,9 @@ namespace Atom
             mPtr = mPtr - steps;
         }
 
-        virtual int Compare(const IteratorT lref rhs) const noexcept override
+        virtual int Compare(const IteratorT ref rhs) const noexcept override
         {
-            const ThisT ptr rhsPtr = dcast<const ThisT ptr>(lref rhs);
+            const ThisT ptr rhsPtr = dcast<const ThisT ptr>(ref rhs);
             if (rhsPtr isnot null)
             {
                 return Compare(ptr rhsPtr);
@@ -58,7 +57,7 @@ namespace Atom
             return -1;
         }
 
-        virtual int Compare(const ThisT lref rhs) const noexcept
+        virtual int Compare(const ThisT ref rhs) const noexcept
         {
             return scast<int>(mPtr - rhs.mPtr);
         }
