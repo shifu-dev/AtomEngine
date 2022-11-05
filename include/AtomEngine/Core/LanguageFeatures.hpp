@@ -28,3 +28,4 @@
 #define rcast reinterpret_cast
 
 #define sassert static_assert
+#define sthrow(msg) sassert(false, msg)
