@@ -56,7 +56,7 @@
 #define SS_PLATFORM_ANDROID_API __ANDROID_API__
 #endif
 
-#ifdef __CYGWIN__
+#if defined(__CYGWIN__)
 #define SS_PLATFORM_CYGWIN
 #endif
 
