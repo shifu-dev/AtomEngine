@@ -4,10 +4,10 @@
 #define nullt std::nullptr_t
 #define null nullptr
 
-#define iseq ==
+#define is ==
 #define isnot !=
-#define isnull(ptr) (ptr iseq nullptr)
-#define isnotnull(ptr) (isnull(ptr) iseq false)
+#define isnull(ptr) (ptr is nullptr)
+#define isnotnull(ptr) (isnull(ptr) is false)
 
 #define ptr *
 #define ref &

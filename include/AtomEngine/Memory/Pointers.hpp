@@ -59,7 +59,7 @@ namespace Atom
         static TThis Create(TAllocator allocator, Args... args)
         {
             const TType ptr valueptr = nullptr;
-            if (allocator.Allocate(valueptr) iseq false)
+            if (allocator.Allocate(valueptr) is false)
             {
                 return UniquePtr();
             }
@@ -89,7 +89,7 @@ namespace Atom
     template <typename TType, typename TAllocator>
     UniquePtr<TType, TAllocator>::dtor UniquePtr()
     {
-        if (TThis::isNull() iseq false)
+        if (TThis::isNull() is false)
         {
             _allocator.Deallocate(TThis::_ptr, 1);
         }

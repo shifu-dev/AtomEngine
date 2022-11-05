@@ -132,7 +132,7 @@ namespace Atom
         {
             for (sizet i = 0; i < mCount; i++)
             {
-                if (comparer.Compare(mArray[i], element) iseq true)
+                if (comparer.Compare(mArray[i], element) is true)
                 {
                     return i;
                 }
@@ -145,7 +145,7 @@ namespace Atom
         {
             for (sizet i = mCount; i >= 0; i--)
             {
-                if (comparer.Compare(mArray[i], element) iseq true)
+                if (comparer.Compare(mArray[i], element) is true)
                 {
                     return i;
                 }
@@ -251,7 +251,7 @@ namespace Atom
             sizet count = mCount;
             for (sizet i = 0; i < count; i++)
             {
-                if (pred(mArray[i], sizet(i)) iseq true)
+                if (pred(mArray[i], sizet(i)) is true)
                 {
                     RemoveAt(i);
 

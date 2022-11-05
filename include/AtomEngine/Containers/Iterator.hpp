@@ -56,7 +56,7 @@ namespace Atom
         /// @return true if both iterators represent same value
         virtual bool operator ==(const ThisT ref rhs) const noexcept
         {
-            return Compare(rhs) iseq 0;
+            return Compare(rhs) is 0;
         }
 
         /// @brief compares with other iterator

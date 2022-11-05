@@ -126,7 +126,7 @@ namespace Atom
                 byte mStackMemTmp[StackSize];
 
                 // if our object is stored in stack memory, save if before swapping
-                if (mObject iseq rcast<ObjectT ptr>(mStackMem))
+                if (mObject is rcast<ObjectT ptr>(mStackMem))
                 {
                     memcpy(mStackMemTmp, mStackMem, mObjectSize);
                 }
@@ -135,13 +135,13 @@ namespace Atom
                 swap(mObjectSize, other.mObjectSize);
                 swap(mObject, other.mObject);
 
-                if (mObject iseq rcast<ObjectT ptr>(other.mStackMem))
+                if (mObject is rcast<ObjectT ptr>(other.mStackMem))
                 {
                     mAllocObject(mObjectSize);
                     memcpy(mObject, other.mStackMem, mObjectSize);
                 }
 
-                if (other.mObject iseq rcast<ObjectT ptr>(mStackMem))
+                if (other.mObject is rcast<ObjectT ptr>(mStackMem))
                 {
                     other.mAllocObject(other.mObjectSize);
                     memcpy(other.mObject, mStackMemTmp, other.mObjectSize);

@@ -133,7 +133,7 @@ namespace Atom
     inline memptr LinkedMemPool::AllocateRaw(const sizet size, bool clear)
     {
         blockptr block = mFindBlock(size);
-        if (block iseq nullptr)
+        if (block is nullptr)
         {
             return nullptr;
         }
@@ -153,14 +153,14 @@ namespace Atom
         if (src isnot nullptr)
         {
             blockptr block = mFindBlockFor(src);
-            if (block iseq nullptr)
+            if (block is nullptr)
             {
                 // todo: throw exception
                 // this address is not managed by this pool
                 return;
             }
 
-            if (block->isFree iseq true)
+            if (block->isFree is true)
             {
                 // todo: throw exception
                 // fatal, memory not allocated yet
@@ -244,7 +244,7 @@ namespace Atom
             block->isFree = true;
             block->next = nullptr;
 
-            if (mRootBlock iseq nullptr)
+            if (mRootBlock is nullptr)
             {
                 mRootBlock = block;
                 mEndBlock = block;
@@ -263,8 +263,8 @@ namespace Atom
 
     inline sizet LinkedMemPool::mTryRemoveMemory(memptr mem, const sizet size, const bool tillHit)
     {
-        if (mem iseq nullptr) return 0;
-        if (size iseq 0) return 0;
+        if (mem is nullptr) return 0;
+        if (size is 0) return 0;
 
         blockptr rootBlock = nullptr;   // root block of memory to remove
         blockptr endBlock = nullptr;    // end block of memory to remove
@@ -276,7 +276,7 @@ namespace Atom
         rootBlock = mFindBlockFor(mem);
 
         // this memory is not managed by this pool
-        if (rootBlock iseq nullptr) return 0;
+        if (rootBlock is nullptr) return 0;
 
         // process root for memOffset
         memOffset = (byte ptr)mem - (byte ptr)rootBlock->mem;
@@ -359,7 +359,7 @@ namespace Atom
             if (extraSize > 0)
             {
                 blockptr nextBlock = block->next;
-                if (nextBlock iseq nullptr || nextBlock->isFree isnot true)
+                if (nextBlock is nullptr || nextBlock->isFree isnot true)
                 {
                     nextBlock = mCreateBlock();
                     nextBlock->next = block->next;
@@ -381,10 +381,10 @@ namespace Atom
 
     inline bool LinkedMemPool::mJoinBlock(blockptr block)
     {
-        if (block isnot nullptr and block->isFree iseq true)
+        if (block isnot nullptr and block->isFree is true)
         {
             blockptr nextBlock = block->next;
-            if (nextBlock isnot nullptr and nextBlock->isFree iseq true)
+            if (nextBlock isnot nullptr and nextBlock->isFree is true)
             {
                 block->size += nextBlock->size;
                 block->next = nextBlock->next;
@@ -504,7 +504,7 @@ namespace Atom
     inline void DynamicLinkedMemPool::ReserveMore(const sizet size)
     {
         memptr mem = mAllocateMemory(size);
-        if (mem iseq nullptr)
+        if (mem is nullptr)
         {
             // todo: throw exception
             // out of memory
@@ -522,10 +522,10 @@ namespace Atom
 
     inline DynamicLinkedMemPool::blockptr DynamicLinkedMemPool::mAddMemory(const sizet size, bool isRoot)
     {
-        if (size iseq 0) return nullptr;
+        if (size is 0) return nullptr;
 
         memptr mem = mAllocateMemory(size);
-        if (mem iseq nullptr)
+        if (mem is nullptr)
         {
             return nullptr;
         }
