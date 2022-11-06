@@ -13,7 +13,7 @@ class Functor
     }
 };
 
-int testFunc(int a, char b, uint c)
+static int testFunc(int a, char b, uint c)
 {
     // std::cout << "Hi! I am function()" << std::endl;
     return 1;
