@@ -6,65 +6,60 @@
 
 namespace Atom
 {
+    namespace Core
+    {
+        class IteratorPointerIdentifier { };
+    }
+
     /// @brief pointer to iterator to provide iterface ability to Iterable
     /// @note this class acts like a unique ptr with functionality of iterators
     /// @tparam TElement type of value iterator points to
     template <typename TElement>
     class IteratorPointer : public virtual Iterator<TElement>,
-        protected Core::BoxedObject<LegacyAllocator, 500>
+        protected Core::BoxedObject<LegacyAllocator, 500>,
+        public Core::IteratorPointerIdentifier
     {
         using ThisT = IteratorPointer<TElement>;
-        using BaseT = Core::BoxedObject<LegacyAllocator, 500>;
+        using BoxedObjectT = Core::BoxedObject<LegacyAllocator, 500>;
         using ElementT = TElement;
         using IteratorT = Iterator<ElementT>;
         using AllocatorT = LegacyAllocator;
 
-        /// @brief default constructor initializes impl iterator with null
-        mpublic IteratorPointer() noexcept : BaseT() { }
+        mpublic IteratorPointer() noexcept = default;
+        mpublic IteratorPointer(const ThisT ref other) noexcept = default;
+        mpublic IteratorPointer(ThisT rref other) noexcept = default;
+        mpublic ThisT ref operator = (const ThisT ref other) noexcept = default;
+        mpublic ThisT ref operator = (ThisT rref other) noexcept = default;
 
-        mpublic IteratorPointer(const ThisT ref other) noexcept :
-            BaseT(other) { }
-
-        mpublic IteratorPointer(ThisT rref other) noexcept :
-            BaseT(move(other)) { }
-
-        mpublic ThisT ref operator = (const ThisT ref other) noexcept
-        {
-            BaseT::operator = (other);
-            return ptr this;
-        }
-
-        mpublic ThisT ref operator = (ThisT rref other) noexcept
-        {
-            BaseT::operator = (move(other));
-            return ptr this;
-        }
-
-        mpublic template <typename TIterator, EnableIf<IsSubClass<ThisT, TIterator> == false> = true>
+        mpublic template <typename TIterator,
+            EnableIf<IsSubClass<Core::IteratorPointerIdentifier, TIterator> == false> = true>
             IteratorPointer(const TIterator ref iterator) noexcept
         {
-            BaseT::SetObject(iterator);
+            StaticAssertSubClass<IteratorT, TIterator>();
+            SetObject(iterator);
         }
 
-        mpublic template <typename TIterator, EnableIf<IsSubClass<ThisT, TIterator> == false> = true>
+        mpublic template <typename TIterator,
+            EnableIf<IsSubClass<Core::IteratorPointerIdentifier, TIterator> == false> = true>
             IteratorPointer(TIterator rref iterator) noexcept
         {
-            BaseT::SetObject(move(iterator));
+            StaticAssertSubClass<IteratorT, TIterator>();
+            SetObject(move(iterator));
         }
 
-        // *******************************************************************
+        ////////////////////////////////////////////////////////////////////////////////
 
         mpublic IteratorT ref GetIterator() noexcept
         {
-            return BaseT::GetObject<IteratorT>();
+            return BoxedObjectT::GetObject<IteratorT>();
         }
 
         mpublic const IteratorT ref GetIterator() const noexcept
         {
-            return BaseT::GetObject<IteratorT>();
+            return BoxedObjectT::GetObject<IteratorT>();
         }
 
-        // *******************************************************************
+        ////////////////////////////////////////////////////////////////////////////////
 
         mpublic virtual ElementT ref Value() noexcept final override
         {
@@ -81,7 +76,7 @@ namespace Atom
             return GetIterator().Compare(rhs);
         }
 
-        // *******************************************************************
+        ////////////////////////////////////////////////////////////////////////////////
 
         /// @brief compares with other iterator pointer
         /// @param rhs other iterator pointer to compare with
@@ -106,7 +101,6 @@ namespace Atom
         }
     };
 
-    /// @extends IteratorPointer
     template <typename TElement>
     class ForwardIteratorPointer :
         public virtual IteratorPointer<TElement>,
@@ -116,23 +110,27 @@ namespace Atom
         using BaseT = IteratorPointer<TElement>;
         using IteratorT = ForwardIterator<TElement>;
 
-        /// @brief default constructor initializes impl iterator with null
-        mpublic ForwardIteratorPointer() noexcept : BaseT() { }
+        mpublic ForwardIteratorPointer() noexcept = default;
+        mpublic ForwardIteratorPointer(const ThisT ref other) noexcept = default;
+        mpublic ForwardIteratorPointer(ThisT rref other) noexcept = default;
+        mpublic ThisT ref operator = (const ThisT ref other) noexcept = default;
+        mpublic ThisT ref operator = (ThisT rref other) noexcept = default;
 
         mpublic template <typename TIterator>
             ForwardIteratorPointer(const TIterator ref iterator) noexcept :
-            BaseT(ref iterator, sizeof(TIterator)) { }
+            BaseT(iterator)
+        {
+            StaticAssertSubClass<IteratorT, TIterator>();
+        }
 
-        mpublic ForwardIteratorPointer(const IteratorT ptr iterator, const sizet size) noexcept :
-            BaseT(iterator, size) { }
+        mpublic template <typename TIterator>
+            ForwardIteratorPointer(TIterator rref iterator) noexcept :
+            BaseT(move(iterator))
+        {
+            StaticAssertSubClass<IteratorT, TIterator>();
+        }
 
-        mpublic ForwardIteratorPointer(const ThisT ref other) noexcept :
-            BaseT(other) { }
-
-        mpublic ForwardIteratorPointer(ThisT rref other) noexcept :
-            BaseT(other) { }
-
-        // *******************************************************************
+        ////////////////////////////////////////////////////////////////////////////////
 
         mpublic IteratorT ref GetIterator() noexcept
         {
@@ -149,7 +147,7 @@ namespace Atom
             GetIterator().MoveFwd();
         }
 
-        // *******************************************************************
+        ////////////////////////////////////////////////////////////////////////////////
 
         mpublic operator BaseT () const noexcept
         {
@@ -157,7 +155,6 @@ namespace Atom
         }
     };
 
-    /// @extends ForwardIteratorPointer
     template <typename TElement>
     class BidirectionalIteratorPointer :
         public virtual ForwardIteratorPointer<TElement>,
@@ -167,23 +164,27 @@ namespace Atom
         using BaseT = ForwardIteratorPointer<TElement>;
         using IteratorT = BidirectionalIterator<TElement>;
 
-        /// @brief default constructor initializes impl iterator with null
-        mpublic BidirectionalIteratorPointer() noexcept : BaseT() { }
+        mpublic BidirectionalIteratorPointer() noexcept = default;
+        mpublic BidirectionalIteratorPointer(const ThisT ref other) noexcept = default;
+        mpublic BidirectionalIteratorPointer(ThisT rref other) noexcept = default;
+        mpublic ThisT ref operator = (const ThisT ref other) noexcept = default;
+        mpublic ThisT ref operator = (ThisT rref other) noexcept = default;
 
         mpublic template <typename TIterator>
             BidirectionalIteratorPointer(const TIterator ref iterator) noexcept :
-            BaseT(ref iterator, sizeof(TIterator)) { }
+            BaseT(iterator)
+        {
+            StaticAssertSubClass<IteratorT, TIterator>();
+        }
 
-        mpublic BidirectionalIteratorPointer(const IteratorT ptr iterator, const sizet size) noexcept :
-            BaseT(iterator, size) { }
+        mpublic template <typename TIterator>
+            BidirectionalIteratorPointer(TIterator rref iterator) noexcept :
+            BaseT(move(iterator))
+        {
+            StaticAssertSubClass<IteratorT, TIterator>();
+        }
 
-        mpublic BidirectionalIteratorPointer(const ThisT ref other) noexcept :
-            BaseT(other) { }
-
-        mpublic BidirectionalIteratorPointer(ThisT rref other) noexcept :
-            BaseT(other) { }
-
-        // *******************************************************************
+        ////////////////////////////////////////////////////////////////////////////////
 
         mpublic IteratorT ref GetIterator() noexcept
         {
@@ -200,7 +201,7 @@ namespace Atom
             GetIterator().MoveBwd();
         }
 
-        // *******************************************************************
+        ////////////////////////////////////////////////////////////////////////////////
 
         mpublic operator BaseT () const noexcept
         {
@@ -208,7 +209,6 @@ namespace Atom
         }
     };
 
-    /// @extends BidirectionalIteratorPointer
     template <typename TElement>
     class RandomAccessIteratorPointer :
         public virtual BidirectionalIteratorPointer<TElement>,
@@ -216,26 +216,29 @@ namespace Atom
     {
         using ThisT = RandomAccessIteratorPointer<TElement>;
         using BaseT = BidirectionalIteratorPointer<TElement>;
-        using ElementT = TElement;
-        using IteratorT = RandomAccessIterator<ElementT>;
+        using IteratorT = RandomAccessIterator<TElement>;
 
-        /// @brief default constructor initializes impl iterator with null
-        mpublic RandomAccessIteratorPointer() noexcept : BaseT() { }
+        mpublic RandomAccessIteratorPointer() noexcept = default;
+        mpublic RandomAccessIteratorPointer(const ThisT ref other) noexcept = default;
+        mpublic RandomAccessIteratorPointer(ThisT rref other) noexcept = default;
+        mpublic ThisT ref operator = (const ThisT ref other) noexcept = default;
+        mpublic ThisT ref operator = (ThisT rref other) noexcept = default;
 
         mpublic template <typename TIterator>
             RandomAccessIteratorPointer(const TIterator ref iterator) noexcept :
-            BaseT(ref iterator, sizeof(TIterator)) { }
+            BaseT(iterator)
+        {
+            StaticAssertSubClass<IteratorT, TIterator>();
+        }
 
-        mpublic RandomAccessIteratorPointer(const IteratorT ptr iterator, const sizet size) noexcept :
-            BaseT(iterator, size) { }
+        mpublic template <typename TIterator>
+            RandomAccessIteratorPointer(TIterator rref iterator) noexcept :
+            BaseT(move(iterator))
+        {
+            StaticAssertSubClass<IteratorT, TIterator>();
+        }
 
-        mpublic RandomAccessIteratorPointer(const ThisT ref other) noexcept :
-            BaseT(other) { }
-
-        mpublic RandomAccessIteratorPointer(ThisT rref other) noexcept :
-            BaseT(other) { }
-
-        // *******************************************************************
+        ////////////////////////////////////////////////////////////////////////////////
 
         mpublic IteratorT ref GetIterator() noexcept
         {
@@ -257,7 +260,7 @@ namespace Atom
             GetIterator().MoveBwdBy(steps);
         }
 
-        // *******************************************************************
+        ////////////////////////////////////////////////////////////////////////////////
 
         mpublic operator BaseT () const noexcept
         {
