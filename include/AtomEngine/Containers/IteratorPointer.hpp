@@ -16,11 +16,11 @@ namespace Atom
     /// @tparam TElement type of value iterator points to
     template <typename TElement>
     class IteratorPointer : public virtual Iterator<TElement>,
-        protected Core::BoxedObject<LegacyAllocator, 500>,
+        protected BoxedObject<LegacyAllocator, 500>,
         public Core::IteratorPointerIdentifier
     {
         using ThisT = IteratorPointer<TElement>;
-        using BoxedObjectT = Core::BoxedObject<LegacyAllocator, 500>;
+        using BoxedObjectT = BoxedObject<LegacyAllocator, 500>;
         using ElementT = TElement;
         using IteratorT = Iterator<ElementT>;
         using AllocatorT = LegacyAllocator;

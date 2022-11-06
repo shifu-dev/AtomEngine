@@ -10,11 +10,11 @@ namespace Atom
     template <typename TResult, typename... TArgs>
     class BoxedCallable<TResult(TArgs...)> :
         public Callable<TResult(TArgs...)>,
-        protected Core::BoxedObject<LegacyAllocator, 1000>
+        protected BoxedObject<LegacyAllocator, 1000>
     {
         mprivate using ThisT = BoxedCallable<TResult(TArgs...)>;
         mprotected using CallableT = Callable<TResult(TArgs...)>;
-        mprotected using BoxedObjectT = Core::BoxedObject<LegacyAllocator, 1000>;
+        mprotected using BoxedObjectT = BoxedObject<LegacyAllocator, 1000>;
 
         mpublic BoxedCallable() = default;
         mpublic BoxedCallable(const ThisT ref other) = default;
