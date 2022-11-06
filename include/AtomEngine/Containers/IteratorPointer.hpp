@@ -1,7 +1,7 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
 #include "AtomEngine/Containers/Iterator.hpp"
-#include "AtomEngine/Memory/ObjectPointer.hpp"
+#include "AtomEngine/Memory/BoxedObject.hpp"
 #include "AtomEngine/Memory/LegacyAllocator.hpp"
 
 namespace Atom
@@ -11,10 +11,10 @@ namespace Atom
     /// @tparam TElement type of value iterator points to
     template <typename TElement>
     class IteratorPointer : public virtual Iterator<TElement>,
-        protected Core::ObjectPointer<Iterator<TElement>, LegacyAllocator, 500>
+        protected Core::BoxedObject<LegacyAllocator, 500>
     {
         using ThisT = IteratorPointer<TElement>;
-        using BaseT = Core::ObjectPointer<Iterator<TElement>, LegacyAllocator, 500>;
+        using BaseT = Core::BoxedObject<LegacyAllocator, 500>;
         using ElementT = TElement;
         using IteratorT = Iterator<ElementT>;
         using AllocatorT = LegacyAllocator;
@@ -56,12 +56,12 @@ namespace Atom
 
         mpublic IteratorT ref GetIterator() noexcept
         {
-            return ptr BaseT::mObject;
+            return BaseT::GetObject<IteratorT>();
         }
 
         mpublic const IteratorT ref GetIterator() const noexcept
         {
-            return ptr BaseT::mObject;
+            return BaseT::GetObject<IteratorT>();
         }
 
         // *******************************************************************

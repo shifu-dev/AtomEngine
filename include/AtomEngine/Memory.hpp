@@ -1,6 +1,6 @@
 #pragma once
 #include "AtomEngine/Memory/Core.hpp"
-#include "AtomEngine/Memory/ObjectPointer.hpp"
+#include "AtomEngine/Memory/BoxedObject.hpp"
 #include "AtomEngine/Memory/Allocator.hpp"
 #include "AtomEngine/Memory/MemPool.hpp"
 #include "AtomEngine/Memory/LinkedMemPool.hpp"
