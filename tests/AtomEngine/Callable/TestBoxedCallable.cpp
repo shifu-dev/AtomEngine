@@ -17,7 +17,7 @@ static int testFunc(int a, char b, uint c)
     return 0;
 }
 
-TEST_CASE("BoxedCallable")
+TEST_CASE("BoxedCallable", "[Implementation]")
 {
     using CallableT = Callable<int(int, char, uint)>;
     using BoxedCallableT = BoxedCallable<int(int, char, uint)>;
@@ -35,6 +35,11 @@ TEST_CASE("BoxedCallable")
         {
             return 3;
         });
+
+    BoxedCallableT functionCopy = function;
+
+    BoxedCallableT functionCopyByOperator;
+    functionCopyByOperator = function;
 
     CHECK(function(0, 'a', 0) == 0);
     CHECK(functor(0, 'a', 0) == 1);

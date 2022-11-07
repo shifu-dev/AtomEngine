@@ -38,6 +38,24 @@ namespace Atom
             StaticAssertSubClass<CallableT, TCallable>();
         }
 
+        mpublic template <typename TCallable>
+            ThisT ref operator = (const TCallable ref callable)
+        {
+            StaticAssertSubClass<CallableT, TCallable>();
+            BoxedObjectT::operator = (callable);
+
+            return ptr this;
+        }
+
+        mpublic template <typename TCallable>
+            ThisT ref operator = (TCallable rref callable)
+        {
+            StaticAssertSubClass<CallableT, TCallable>();
+            BoxedObjectT::operator = (move(callable));
+
+            return ptr this;
+        }
+
         ////////////////////////////////////////////////////////////////////////////////
 
         mpublic CallableT ref GetCallable() noexcept

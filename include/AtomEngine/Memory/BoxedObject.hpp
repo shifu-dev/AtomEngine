@@ -96,6 +96,18 @@ namespace Atom
             SetObject(move(object));
         }
 
+        mpublic template <typename TObject, EnableIf<not IsBoxedObject<TObject>> = false>
+            ThisT ref operator = (const TObject ref object) noexcept
+        {
+            SetObject(object);
+        }
+
+        mpublic template <typename TObject, EnableIf<not IsBoxedObject<TObject>> = false>
+            ThisT ref operator = (TObject rref object) noexcept
+        {
+            SetObject(move(object));
+        }
+
         mpublic dtor BoxedObject()
         {
             if (mObject isnot null)

@@ -55,6 +55,24 @@ namespace Atom
             StaticAssertSubClass<IteratorT, TIterator>();
         }
 
+        mpublic template <typename TIterator>
+            ThisT ref operator = (const TIterator ref iterator) noexcept
+        {
+            StaticAssertSubClass<IteratorT, TIterator>();
+            BoxedObjectT::operator = (iterator);
+
+            return ptr this;
+        }
+
+        mpublic template <typename TIterator>
+            ThisT ref operator = (TIterator rref iterator) noexcept
+        {
+            StaticAssertSubClass<IteratorT, TIterator>();
+            BoxedObjectT::operator = (move(iterator));
+
+            return ptr this;
+        }
+
         ////////////////////////////////////////////////////////////////////////////////
 
         mpublic IteratorT ref GetIterator() noexcept
