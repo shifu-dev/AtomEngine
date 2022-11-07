@@ -5,76 +5,43 @@
 
 namespace Atom
 {
+    namespace Core
+    {
+        class BoxedObjectIdentifier { };
+    }
+
     template <typename TAllocator, sizet TStackSize>
-    class BoxedObject
+    class BoxedObject : public Core::BoxedObjectIdentifier
     {
         mprivate using ThisT = BoxedObject<TAllocator, TStackSize>;
+        mprivate using IdentifierT = Core::BoxedObjectIdentifier;
         mprivate using AllocatorT = TAllocator;
         mprivate constexpr static sizet StackSize = TStackSize;
 
+        mprivate template <typename T>
+            constexpr static bool IsBoxedObject = IsSubClass<IdentifierT, T>;
+
         ////////////////////////////////////////////////////////////////////////////////
 
-        mprotected struct Object
+        mpublic BoxedObject() : ThisT(null) { }
+
+        mpublic BoxedObject(nullt value) :
+            mObject(null), mObjectSize(0), mObjectDestructor(null) { }
+
+        mpublic BoxedObject(const ThisT ref other) noexcept
         {
-            mpublic memptr object;
-            mpublic void (ptr destructor) (const memptr object);
-            mpublic sizet size;
-
-            Object() : Object(null) { }
-
-            Object(nullt value)
-            {
-                object = null;
-                destructor = null;
-                size = 0;
-            }
-
-            mpublic template <typename TObject>
-                Object(memptr mem, const TObject ref otherObject)
-            {
-                mSetObject<TObject>(mem);
-                new (object) TObject(otherObject);
-            }
-
-            mpublic template <typename TObject>
-                Object(memptr mem, TObject rref otherObject)
-            {
-                mSetObject<TObject>(mem);
-                new (object) TObject(move(otherObject));
-            }
-
-            mpublic dtor Object()
-            {
-                if (destructor isnot null)
-                {
-                    destructor(object);
-                }
-            }
-
-            mprivate template <typename TObject>
-                void mSetObject(memptr mem)
-            {
-                object = mem;
-                size = sizeof(TObject);
-                destructor = [](const memptr object)
-                {
-                    (ptr rcast<const TObject ptr>(object)).
-                        TObject::dtor TObject();
-                };
-            }
-        };
-
-        ////////////////////////////////////////////////////////////////////////////////
-
-        mpublic BoxedObject() : mObject(nullptr) { }
+            mCopy(other);
+        }
 
         mpublic template <sizet TOtherStackSize>
             BoxedObject(const BoxedObject<TAllocator, TOtherStackSize> ref other) noexcept
         {
-            if (other.mObject isnot nullptr)
-            {
-                mObject = Object(mAllocMem(other.mObject.size), other);
-            }
+            mCopy(other);
+        }
+
+        mpublic BoxedObject(ThisT rref other) noexcept
+        {
+            mSwap(other);
         }
 
         mpublic template <sizet TOtherStackSize>
@@ -83,10 +50,26 @@ namespace Atom
             mSwap(other);
         }
 
+        mpublic ThisT ref operator = (const ThisT ref other) noexcept
+        {
+            ThisT tmp(other);
+            mSwap(tmp);
+
+            return ptr this;
+        }
+
         mpublic template <sizet TOtherStackSize>
             ThisT ref operator = (const BoxedObject<TAllocator, TOtherStackSize> ref other) noexcept
         {
             ThisT tmp(other);
+            mSwap(tmp);
+
+            return ptr this;
+        }
+
+        mpublic ThisT ref operator = (ThisT rref other) noexcept
+        {
+            ThisT tmp(move(other));
             mSwap(tmp);
 
             return ptr this;
@@ -101,15 +84,27 @@ namespace Atom
             return ptr this;
         }
 
+        mpublic template <typename TObject, EnableIf<!IsBoxedObject<TObject>> = false>
+            BoxedObject(const TObject ref object) noexcept
+        {
+            SetObject(object);
+        }
+
+        mpublic template <typename TObject, EnableIf<!IsBoxedObject<TObject>> = false>
+            BoxedObject(TObject rref object) noexcept
+        {
+            SetObject(move(object));
+        }
+
         mpublic dtor BoxedObject()
         {
-            if (mObject.object isnot nullptr)
+            if (mObject isnot null)
             {
-                mObject.dtor Object();
+                mObjectDestructor(mObject);
 
-                if (mObject.object isnot mStackMem)
+                if (mObject isnot mStackMem)
                 {
-                    mAllocator.DeallocateRaw(mObject.object, mObject.size);
+                    mAllocator.DeallocateRaw(mObject, mObjectSize);
                 }
             }
         }
@@ -117,62 +112,48 @@ namespace Atom
         ////////////////////////////////////////////////////////////////////////////////
 
         mpublic template <typename TObject>
-            static ThisT Box(const TObject ref object) noexcept
-        {
-            ThisT boxedObject;
-            boxedObject.SetObject(object);
-            return boxedObject;
-        }
-
-        mpublic template <typename TObject>
-            static ThisT Box(TObject rref object) noexcept
-        {
-            ThisT boxedObject;
-            boxedObject.SetObject(move(object));
-            return boxedObject;
-        }
-
-        mpublic template <typename TObject>
             void SetObject(const TObject ref object) noexcept
         {
-            mObject = Object(mAllocMem(sizeof(TObject)), object);
+            mSetObject(ref object);
+
+            new (mObject) TObject(object);
         }
 
         mpublic template <typename TObject>
             void SetObject(TObject rref object) noexcept
         {
-            mObject = Object(mAllocMem(sizeof(TObject)), move(object));
-        }
+            mSetObject(ref object);
 
-        ////////////////////////////////////////////////////////////////////////////////
+            new (mObject) TObject(move(object));
+        }
 
         mpublic template <typename TObject>
             const TObject ref GetObject() const noexcept
         {
-            return ptr scast<const TObject ptr>(mObject.object);
+            return ptr rcast<const TObject ptr>(mObject);
         }
 
         mpublic template <typename TObject>
             TObject ref GetObject() noexcept
         {
-            return ptr scast<TObject ptr>(mObject.object);
+            return ptr rcast<TObject ptr>(mObject);
         }
 
-        mpublic const void ptr GetRawObject() const noexcept
+        mpublic const memptr GetRawObject() const noexcept
         {
-            return mObject.object;
+            return mObject;
         }
 
-        mpublic void ptr GetRawObject() noexcept
+        mpublic memptr GetRawObject() noexcept
         {
-            return mObject.object;
+            return mObject;
         }
 
         ////////////////////////////////////////////////////////////////////////////////
 
-        mprivate memptr mAllocMem(const sizet size) noexcept
+        mprotected memptr mAllocMem(const sizet size) noexcept
         {
-            memptr mem = nullptr;
+            memptr mem = null;
 
             if (size isnot 0)
             {
@@ -189,30 +170,71 @@ namespace Atom
             return mem;
         }
 
+        mprotected void mDestroyObject() noexcept
+        {
+            if (mObject isnot null)
+            {
+                mObjectDestructor(mObject);
+
+                if (mObject isnot mStackMem)
+                {
+                    mAllocator.DeallocateRaw(mObject, mObjectSize);
+                }
+            }
+
+            mObjectSize = 0;
+            mObject = null;
+            mObjectDestructor = null;
+        }
+
+        mprotected template <typename TObject>
+            void mSetObject(TObject ptr object) noexcept
+        {
+            mDestroyObject();
+
+            mObjectSize = sizeof(TObject);
+            mObject = mAllocMem(mObjectSize);
+            mObjectDestructor = null;
+        }
+
+        mprotected template <sizet TOtherStackSize>
+            void mCopy(const BoxedObject<TAllocator, TOtherStackSize> ref other) noexcept
+        {
+            mDestroyObject();
+
+            mObject = mAllocMem(other.mObjectSize);
+            mObjectSize = other.mObjectSize;
+            mObjectDestructor = other.mObjectDestructor;
+
+            memcpy(mObject, other.mObject, mObjectSize);
+        }
+
         mprotected template <sizet TOtherStackSize>
             void mSwap(BoxedObject<TAllocator, TOtherStackSize> ref other) noexcept
         {
             byte mStackMemTmp[StackSize];
 
             // if our object is stored in stack memory, save if before swapping
-            if (mObject.object is mStackMem)
+            if (mObject is mStackMem)
             {
-                memcpy(mStackMemTmp, mStackMem, mObject.size);
+                memcpy(mStackMemTmp, mStackMem, mObjectSize);
             }
 
             swap(mAllocator, other.mAllocator);
             swap(mObject, other.mObject);
+            swap(mObjectSize, other.mObjectSize);
+            swap(mObjectDestructor, other.mObjectDestructor);
 
-            if (mObject.object is other.mStackMem)
+            if (mObject is other.mStackMem)
             {
-                mAllocMem(mObject.size);
-                memcpy(mObject.object, other.mStackMem, mObject.size);
+                mObject = mAllocMem(mObjectSize);
+                memcpy(mObject, other.mStackMem, mObjectSize);
             }
 
-            if (other.mObject.object is mStackMem)
+            if (other.mObject is mStackMem)
             {
-                other.mAllocMem(other.mObject.size);
-                memcpy(other.mObject.object, mStackMemTmp, other.mObject.size);
+                other.mObject = other.mAllocMem(other.mObjectSize);
+                memcpy(other.mObject, mStackMemTmp, other.mObjectSize);
             }
         }
 
@@ -220,6 +242,9 @@ namespace Atom
 
         mprotected byte mStackMem[StackSize];
         mprotected AllocatorT mAllocator;
-        mprotected Object mObject;
+
+        mprotected memptr mObject;
+        mprotected void (ptr mObjectDestructor) (const memptr object);
+        mprotected sizet mObjectSize;
     };
 }

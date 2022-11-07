@@ -6,18 +6,12 @@
 
 namespace Atom
 {
-    namespace Core
-    {
-        class IteratorPointerIdentifier { };
-    }
-
     /// @brief pointer to iterator to provide iterface ability to Iterable
     /// @note this class acts like a unique ptr with functionality of iterators
     /// @tparam TElement type of value iterator points to
     template <typename TElement>
     class IteratorPointer : public virtual Iterator<TElement>,
-        protected BoxedObject<LegacyAllocator, 500>,
-        public Core::IteratorPointerIdentifier
+        public BoxedObject<LegacyAllocator, 500>
     {
         using ThisT = IteratorPointer<TElement>;
         using BoxedObjectT = BoxedObject<LegacyAllocator, 500>;
@@ -25,26 +19,29 @@ namespace Atom
         using IteratorT = Iterator<ElementT>;
         using AllocatorT = LegacyAllocator;
 
-        mpublic IteratorPointer() noexcept = default;
-        mpublic IteratorPointer(const ThisT ref other) noexcept = default;
-        mpublic IteratorPointer(ThisT rref other) noexcept = default;
+        mpublic IteratorPointer() { }
+
+        mpublic IteratorPointer(const ThisT ref other) noexcept :
+            BoxedObjectT(other) { }
+
+        mpublic IteratorPointer(ThisT rref other) noexcept :
+            BoxedObjectT(move(other)) { }
+
         mpublic ThisT ref operator = (const ThisT ref other) noexcept = default;
         mpublic ThisT ref operator = (ThisT rref other) noexcept = default;
 
-        mpublic template <typename TIterator,
-            EnableIf<IsSubClass<Core::IteratorPointerIdentifier, TIterator> == false> = true>
-            IteratorPointer(const TIterator ref iterator) noexcept
+        mpublic template <typename TIterator>
+            IteratorPointer(const TIterator ref iterator) noexcept :
+            BoxedObjectT(iterator)
         {
             StaticAssertSubClass<IteratorT, TIterator>();
-            SetObject(iterator);
         }
 
-        mpublic template <typename TIterator,
-            EnableIf<IsSubClass<Core::IteratorPointerIdentifier, TIterator> == false> = true>
-            IteratorPointer(TIterator rref iterator) noexcept
+        mpublic template <typename TIterator>
+            IteratorPointer(TIterator rref iterator) noexcept :
+            BoxedObjectT(move(iterator))
         {
             StaticAssertSubClass<IteratorT, TIterator>();
-            SetObject(move(iterator));
         }
 
         ////////////////////////////////////////////////////////////////////////////////
