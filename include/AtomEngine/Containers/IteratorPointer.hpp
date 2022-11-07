@@ -19,7 +19,9 @@ namespace Atom
         using IteratorT = Iterator<ElementT>;
         using AllocatorT = LegacyAllocator;
 
-        mpublic IteratorPointer() { }
+        ////////////////////////////////////////////////////////////////////////////////
+
+        mpublic IteratorPointer() : BoxedObjectT(null) { }
 
         mpublic IteratorPointer(const ThisT ref other) noexcept :
             BoxedObjectT(other) { }
@@ -27,8 +29,17 @@ namespace Atom
         mpublic IteratorPointer(ThisT rref other) noexcept :
             BoxedObjectT(move(other)) { }
 
-        mpublic ThisT ref operator = (const ThisT ref other) noexcept = default;
-        mpublic ThisT ref operator = (ThisT rref other) noexcept = default;
+        mpublic ThisT ref operator = (const ThisT ref other) noexcept
+        {
+            BoxedObjectT::operator = (other);
+            return ptr this;
+        }
+
+        mpublic ThisT ref operator = (ThisT rref other) noexcept
+        {
+            BoxedObjectT::operator = (move(other));
+            return ptr this;
+        }
 
         mpublic template <typename TIterator>
             IteratorPointer(const TIterator ref iterator) noexcept :
@@ -55,8 +66,6 @@ namespace Atom
         {
             return BoxedObjectT::GetObject<IteratorT>();
         }
-
-        ////////////////////////////////////////////////////////////////////////////////
 
         mpublic virtual ElementT ref Value() noexcept final override
         {
@@ -107,11 +116,27 @@ namespace Atom
         using BaseT = IteratorPointer<TElement>;
         using IteratorT = ForwardIterator<TElement>;
 
-        mpublic ForwardIteratorPointer() noexcept = default;
-        mpublic ForwardIteratorPointer(const ThisT ref other) noexcept = default;
-        mpublic ForwardIteratorPointer(ThisT rref other) noexcept = default;
-        mpublic ThisT ref operator = (const ThisT ref other) noexcept = default;
-        mpublic ThisT ref operator = (ThisT rref other) noexcept = default;
+        ////////////////////////////////////////////////////////////////////////////////
+
+        mpublic ForwardIteratorPointer() : BaseT(null) { }
+
+        mpublic ForwardIteratorPointer(const ThisT ref other) noexcept :
+            BaseT(other) { }
+
+        mpublic ForwardIteratorPointer(ThisT rref other) noexcept :
+            BaseT(move(other)) { }
+
+        mpublic ThisT ref operator = (const ThisT ref other) noexcept
+        {
+            BaseT::operator = (other);
+            return ptr this;
+        }
+
+        mpublic ThisT ref operator = (ThisT rref other) noexcept
+        {
+            BaseT::operator = (move(other));
+            return ptr this;
+        }
 
         mpublic template <typename TIterator>
             ForwardIteratorPointer(const TIterator ref iterator) noexcept :
@@ -161,11 +186,27 @@ namespace Atom
         using BaseT = ForwardIteratorPointer<TElement>;
         using IteratorT = BidirectionalIterator<TElement>;
 
-        mpublic BidirectionalIteratorPointer() noexcept = default;
-        mpublic BidirectionalIteratorPointer(const ThisT ref other) noexcept = default;
-        mpublic BidirectionalIteratorPointer(ThisT rref other) noexcept = default;
-        mpublic ThisT ref operator = (const ThisT ref other) noexcept = default;
-        mpublic ThisT ref operator = (ThisT rref other) noexcept = default;
+        ////////////////////////////////////////////////////////////////////////////////
+
+        mpublic BidirectionalIteratorPointer() : BaseT(null) { }
+
+        mpublic BidirectionalIteratorPointer(const ThisT ref other) noexcept :
+            BaseT(other) { }
+
+        mpublic BidirectionalIteratorPointer(ThisT rref other) noexcept :
+            BaseT(move(other)) { }
+
+        mpublic ThisT ref operator = (const ThisT ref other) noexcept
+        {
+            BaseT::operator = (other);
+            return ptr this;
+        }
+
+        mpublic ThisT ref operator = (ThisT rref other) noexcept
+        {
+            BaseT::operator = (move(other));
+            return ptr this;
+        }
 
         mpublic template <typename TIterator>
             BidirectionalIteratorPointer(const TIterator ref iterator) noexcept :
@@ -215,11 +256,27 @@ namespace Atom
         using BaseT = BidirectionalIteratorPointer<TElement>;
         using IteratorT = RandomAccessIterator<TElement>;
 
-        mpublic RandomAccessIteratorPointer() noexcept = default;
-        mpublic RandomAccessIteratorPointer(const ThisT ref other) noexcept = default;
-        mpublic RandomAccessIteratorPointer(ThisT rref other) noexcept = default;
-        mpublic ThisT ref operator = (const ThisT ref other) noexcept = default;
-        mpublic ThisT ref operator = (ThisT rref other) noexcept = default;
+        ////////////////////////////////////////////////////////////////////////////////
+
+        mpublic RandomAccessIteratorPointer() : BaseT(null) { }
+
+        mpublic RandomAccessIteratorPointer(const ThisT ref other) noexcept :
+            BaseT(other) { }
+
+        mpublic RandomAccessIteratorPointer(ThisT rref other) noexcept :
+            BaseT(move(other)) { }
+
+        mpublic ThisT ref operator = (const ThisT ref other) noexcept
+        {
+            BaseT::operator = (other);
+            return ptr this;
+        }
+
+        mpublic ThisT ref operator = (ThisT rref other) noexcept
+        {
+            BaseT::operator = (move(other));
+            return ptr this;
+        }
 
         mpublic template <typename TIterator>
             RandomAccessIteratorPointer(const TIterator ref iterator) noexcept :
