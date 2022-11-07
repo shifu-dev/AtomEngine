@@ -4,9 +4,6 @@
 namespace Atom
 {
     template <typename TElement>
-    class ContainerDefination;
-
-    template <typename TElement>
     class InputIterator {};
 
     template <typename TElement>

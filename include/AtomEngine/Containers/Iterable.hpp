@@ -6,9 +6,6 @@
 
 namespace Atom
 {
-    template <typename TElement>
-    class ContainerDefination;
-
     /// @brief base abstract class to implement basic iterable functionality
     /// just by implementing from this class, 
     /// extended class will be able to be used in range based for loop
