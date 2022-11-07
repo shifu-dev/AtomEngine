@@ -84,13 +84,13 @@ namespace Atom
             return ptr this;
         }
 
-        mpublic template <typename TObject, EnableIf<!IsBoxedObject<TObject>> = false>
+        mpublic template <typename TObject, EnableIf<not IsBoxedObject<TObject>> = false>
             BoxedObject(const TObject ref object) noexcept
         {
             SetObject(object);
         }
 
-        mpublic template <typename TObject, EnableIf<!IsBoxedObject<TObject>> = false>
+        mpublic template <typename TObject, EnableIf<not IsBoxedObject<TObject>> = false>
             BoxedObject(TObject rref object) noexcept
         {
             SetObject(move(object));

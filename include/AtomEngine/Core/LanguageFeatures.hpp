@@ -8,6 +8,7 @@
 #define nullt std::nullptr_t
 #define null nullptr
 
+#define not !
 #define is ==
 #define isnot !=
 #define isnull(ptr) (ptr is nullptr)
