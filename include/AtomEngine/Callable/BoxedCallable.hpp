@@ -10,11 +10,13 @@ namespace Atom
     template <typename TResult, typename... TArgs>
     class BoxedCallable<TResult(TArgs...)> :
         public Callable<TResult(TArgs...)>,
-        protected BoxedObject<LegacyAllocator, 1000>
+        public BoxedObject<LegacyAllocator, 50>
     {
         mprivate using ThisT = BoxedCallable<TResult(TArgs...)>;
         mprotected using CallableT = Callable<TResult(TArgs...)>;
-        mprotected using BoxedObjectT = BoxedObject<LegacyAllocator, 1000>;
+        mprotected using BoxedObjectT = BoxedObject<LegacyAllocator, 50>;
+
+        ////////////////////////////////////////////////////////////////////////////////
 
         mpublic BoxedCallable() = default;
         mpublic BoxedCallable(const ThisT ref other) = default;
@@ -23,18 +25,20 @@ namespace Atom
         mpublic ThisT ref operator = (ThisT rref other) = default;
 
         mpublic template <typename TCallable>
-            BoxedCallable(const TCallable ref callable)
+            BoxedCallable(const TCallable ref callable) :
+            BoxedObjectT(callable)
         {
             StaticAssertSubClass<CallableT, TCallable>();
-            BoxedObjectT::SetObject(callable);
         }
 
         mpublic template <typename TCallable>
-            BoxedCallable(TCallable rref callable)
+            BoxedCallable(TCallable rref callable) :
+            BoxedObjectT(move(callable))
         {
             StaticAssertSubClass<CallableT, TCallable>();
-            BoxedObjectT::SetObject(move(callable));
         }
+
+        ////////////////////////////////////////////////////////////////////////////////
 
         mpublic CallableT ref GetCallable() noexcept
         {

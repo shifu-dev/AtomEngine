@@ -114,7 +114,7 @@ namespace Atom
         mpublic template <typename TObject>
             void SetObject(const TObject ref object) noexcept
         {
-            mSetObject(ref object);
+            mSetObject(object);
 
             new (mObject) TObject(object);
         }
@@ -122,21 +122,21 @@ namespace Atom
         mpublic template <typename TObject>
             void SetObject(TObject rref object) noexcept
         {
-            mSetObject(ref object);
+            mSetObject(object);
 
             new (mObject) TObject(move(object));
-        }
-
-        mpublic template <typename TObject>
-            const TObject ref GetObject() const noexcept
-        {
-            return ptr rcast<const TObject ptr>(mObject);
         }
 
         mpublic template <typename TObject>
             TObject ref GetObject() noexcept
         {
             return ptr rcast<TObject ptr>(mObject);
+        }
+
+        mpublic template <typename TObject>
+            const TObject ref GetObject() const noexcept
+        {
+            return ptr rcast<const TObject ptr>(mObject);
         }
 
         mpublic const memptr GetRawObject() const noexcept
@@ -188,20 +188,28 @@ namespace Atom
         }
 
         mprotected template <typename TObject>
-            void mSetObject(TObject ptr object) noexcept
+            void mSetObject(const TObject ref object) noexcept
         {
-            mDestroyObject();
+            if (mObject isnot null)
+            {
+                mObjectDestructor(mObject);
+
+                if (mObject isnot mStackMem)
+                {
+                    mAllocator.DeallocateRaw(mObject, mObjectSize);
+                }
+            }
 
             mObjectSize = sizeof(TObject);
             mObject = mAllocMem(mObjectSize);
             mObjectDestructor = null;
         }
 
+        // does not destroys previous state,
+        // assumes to be called from constructor
         mprotected template <sizet TOtherStackSize>
             void mCopy(const BoxedObject<TAllocator, TOtherStackSize> ref other) noexcept
         {
-            mDestroyObject();
-
             mObject = mAllocMem(other.mObjectSize);
             mObjectSize = other.mObjectSize;
             mObjectDestructor = other.mObjectDestructor;
@@ -243,7 +251,7 @@ namespace Atom
         mprotected byte mStackMem[StackSize];
         mprotected AllocatorT mAllocator;
 
-        mprotected memptr mObject;
+        mprotected memptr mObject = null;
         mprotected void (ptr mObjectDestructor) (const memptr object);
         mprotected sizet mObjectSize;
     };
