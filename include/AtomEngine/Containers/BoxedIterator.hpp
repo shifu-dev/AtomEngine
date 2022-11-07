@@ -10,10 +10,10 @@ namespace Atom
     /// @note this class acts like a unique ptr with functionality of iterators
     /// @tparam TElement type of value iterator points to
     template <typename TElement>
-    class IteratorPointer : public virtual Iterator<TElement>,
+    class BoxedIterator : public virtual Iterator<TElement>,
         public BoxedObject<LegacyAllocator, 500>
     {
-        using ThisT = IteratorPointer<TElement>;
+        using ThisT = BoxedIterator<TElement>;
         using BoxedObjectT = BoxedObject<LegacyAllocator, 500>;
         using ElementT = TElement;
         using IteratorT = Iterator<ElementT>;
@@ -21,12 +21,12 @@ namespace Atom
 
         ////////////////////////////////////////////////////////////////////////////////
 
-        mpublic IteratorPointer() : BoxedObjectT(null) { }
+        mpublic BoxedIterator() : BoxedObjectT(null) { }
 
-        mpublic IteratorPointer(const ThisT ref other) noexcept :
+        mpublic BoxedIterator(const ThisT ref other) noexcept :
             BoxedObjectT(other) { }
 
-        mpublic IteratorPointer(ThisT rref other) noexcept :
+        mpublic BoxedIterator(ThisT rref other) noexcept :
             BoxedObjectT(move(other)) { }
 
         mpublic ThisT ref operator = (const ThisT ref other) noexcept
@@ -42,14 +42,14 @@ namespace Atom
         }
 
         mpublic template <typename TIterator>
-            IteratorPointer(const TIterator ref iterator) noexcept :
+            BoxedIterator(const TIterator ref iterator) noexcept :
             BoxedObjectT(iterator)
         {
             StaticAssertSubClass<IteratorT, TIterator>();
         }
 
         mpublic template <typename TIterator>
-            IteratorPointer(TIterator rref iterator) noexcept :
+            BoxedIterator(TIterator rref iterator) noexcept :
             BoxedObjectT(move(iterator))
         {
             StaticAssertSubClass<IteratorT, TIterator>();
@@ -108,22 +108,22 @@ namespace Atom
     };
 
     template <typename TElement>
-    class ForwardIteratorPointer :
-        public virtual IteratorPointer<TElement>,
+    class BoxedForwardIterator :
+        public virtual BoxedIterator<TElement>,
         public virtual ForwardIterator<TElement>
     {
-        using ThisT = ForwardIteratorPointer<TElement>;
-        using BaseT = IteratorPointer<TElement>;
+        using ThisT = BoxedForwardIterator<TElement>;
+        using BaseT = BoxedIterator<TElement>;
         using IteratorT = ForwardIterator<TElement>;
 
         ////////////////////////////////////////////////////////////////////////////////
 
-        mpublic ForwardIteratorPointer() : BaseT(null) { }
+        mpublic BoxedForwardIterator() : BaseT(null) { }
 
-        mpublic ForwardIteratorPointer(const ThisT ref other) noexcept :
+        mpublic BoxedForwardIterator(const ThisT ref other) noexcept :
             BaseT(other) { }
 
-        mpublic ForwardIteratorPointer(ThisT rref other) noexcept :
+        mpublic BoxedForwardIterator(ThisT rref other) noexcept :
             BaseT(move(other)) { }
 
         mpublic ThisT ref operator = (const ThisT ref other) noexcept
@@ -139,14 +139,14 @@ namespace Atom
         }
 
         mpublic template <typename TIterator>
-            ForwardIteratorPointer(const TIterator ref iterator) noexcept :
+            BoxedForwardIterator(const TIterator ref iterator) noexcept :
             BaseT(iterator)
         {
             StaticAssertSubClass<IteratorT, TIterator>();
         }
 
         mpublic template <typename TIterator>
-            ForwardIteratorPointer(TIterator rref iterator) noexcept :
+            BoxedForwardIterator(TIterator rref iterator) noexcept :
             BaseT(move(iterator))
         {
             StaticAssertSubClass<IteratorT, TIterator>();
@@ -178,22 +178,22 @@ namespace Atom
     };
 
     template <typename TElement>
-    class BidirectionalIteratorPointer :
-        public virtual ForwardIteratorPointer<TElement>,
+    class BoxedBidirectionalIterator :
+        public virtual BoxedForwardIterator<TElement>,
         public virtual BidirectionalIterator<TElement>
     {
-        using ThisT = BidirectionalIteratorPointer<TElement>;
-        using BaseT = ForwardIteratorPointer<TElement>;
+        using ThisT = BoxedBidirectionalIterator<TElement>;
+        using BaseT = BoxedForwardIterator<TElement>;
         using IteratorT = BidirectionalIterator<TElement>;
 
         ////////////////////////////////////////////////////////////////////////////////
 
-        mpublic BidirectionalIteratorPointer() : BaseT(null) { }
+        mpublic BoxedBidirectionalIterator() : BaseT(null) { }
 
-        mpublic BidirectionalIteratorPointer(const ThisT ref other) noexcept :
+        mpublic BoxedBidirectionalIterator(const ThisT ref other) noexcept :
             BaseT(other) { }
 
-        mpublic BidirectionalIteratorPointer(ThisT rref other) noexcept :
+        mpublic BoxedBidirectionalIterator(ThisT rref other) noexcept :
             BaseT(move(other)) { }
 
         mpublic ThisT ref operator = (const ThisT ref other) noexcept
@@ -209,14 +209,14 @@ namespace Atom
         }
 
         mpublic template <typename TIterator>
-            BidirectionalIteratorPointer(const TIterator ref iterator) noexcept :
+            BoxedBidirectionalIterator(const TIterator ref iterator) noexcept :
             BaseT(iterator)
         {
             StaticAssertSubClass<IteratorT, TIterator>();
         }
 
         mpublic template <typename TIterator>
-            BidirectionalIteratorPointer(TIterator rref iterator) noexcept :
+            BoxedBidirectionalIterator(TIterator rref iterator) noexcept :
             BaseT(move(iterator))
         {
             StaticAssertSubClass<IteratorT, TIterator>();
@@ -248,22 +248,22 @@ namespace Atom
     };
 
     template <typename TElement>
-    class RandomAccessIteratorPointer :
-        public virtual BidirectionalIteratorPointer<TElement>,
+    class BoxedRandomAccessIterator :
+        public virtual BoxedBidirectionalIterator<TElement>,
         public virtual RandomAccessIterator<TElement>
     {
-        using ThisT = RandomAccessIteratorPointer<TElement>;
-        using BaseT = BidirectionalIteratorPointer<TElement>;
+        using ThisT = BoxedRandomAccessIterator<TElement>;
+        using BaseT = BoxedBidirectionalIterator<TElement>;
         using IteratorT = RandomAccessIterator<TElement>;
 
         ////////////////////////////////////////////////////////////////////////////////
 
-        mpublic RandomAccessIteratorPointer() : BaseT(null) { }
+        mpublic BoxedRandomAccessIterator() : BaseT(null) { }
 
-        mpublic RandomAccessIteratorPointer(const ThisT ref other) noexcept :
+        mpublic BoxedRandomAccessIterator(const ThisT ref other) noexcept :
             BaseT(other) { }
 
-        mpublic RandomAccessIteratorPointer(ThisT rref other) noexcept :
+        mpublic BoxedRandomAccessIterator(ThisT rref other) noexcept :
             BaseT(move(other)) { }
 
         mpublic ThisT ref operator = (const ThisT ref other) noexcept
@@ -279,14 +279,14 @@ namespace Atom
         }
 
         mpublic template <typename TIterator>
-            RandomAccessIteratorPointer(const TIterator ref iterator) noexcept :
+            BoxedRandomAccessIterator(const TIterator ref iterator) noexcept :
             BaseT(iterator)
         {
             StaticAssertSubClass<IteratorT, TIterator>();
         }
 
         mpublic template <typename TIterator>
-            RandomAccessIteratorPointer(TIterator rref iterator) noexcept :
+            BoxedRandomAccessIterator(TIterator rref iterator) noexcept :
             BaseT(move(iterator))
         {
             StaticAssertSubClass<IteratorT, TIterator>();

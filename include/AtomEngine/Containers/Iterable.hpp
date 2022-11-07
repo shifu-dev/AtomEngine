@@ -2,7 +2,7 @@
 #include "AtomEngine/Core.hpp"
 #include "AtomEngine/Callable/Callable.hpp"
 #include "AtomEngine/Memory.hpp"
-#include "AtomEngine/Containers/IteratorPointer.hpp"
+#include "AtomEngine/Containers/BoxedIterator.hpp"
 
 namespace Atom
 {
@@ -19,7 +19,7 @@ namespace Atom
     class Iterable
     {
         using ElementT = TElement;
-        using ForwardIteratorPointerT = ForwardIteratorPointer<ElementT>;
+        using BoxedForwardIteratorT = BoxedForwardIterator<ElementT>;
 
         mpublic template <typename TFunctor>
             void ForEachT(const TFunctor ref functor) const
@@ -36,50 +36,50 @@ namespace Atom
         mpublic virtual void ForEach(const Callable<void(const ElementT ref)> ref callback) const abstract;
         mpublic virtual void ForEach(const Callable<void(ElementT ref)> ref callback) abstract;
 
-        mpublic ForwardIteratorPointerT Begin() noexcept
+        mpublic BoxedForwardIteratorT Begin() noexcept
         {
             return Iterable_begin();
         }
 
-        mpublic const ForwardIteratorPointerT Begin() const noexcept
+        mpublic const BoxedForwardIteratorT Begin() const noexcept
         {
             return Iterable_begin();
         }
 
-        mpublic ForwardIteratorPointerT End() noexcept
+        mpublic BoxedForwardIteratorT End() noexcept
         {
             return Iterable_end();
         }
 
-        mpublic const ForwardIteratorPointerT End() const noexcept
+        mpublic const BoxedForwardIteratorT End() const noexcept
         {
             return Iterable_end();
         }
 
-        mpublic ForwardIteratorPointerT begin() noexcept
+        mpublic BoxedForwardIteratorT begin() noexcept
         {
             return Iterable_begin();
         }
 
-        mpublic const ForwardIteratorPointerT begin() const noexcept
+        mpublic const BoxedForwardIteratorT begin() const noexcept
         {
             return Iterable_begin();
         }
 
-        mpublic ForwardIteratorPointerT end() noexcept
+        mpublic BoxedForwardIteratorT end() noexcept
         {
             return Iterable_end();
         }
 
-        mpublic const ForwardIteratorPointerT end() const noexcept
+        mpublic const BoxedForwardIteratorT end() const noexcept
         {
             return Iterable_end();
         }
 
-        mprotected virtual ForwardIteratorPointerT Iterable_begin() noexcept abstract;
-        mprotected virtual ForwardIteratorPointerT Iterable_end() noexcept abstract;
+        mprotected virtual BoxedForwardIteratorT Iterable_begin() noexcept abstract;
+        mprotected virtual BoxedForwardIteratorT Iterable_end() noexcept abstract;
 
-        mprotected virtual const ForwardIteratorPointerT Iterable_begin() const noexcept abstract;
-        mprotected virtual const ForwardIteratorPointerT Iterable_end() const noexcept abstract;
+        mprotected virtual const BoxedForwardIteratorT Iterable_begin() const noexcept abstract;
+        mprotected virtual const BoxedForwardIteratorT Iterable_end() const noexcept abstract;
     };
 }

@@ -1,21 +1,21 @@
 #pragma once
 #include "catch2/catch_all.hpp"
-#include "AtomEngine/Containers/IteratorPointer.hpp"
+#include "AtomEngine/Containers/BoxedIterator.hpp"
 #include "AtomEngine/Containers/ArrayIterator.hpp"
 
 using namespace Atom;
 
-TEST_CASE("IteratorPointer Implementation")
+TEST_CASE("BoxedIterator Implementation")
 {
-    IteratorPointer<int> itPtr1;
+    BoxedIterator<int> itPtr1;
 
-    IteratorPointer<int> itPtr2 = itPtr1;
+    BoxedIterator<int> itPtr2 = itPtr1;
 
-    IteratorPointer<int> itPtr3;
+    BoxedIterator<int> itPtr3;
     itPtr3 = itPtr1;
 
     ArrayIterator<int> arrIt(nullptr);
-    IteratorPointer<int> itPtr4 = arrIt;
+    BoxedIterator<int> itPtr4 = arrIt;
 
     return;
 }

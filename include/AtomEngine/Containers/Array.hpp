@@ -74,24 +74,24 @@ namespace Atom
         mpublic IteratorT end() noexcept { return End(); }
         mpublic const IteratorT end() const noexcept { return End(); }
 
-        mprotected virtual const ForwardIteratorPointerT Iterable_begin() const noexcept override
+        mprotected virtual const BoxedForwardIteratorT Iterable_begin() const noexcept override
         {
-            return ForwardIteratorPointerT(Begin());
+            return BoxedForwardIteratorT(Begin());
         }
 
-        mprotected virtual ForwardIteratorPointerT Iterable_begin() noexcept override
+        mprotected virtual BoxedForwardIteratorT Iterable_begin() noexcept override
         {
-            return ForwardIteratorPointerT(Begin());
+            return BoxedForwardIteratorT(Begin());
         }
 
-        mprotected virtual const ForwardIteratorPointerT Iterable_end() const noexcept override
+        mprotected virtual const BoxedForwardIteratorT Iterable_end() const noexcept override
         {
-            return ForwardIteratorPointerT(End());
+            return BoxedForwardIteratorT(End());
         }
 
-        mprotected virtual ForwardIteratorPointerT Iterable_end() noexcept override
+        mprotected virtual BoxedForwardIteratorT Iterable_end() noexcept override
         {
-            return ForwardIteratorPointerT(End());
+            return BoxedForwardIteratorT(End());
         }
 
         // *******************************************************************
