@@ -135,10 +135,11 @@ namespace Atom
         return scast<TType rref>(arg);
     }
 
-    template <typename TType>
-    auto move(TType value) noexcept
+    template <class TType>
+    [[nodiscard]] constexpr std::remove_reference_t<TType> rref move(TType rref args) noexcept
     {
-        return std::move(value);
+        // forward args as movable
+        return scast<std::remove_reference_t<TType> rref>(args);
     }
 
     template <typename TType>
