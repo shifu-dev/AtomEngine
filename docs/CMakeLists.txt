@@ -1,13 +1,13 @@
 find_package(Doxygen REQUIRED)
 
 set(DOXYGEN_OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/doxygen)
+file(GLOB_RECURSE DOXYGEN_INPUT_FILES ${CMAKE_SOURCE_DIR}/include/*.hpp)
 
-file(GLOB_RECURSE DOXYGEN_INPUT ${CMAKE_SOURCE_DIR}/include/*.hpp)
-string(REPLACE ";" "\" \\\n\"" DOXYGEN_INPUT "${DOXYGEN_INPUT}")
+string(REPLACE ";" "\" \\\n\"" DOXYGEN_INPUT "${DOXYGEN_INPUT_FILES}")
 
 set(DOXYGEN_CONFIG_IN ${CMAKE_CURRENT_SOURCE_DIR}/doxygen.conf)
-set(DOXYGEN_CONFIG ${DOXYGEN_OUTPUT}/doxygen.conf)
-set(DOXYGEN_STAMP ${DOXYGEN_OUTPUT}/doxygen.stamp)
+set(DOXYGEN_CONFIG ${DOXYGEN_CURRENT_BINARY_DIR}doxygen.conf)
+set(DOXYGEN_STAMP ${DOXYGEN_CURRENT_BINARY_DIR}doxygen.stamp)
 
 configure_file(${DOXYGEN_CONFIG_IN} ${DOXYGEN_CONFIG})
 
@@ -20,23 +20,40 @@ add_custom_command(
     TARGET CleanDocs
     VERBATIM
 
-    COMMENT "Cleaning Docs..."
-    COMMAND ${CMAKE_COMMAND} -E rm -rf ${DOXYGEN_OUTPUT}/html
+    COMMAND ${CMAKE_COMMAND} -E echo  "Cleaning Docs..."
+    COMMAND ${CMAKE_COMMAND} -E rm -rf ${DOXYGEN_OUTPUT}
+    COMMAND ${CMAKE_COMMAND} -E rm -f ${DOXYGEN_CONFIG}
+    COMMAND ${CMAKE_COMMAND} -E rm -f ${DOXYGEN_STAMP}
 )
 
 ######################################################################
 # BuildDocs
 
 add_custom_command(
-    OUTPUT ${DOXYGEN_STAMP}
     VERBATIM
 
-    COMMENT "Generating Docs..."
+    OUTPUT ${DOXYGEN_STAMP}
+    DEPENDS ${DOXYGEN_INPUT_FILES}
+    DEPENDS ${DOXYGEN_CONFIG_IN}
+
+    COMMAND ${CMAKE_COMMAND} -E echo "Cleaning Docs..."
+    COMMAND ${CMAKE_COMMAND} -E rm -rf ${DOXYGEN_OUTPUT}
+
+    COMMAND ${CMAKE_COMMAND} -E echo "Generating Docs..."
     COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_CONFIG}
     COMMAND ${CMAKE_COMMAND} -E touch ${DOXYGEN_STAMP}
 )
 
 add_custom_target(BuildDocs ALL
-    DEPENDS CleanDocs
     DEPENDS ${DOXYGEN_STAMP}
+)
+
+add_custom_target(BuildDocsForce
+    VERBATIM
+
+    COMMAND ${CMAKE_COMMAND} -E echo "Cleaning Docs..."
+    COMMAND ${CMAKE_COMMAND} -E rm -rf ${DOXYGEN_OUTPUT}
+
+    COMMAND ${CMAKE_COMMAND} -E echo "Generating Docs..."
+    COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_CONFIG}
 )
