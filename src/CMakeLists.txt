@@ -22,3 +22,7 @@ target_include_directories(${ATOM_ENGINE_LIB} PRIVATE ${ATOM_ENGINE_SOURCE_DIR})
 target_compile_definitions(${ATOM_ENGINE_LIB} PRIVATE ATOM_BUILD_DLL=1)
 set_property(TARGET ${ATOM_ENGINE_LIB} PROPERTY LINKER_LANGUAGE CXX)
 set_property(TARGET ${ATOM_ENGINE_LIB} PROPERTY CXX_STANDARD 17)
+
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+    target_compile_options(${ATOM_ENGINE_LIB} PUBLIC "/permissive-")
+endif()

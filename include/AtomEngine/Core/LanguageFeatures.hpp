@@ -8,7 +8,6 @@
 #define nullt std::nullptr_t
 #define null nullptr
 
-#define not !
 #define is ==
 #define isnot !=
 #define isnull(ptr) (ptr is nullptr)
@@ -19,9 +18,6 @@
 #define rref &&
 #define dtor ~
 #define abstract = 0
-
-#define and &&
-#define or ||
 
 #define noexceptif(cond) noexcept(noexcept(cond))
 
