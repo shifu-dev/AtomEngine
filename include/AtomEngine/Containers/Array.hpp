@@ -14,6 +14,7 @@ namespace Atom
     {
         using ElementT = TElement;
         using ForwardIteratorT = ForwardIterator<ElementT>;
+        using BoxedForwardIteratorT = BoxedForwardIterator<ElementT>;
         using EqualityComparerT = EqualityComparer<ElementT>;
         using PredicateT = Predicate<const ElementT ref, sizet>;
         using IteratorT = ArrayIterator<ElementT>;
