@@ -100,22 +100,6 @@ namespace Atom
     {
         return scast<TInt>(value);
     }
-
-    // CPP17 introduces std::byte
-#ifdef ATOM_CPP17
-
-    constexpr operator std::byte(const byte value) noexcept
-    {
-        return scast<std::byte>(value);
-    }
-
-    constexpr operator byte(const std::byte value) noexcept
-    {
-        return scast<byte>(value);
-    }
-
-#endif
-
 }
 
 ////////////////////////////////////////////////////////
