@@ -1,4 +1,3 @@
-#pragma once
 #include "catch2/catch_all.hpp"
 #include "AtomEngine/Containers/BoxedIterator.hpp"
 #include "AtomEngine/Containers/ArrayIterator.hpp"
