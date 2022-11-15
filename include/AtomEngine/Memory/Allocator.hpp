@@ -149,7 +149,7 @@ namespace Atom
     template <typename TType>
     inline void Allocator::Deallocate(TType ptr src, const sizet count)
     {
-        DeallocateRaw(rcast<memptr>(src), sizeof(Type) * count);
+        DeallocateRaw(rcast<memptr>(src), sizeof(TType) * count);
     }
 
     template <>
