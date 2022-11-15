@@ -3,7 +3,8 @@
 
 namespace Atom
 {
-    using memptr = void ptr;
+    using memt = byte;
+    using memptr = memt ptr;
 
     inline void memcpy(memptr dest, memptr src, const sizet size) noexcept
     {

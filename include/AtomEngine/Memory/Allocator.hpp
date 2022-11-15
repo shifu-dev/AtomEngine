@@ -126,7 +126,7 @@ namespace Atom
     template <typename Type>
     inline void Allocator::Deallocate(Type ptr src, const sizet count)
     {
-        DeallocateRaw(src, sizeof(Type) * count);
+        DeallocateRaw(rcast<memptr>(src), sizeof(Type) * count);
     }
 
     template <>
@@ -135,6 +135,6 @@ namespace Atom
         // explicit specialization for void type,
         // to avoid call to sizeof() operator on void type
 
-        DeallocateRaw(src, count);
+        DeallocateRaw(rcast<memptr>(src), count);
     }
 }
