@@ -8,7 +8,6 @@ namespace Atom
         using EnableIfIntegral = std::enable_if_t<std::is_integral_v<TType>, int>;
     }
 
-    /// @brief 
     struct byte
     {
         mprivate uchar value;
