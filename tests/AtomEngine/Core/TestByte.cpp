@@ -18,7 +18,7 @@ TEST_CASE("Byte", "[Implmentation]")
     char f = b;
     uint g = c;
 
-    CHECK(e == 1);
+    CHECK(e == 0);
     CHECK(f == 'c');
     CHECK(g == 99U);
 
