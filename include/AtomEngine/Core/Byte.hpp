@@ -8,6 +8,7 @@ namespace Atom
         using EnableIfIntegral = std::enable_if_t<std::is_integral_v<TType>, int>;
     }
 
+    /// @brief 
     struct byte
     {
         mprivate uchar value;
@@ -105,4 +106,6 @@ namespace Atom
             return ptr this = ptr this ^ right;
         }
     };
+
+    sassert(sizeof(byte) == 1, "sizeof(byte) != 1");
 }
