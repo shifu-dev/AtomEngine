@@ -11,7 +11,7 @@ namespace Atom
         std::memcpy(dest, src, size);
     }
 
-    inline void memset(memptr dest, const int value, const sizet count) noexcept
+    inline void memset(memptr dest, const memt value, const sizet count) noexcept
     {
         std::memset(dest, value, count);
     }
