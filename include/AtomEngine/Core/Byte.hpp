@@ -106,6 +106,4 @@ namespace Atom
             return ptr this = ptr this ^ right;
         }
     };
-
-    sassert(sizeof(byte) == 1, "sizeof(byte) != 1");
 }

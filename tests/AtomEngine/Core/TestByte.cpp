@@ -6,6 +6,8 @@ using namespace Atom;
 
 TEST_CASE("Byte", "[Implmentation]")
 {
+    sassert(sizeof(byte) == 1, "sizeof(byte) != 1");
+
     byte value;
 
     byte a = 0;
