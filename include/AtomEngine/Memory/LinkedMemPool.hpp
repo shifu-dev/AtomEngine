@@ -21,103 +21,173 @@ namespace Atom
 
         mpublic LinkedMemPool() noexcept;
 
-        mpublic virtual memptr AllocateRaw(const sizet size, bool clear = true) override;
-        mpublic virtual void DeallocateRaw(memptr src, const sizet size) override;
+        mpublic virtual sizet Size() const noexcept override;
 
-        mpublic virtual sizet Size() const noexcept final override;
-
-        /// @return amount of memory in use from the pool
+        /// ----------------------------------------------------------------------------
+        /// Count of memory units currently in use(allocated) from the pool.
         mpublic virtual sizet UsedCount() const noexcept;
 
-        /// @return amount of free memory in the pool
+        /// ----------------------------------------------------------------------------
+        /// Count of memory units available for use(unallocated) in the pool.
         mpublic virtual sizet FreeCount() const noexcept;
 
-        /// @brief checks if block of enough size is available for allocation
-        /// @param size size of block the check for
-        /// @return true if block exists, false otherwise
+        /// ----------------------------------------------------------------------------
+        /// Checks if a memory block of size \p{size} is available for allocation.
+        /// 
+        /// @param[in] size Size of memory block to check for, if \p{size} is 0 returns @false.
+        /// @return @true if memory block exists, @false otherwise.
         mpublic virtual bool HasBlockFor(const sizet size) const noexcept;
 
-        /// @brief checks if block of [sizeof(Type) * count] is available
-        /// @note looks for contiguous block of memory
-        /// @tparam Type type of object to check blocks for
-        /// @param count count of objects
-        /// @return true if block exists, false otherwise
-        mpublic template <typename Type>
+        /// ----------------------------------------------------------------------------
+        /// Checks if a memory block of size \p{sizeof(TType) * count} is available.
+        /// 
+        /// @tparam TType Type of object to check memory block for.
+        /// \n \p{TType} is only used to find the size of Type.
+        /// \n If \p{TType} is @void, considers its size 1.
+        ///
+        /// @param[in] count Count of objects to check memory block for,
+        /// if \p{sizeof(TType) * count} is 0 returns @false.
+        /// 
+        /// @return @true if memory block exists, @false otherwise.
+        /// 
+        /// @note
+        /// - Calls \p{HasBlockFor(sizeof(TType) * count)}.
+        /// - Looks for a single contiguous memory block.
+        mpublic template <typename TType>
             bool HasBlockFor(const sizet count) const noexcept;
 
-        /// @brief adds memory to be managed by this memory pool
-        /// @param mem ptr to memory, does not do anything if null
-        /// @param isRoot is this memory ptr the root of memory block
-        /// @param size size of memory block
-        /// @return ptr to the block representing memory, null is memory not added
-        mprotected virtual blockptr mAddMemory(memptr mem, const sizet size, bool isRoot = true);
+        mpublic virtual memptr AllocateRaw(const sizet size, bool clear = true) override;
 
-        /// @brief removes memory from this memory pool
-        /// @param mem ptr to memory, does not do anything if null
-        /// @param size size of memory block to remove
-        /// @param tillHit if true, remove till first hit (in use memory)
-        /// @return size of memory block removed from the pool
-        /// @note this does not deallocates the memory
-        mprotected virtual sizet mTryRemoveMemory(memptr mem, const sizet size, const bool tillHit = true);
+        mpublic virtual void DeallocateRaw(memptr src, const sizet size) override;
 
-        /// @brief finds the first block for the specified size
-        /// @param size size to search block for
-        /// @return ptr to block, null if not found
+        /// ----------------------------------------------------------------------------
+        /// Adds memory block to the pool.
+        /// 
+        /// @param[in] mem Ptr to the memory block to add, if @null does nothing.
+        /// @param[in] size Size of the memory block to add, if 0 does nothing.
+        /// @param[in] isRoot Is this memory address the root of memory block.
+        /// \n If @true, adds a flag for the memory address, used during deallocation of memory block.
+        ///
+        /// @return Block object representing added memory block, @null if memory block not added.
+        mprotected virtual blockptr mAddMemory(const memptr mem, const sizet size, const bool isRoot = true);
+
+        /// ----------------------------------------------------------------------------
+        /// Tries to remove memory block from this pool, fails if memory block is being used.
+        /// 
+        /// @param[in] mem Ptr to memory block, if @null does nothing.
+        /// @param[in] size Size of memory block to remove, if 0 does nothing.
+        /// @param[in] tillHit If @true, remove till first hit (in use memory).
+        /// @return Size of memory block removed from the pool.
+        /// 
+        /// @note
+        /// - This does not deallocates the memory block, only removes it from the pool,
+        ///   so the memory block is no longer managed by this pool.
+        mprotected virtual sizet mTryRemoveMemory(const memptr mem, const sizet size, const bool tillHit = true);
+
+        /// ----------------------------------------------------------------------------
+        /// Finds the first Block object representing free memory block of size \p{size}.
+        /// 
+        /// @param[in] size Size of memory block to search Block object for,
+        ///     if \p{size} is 0 does nothing.
+        /// @return Block object representing memory block, @null if not found.
         mprotected virtual blockptr mFindBlock(const sizet size) const noexcept;
 
-        /// @brief finds block which contains given memory address
-        /// @param ptr memory address to search block for
-        /// @return ptr to block, null if not found
+        /// ----------------------------------------------------------------------------
+        /// Finds Block object which represents memory block \p{mem}.
+        /// 
+        /// @param[in] mem Memory block to search Block object for, if @null does nothing.
+        /// @return Block object representing memory block, @null if not found.
         mprotected virtual blockptr mFindBlockFor(const memptr mem) const noexcept;
 
-        /// @brief divides the block into two blocks of [size] and [block->size - size]
-        /// @param block ptr to block to divide
-        /// @param size size of the first block
-        /// @return true if sucessfull, false otherwise
+        /// ----------------------------------------------------------------------------
+        /// Divides the Block object into two Block objects of size \p{size} and \p{block->size - size}.
+        /// The new Block object will pointed by \p{block->next}.
+        /// 
+        /// @param[in] block Block object to divide, if \p{block is null} does nothing.
+        /// @param[in] size Size of memory block of the first Block object, if \p{size is 0} does nothing.
+        /// @return @true if successful, @false otherwise.
         mprotected virtual bool mDivideBlock(blockptr block, const sizet size);
 
-        /// @brief joins the block with its next block if possible
-        /// @param block block to join with its next block
-        /// @return true if sucessfull, false otherwise
+        /// ----------------------------------------------------------------------------
+        /// Joins the Block object with its next Block object if possible.
+        /// 
+        /// @param[in] block Block object to join with its next Block object, if @null does nothing.
+        /// @return @true if successful, @false otherwise.
         mprotected virtual bool mJoinBlock(blockptr block);
 
-        /// @brief allocates or uses cache to create single block
-        /// @return ptr to the block
+        /// ----------------------------------------------------------------------------
+        /// Creates a single Block object, may allocate new Block object or use prereserved Block object.
+        /// 
+        /// @return Ptr to the Block object, @null if failed.
         mprotected virtual blockptr mCreateBlock();
 
-        /// @brief deallocates or caches blocks
-        /// @param blocks ptr to blocks
-        /// @param count count of blocks
+        /// ----------------------------------------------------------------------------
+        /// Destroys Block object, may not deallocate memory and preserve it.
+        /// 
+        /// @param[in] block Ptr to the Block object.
         mprotected virtual void mDestroyBlock(blockptr block);
 
-        /// @brief reserves count blocks used to manage memory
-        /// @param count count of blocks to reserve
+        /// ----------------------------------------------------------------------------
+        /// Reserves \p{count} Block instances used to manage memory.
+        /// 
+        /// @param[in] count Count of Block instances to reserve.
         mprotected virtual void mReserveBlocks(const sizet count);
 
-        /// @brief reserves count blocks used to manage memory,
-        /// does not checks already reserved count
-        /// @param count count of blocks to reserve
+        /// ----------------------------------------------------------------------------
+        /// Reserves count more Block objects used to manage memory.
+        /// 
+        /// @param[in] count Count of Block objects to reserve.
+        /// 
+        /// @note
+        /// - This call is gaurenteed to cause allocation if \p{count > 0}.
         mprotected virtual void mReserveMoreBlocks(const sizet count);
 
-        /// @brief allocates blocks used to manage memory
-        /// @param count count of blocks to allocate
-        /// @return ptr to array of blocks
+        /// ----------------------------------------------------------------------------
+        /// Allocates Block object used to manage memory.
+        /// 
+        /// @param[in] count Count of Block objects to allocate.
+        /// @return Ptr to array of Block objects.
         mprotected virtual blockptr mAllocateBlocks(const sizet count);
 
-        /// @brief deallocates blocks used to manage memory
-        /// @param blocks ptr to blocks
-        /// @param count count of blocks
+        /// ----------------------------------------------------------------------------
+        /// Deallocates Block objects used to manage memory.
+        /// 
+        /// @param[in] block objects ptr to Block objects
+        /// @param[in] count count of Block objects
         mprotected virtual void mDeallocateBlock(blockptr block);
 
-        mprotected blockptr mRootBlock;            // root block of memory layout
-        mprotected blockptr mEndBlock;             // end block of memory layout
-        mprotected blockptr mFirstBlock;           // first block with available memory
-        mprotected sizet mMemoryUsed;              // count of memory used in bytes
-        mprotected sizet mMemoryTotal;             // total memory managed by this pool
+        /// ----------------------------------------------------------------------------
+        /// Ptr to Root Block object of memory table.
+        mprotected blockptr mRootBlock;
 
-        mprotected blockptr mFreeBlock;            // first free block (block allocation cache)
-        mprotected sizet mReservedBlockCount;      // current count of reserved block allocations
-        mprotected sizet mMaxReservedBlockCount;   // max count of block allocations to reserve
+        /// ----------------------------------------------------------------------------
+        /// Ptr to End Block object of memory table.
+        mprotected blockptr mEndBlock;
+
+        /// ----------------------------------------------------------------------------
+        /// Ptr to First Block object with available memory.
+        mprotected blockptr mFirstBlock;
+
+        /// ----------------------------------------------------------------------------
+        /// Count of memory units used.
+        mprotected sizet mMemoryUsed;
+
+        /// ----------------------------------------------------------------------------
+        /// Total count of memory units managed by this pool.
+        mprotected sizet mMemoryTotal;
+
+        /// ----------------------------------------------------------------------------
+        /// Ptr to the first reserved Block object.
+        mprotected blockptr mFreeBlock;
+
+        /// ----------------------------------------------------------------------------
+        /// Current count of reserved Block objects.
+        mprotected sizet mReservedBlockCount;
+
+        /// ----------------------------------------------------------------------------
+        /// Max count of Block objects to reserve,
+        /// if \p{value is 0} no Block objects are reserved.
+        mprotected sizet mMaxReservedBlockCount;
     };
 
     inline LinkedMemPool::LinkedMemPool() noexcept :
@@ -193,6 +263,7 @@ namespace Atom
         }
     }
 
+    /// @memberof nothing 
     inline sizet LinkedMemPool::Size() const noexcept
     {
         return mMemoryTotal;
@@ -219,13 +290,14 @@ namespace Atom
         return mFindBlock(sizeof(Type) * count) isnot nullptr;
     }
 
+    /// @memberof nothing 
     template <>
     inline bool LinkedMemPool::HasBlockFor<void>(const sizet count) const noexcept
     {
         return mFindBlock(count) isnot nullptr;
     }
 
-    inline LinkedMemPool::blockptr LinkedMemPool::mAddMemory(memptr mem, const sizet size, bool isRoot)
+    inline LinkedMemPool::blockptr LinkedMemPool::mAddMemory(const memptr mem, const sizet size, const bool isRoot)
     {
         blockptr block = nullptr;
 
@@ -255,7 +327,7 @@ namespace Atom
         return block;
     }
 
-    inline sizet LinkedMemPool::mTryRemoveMemory(memptr mem, const sizet size, const bool tillHit)
+    inline sizet LinkedMemPool::mTryRemoveMemory(const memptr mem, const sizet size, const bool tillHit)
     {
         if (mem is nullptr) return 0;
         if (size is 0) return 0;
@@ -273,7 +345,7 @@ namespace Atom
         if (rootBlock is nullptr) return 0;
 
         // process root for memOffset
-        memOffset = (byte ptr)mem - (byte ptr)rootBlock->mem;
+        memOffset = mem - rootBlock->mem;
         memCount = rootBlock->size - memOffset;
 
         for (blockptr block = rootBlock->next; block isnot nullptr; block = block->next)

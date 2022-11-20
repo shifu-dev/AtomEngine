@@ -7,7 +7,7 @@ namespace Atom
     /// @brief MemPool is the base abstract type to manage memory pool.
     class MemPool : public virtual Allocator
     {
-        /// @return Total count of memory units.
+        /// @brief Count of memory units managed by this pool.
         mpublic virtual sizet Size() const noexcept abstract;
     };
 

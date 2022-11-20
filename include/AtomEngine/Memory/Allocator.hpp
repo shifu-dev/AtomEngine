@@ -4,7 +4,7 @@
 
 namespace Atom
 {
-    /// @brief Base type used to allocate and deallocate memory.
+    /// Base type used to allocate and deallocate memory.
     class Allocator
     {
         mpublic constexpr Allocator() = default;
@@ -13,7 +13,8 @@ namespace Atom
         mpublic constexpr Allocator ref operator =(const Allocator ref other) = default;
         mpublic constexpr Allocator ref operator =(Allocator rref other) = default;
 
-        /// @brief Allocates memory and Constructs an object with given args.
+        /// Allocates memory and Constructs an object with given args.
+        ///
         /// @tparam TType Type of object to create.
         /// @tparam TArgs... Type of args used to create the object.
         /// @param args... Args used to construct the object.
@@ -21,34 +22,36 @@ namespace Atom
         ///
         /// @note Calls @ref ConstructMultiple(count: 1, args);
         ///
-        /// @todo Add exception specifications.
+        /// @todo
+        /// - Add exception specifications.
         mpublic template <typename TType, typename... TArgs>
             TType ptr Construct(TArgs ref... args);
 
-        /// @brief Allocates memory and Constructs an array of object,
+        /// Allocates memory and Constructs an array of object,
         /// each object is constructed with given args.
+        ///
         /// @tparam TType Type of objects to create.
         /// @tparam TArgs... Type of args used to create objects.
         /// @param args... Args used to construct objects.
         /// @param count Count of objects to create.
         /// @return Ptr to the array of objects.
         ///
-        ///
-        /// @todo Add exception specifications.
+        /// @todo
+        /// - Add exception specifications.
         mpublic template <typename TType, typename... TArgs>
             TType ptr ConstructMultiple(const sizet count, TArgs ref... args);
 
-        /// @brief Destructs object and deallocates memory.
+        /// Destructs object and deallocates memory.
         /// @tparam TType Type of object to destruct.
         /// @param src Ptr to the object to destruct.
         /// @param count Count of objects to destruct if ptr is an array.
         ///
-        ///
-        /// @todo Add exception specifications.
+        /// @todo
+        /// - Add exception specifications.
         mpublic template <typename TType>
             void Destruct(TType ptr src, const sizet count = 1);
 
-        /// @brief Allocates memory according to the sizeof(TType)
+        /// Allocates memory according to the sizeof(TType)
         /// @tparam TType Type of object to allocate memory.
         /// @param count Count of objects to allocate memory for.
         /// @return Ptr to first block of allocated memory.
@@ -56,11 +59,12 @@ namespace Atom
         /// @note This function does not counstruct's the object,
         /// TType is used only as a reference for size.
         ///
-        /// @todo Add exception specifications.
+        /// @todo
+        /// - Add exception specifications.
         mpublic template <typename TType>
             TType ptr Allocate(const sizet count = 1);
 
-        /// @brief Deallocates memory according to the sizeof(TType)
+        /// Deallocates memory according to the sizeof(TType)
         /// @tparam TType Type of object to deallocate memory.
         /// @param src Ptr to the memory block.
         /// @param count Count of objects to deallocate memory for.
@@ -68,30 +72,36 @@ namespace Atom
         /// @note Does not destructs the object.
         /// TType is only used as a reference for size.
         ///
-        /// @todo Add exception specifications.
+        /// @todo
+        /// - Add exception specifications.
         mpublic template <typename TType>
             void Deallocate(TType ptr src, const sizet count = 1);
 
-        /// @brief Base abstract function used to allocate memory.
+        /// Base abstract function used to allocate memory.
         /// @param count Count of memory ( @ref memt objects ) to allocate.
         /// @param clear If true, initializes memory with 0.
         /// @return Ptr to the memory block.
         /// 
-        /// @note This is the base underlying function used to allocate memory.
+        /// @note
+        /// - This is the base underlying function used to allocate memory.
         ///
-        /// @todo Add exception specifications.
+        /// @todo
+        /// - Add exception specifications.
         mpublic virtual memptr AllocateRaw(const sizet count, bool clear = true) abstract;
 
-        /// @brief Base abstract function used to deallocate memory.
+        /// Base abstract function used to deallocate memory.
         /// @param src Ptr to memory to deallocate.
         /// @param count Count of memory to deallcate.
         /// 
-        /// @note Support for partial memory deallocation is implementation dependent.
-        /// Example of Partial memory deallocation,
-        /// Allocate 5 blocks memory but deallocate and 2 blocks,
-        /// still the rest 3 blocks of memory are usable.
+        /// @note
+        /// - Support for partial memory deallocation is implementation dependent.
+        /// <b>Example of Partial memory deallocation,</b>
+        /// Allocate 5 blocks memory and deallocate any 2 blocks,
+        /// the rest 3 blocks of memory are still usable.
         /// 
-        /// @todo Add exception specifications.
+        /// @todo
+        /// - Add exception specifications.
+        /// - Move Partial Deallocation Concept to concepts section.
         mpublic virtual void DeallocateRaw(memptr src, const sizet count) abstract;
     };
 
