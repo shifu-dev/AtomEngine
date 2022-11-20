@@ -10,6 +10,10 @@ namespace Atom
     /// @note 
     /// - This type is not supposed to be used as an interface to recieve objects,
     ///   as this just defines the base functionality for code reusage, instead use MemPool.
+    ///
+    /// @todo
+    /// - Redesign LinkedMemPool to use object memory(memory used by user during allocation) to
+    ///   allocate Block objects.
     class LinkedMemPool : public virtual MemPool
     {
         /// Used to manage memory blocks
