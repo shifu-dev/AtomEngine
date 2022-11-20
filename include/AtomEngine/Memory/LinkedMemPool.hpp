@@ -5,20 +5,44 @@
 
 namespace Atom
 {
+    /// LinkedMemPool defines the base logic to implement a MemPool using LinkedData structure.
+    ///
+    /// @note 
+    /// - This type is not supposed to be used as an interface to recieve objects,
+    ///   as this just defines the base functionality for code reusage, instead use MemPool.
     class LinkedMemPool : public virtual MemPool
     {
+        /// Used to manage memory blocks
         mprotected struct Block
         {
-            memptr mem = nullptr;   // ptr to memory
-            sizet size = 0;         // size of this memory block
-            bool isFree = true;     // is this memory available to use?
-            bool isRoot = false;    // is this ptr used to manage memory block?
+            /// ----------------------------------------------------------------------------
+            /// Ptr to memory block.
+            memptr mem = nullptr;
+            
+            /// ----------------------------------------------------------------------------
+            /// Size of this memory block.
+            sizet size = 0;
+            
+            /// ----------------------------------------------------------------------------
+            /// Is this memory available to use?
+            bool isFree = true;
+            
+            /// ----------------------------------------------------------------------------
+            /// Is this ptr the root of memory block?
+            /// It is used to manage the memory block.
+            bool isRoot = false;
 
+            /// ----------------------------------------------------------------------------
+            /// Ptr to next Block object, to create linked data structure.
             Block ptr next = nullptr;
         };
 
+        /// ----------------------------------------------------------------------------
+        /// Type alias to promote code readibility.
         mprotected using blockptr = Block ptr;
 
+        /// ----------------------------------------------------------------------------
+        /// Default Constructor
         mpublic LinkedMemPool() noexcept;
 
         mpublic virtual sizet Size() const noexcept override;
