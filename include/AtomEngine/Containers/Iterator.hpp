@@ -10,7 +10,7 @@ namespace Atom
     class OutputIterator {};
 
     /// ----------------------------------------------------------------------------
-    /// Object used to iterate over container elements.
+    /// Object to iterate over container elements.
     ///
     /// @tparam TElement Type of element Iterator iterates over.
     template <typename TElement>
