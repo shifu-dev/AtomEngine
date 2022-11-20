@@ -16,23 +16,23 @@ namespace Atom
     template <typename TElement>
     class Iterator : public virtual InputIterator<TElement>, public virtual OutputIterator<TElement>
     {
-        using ThisT = Iterator<TElement>;
-        using ElementT = TElement;
-
+        using ThisT = Iterator<TElement>;           ///< ----
+        using ElementT = TElement;                  ///< ----
+    
         /// ----------------------------------------------------------------------------
-        /// Current element.
+        /// Get cuurrent element by ref.
         ///
         /// @return @const ref to current element.
         mpublic virtual const ElementT ref Value() const noexcept abstract;
 
         /// ----------------------------------------------------------------------------
-        /// Current element.
+        /// Get cuurrent element by ref.
         ///
         /// @return ref to current element.
         mpublic virtual ElementT ref Value() noexcept abstract;
 
         /// ----------------------------------------------------------------------------
-        /// Current element.
+        /// Get cuurrent element by ref.
         ///
         /// @return @const ref to current element.
         mpublic const ElementT ref operator *() const noexcept
@@ -41,7 +41,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------
-        /// Current element.
+        /// Get cuurrent element by ref.
         ///
         /// @return ref to current element.
         mpublic ElementT ref operator *() noexcept
