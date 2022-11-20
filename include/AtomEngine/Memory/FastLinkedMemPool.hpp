@@ -64,9 +64,4 @@ namespace Atom
         mprotected bool mStackReservedBlocksUsage[BLOCK_STACK_COUNT];
         mprotected sizet mStackReservedFreeBlock = 0;
     };
-
-    template <sizet TBlockStackSize>
-    class FastDynamicLinkedMemPool :
-        public virtual FastLinkedMemPool<TBlockStackSize>,
-        public virtual DynamicLinkedMemPool {};
 }

@@ -6,9 +6,12 @@
 
 namespace Atom
 {
-    /// @brief pointer to iterator to provide iterface ability to Iterable
-    /// @note this class acts like a unique ptr with functionality of iterators
-    /// @tparam TElement type of value iterator points to
+    /// Pointer to iterator to provide iterface ability to Iterable.
+    ///
+    /// @tparam TElement Type of value iterator points to.
+    ///
+    /// @note
+    /// - This class acts like a unique ptr with functionality of iterators.
     template <typename TElement>
     class BoxedIterator : public virtual Iterator<TElement>,
         public BoxedObject<LegacyAllocator, 500>
@@ -19,7 +22,7 @@ namespace Atom
         using IteratorT = Iterator<ElementT>;
         using AllocatorT = LegacyAllocator;
 
-        ////////////////////////////////////////////////////////////////////////////////
+        /// ----------------------------------------------------------------------------
 
         mpublic BoxedIterator() : BoxedObjectT(null) { }
 
@@ -73,7 +76,7 @@ namespace Atom
             return ptr this;
         }
 
-        ////////////////////////////////////////////////////////////////////////////////
+        /// ----------------------------------------------------------------------------
 
         mpublic IteratorT ref GetIterator() noexcept
         {
@@ -100,7 +103,7 @@ namespace Atom
             return GetIterator().Compare(rhs);
         }
 
-        ////////////////////////////////////////////////////////////////////////////////
+        /// ----------------------------------------------------------------------------
 
         /// @brief compares with other iterator pointer
         /// @param rhs other iterator pointer to compare with
@@ -122,221 +125,6 @@ namespace Atom
         mpublic virtual int Compare(const ThisT ref rhs) const noexcept
         {
             return GetIterator().Compare(rhs.GetIterator());
-        }
-    };
-
-    template <typename TElement>
-    class BoxedForwardIterator :
-        public virtual BoxedIterator<TElement>,
-        public virtual ForwardIterator<TElement>
-    {
-        using ThisT = BoxedForwardIterator<TElement>;
-        using BaseT = BoxedIterator<TElement>;
-        using IteratorT = ForwardIterator<TElement>;
-
-        ////////////////////////////////////////////////////////////////////////////////
-
-        mpublic BoxedForwardIterator() : BaseT(null) { }
-
-        mpublic BoxedForwardIterator(const ThisT ref other) noexcept :
-            BaseT(other) { }
-
-        mpublic BoxedForwardIterator(ThisT rref other) noexcept :
-            BaseT(move(other)) { }
-
-        mpublic ThisT ref operator = (const ThisT ref other) noexcept
-        {
-            BaseT::operator = (other);
-            return ptr this;
-        }
-
-        mpublic ThisT ref operator = (ThisT rref other) noexcept
-        {
-            BaseT::operator = (move(other));
-            return ptr this;
-        }
-
-        mpublic template <typename TIterator>
-            BoxedForwardIterator(const TIterator ref iterator) noexcept :
-            BaseT(iterator)
-        {
-            StaticAssertSubClass<IteratorT, TIterator>();
-        }
-
-        mpublic template <typename TIterator>
-            BoxedForwardIterator(TIterator rref iterator) noexcept :
-            BaseT(move(iterator))
-        {
-            StaticAssertSubClass<IteratorT, TIterator>();
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////
-
-        mpublic IteratorT ref GetIterator() noexcept
-        {
-            return rcast<IteratorT ref>(BaseT::GetIterator());
-        }
-
-        mpublic const IteratorT ref GetIterator() const noexcept
-        {
-            return rcast<const IteratorT ref>(BaseT::GetIterator());
-        }
-
-        mpublic virtual void MoveFwd() const noexcept override
-        {
-            GetIterator().MoveFwd();
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////
-
-        mpublic operator BaseT () const noexcept
-        {
-            return BaseT(ptr this);
-        }
-    };
-
-    template <typename TElement>
-    class BoxedBidirectionalIterator :
-        public virtual BoxedForwardIterator<TElement>,
-        public virtual BidirectionalIterator<TElement>
-    {
-        using ThisT = BoxedBidirectionalIterator<TElement>;
-        using BaseT = BoxedForwardIterator<TElement>;
-        using IteratorT = BidirectionalIterator<TElement>;
-
-        ////////////////////////////////////////////////////////////////////////////////
-
-        mpublic BoxedBidirectionalIterator() : BaseT(null) { }
-
-        mpublic BoxedBidirectionalIterator(const ThisT ref other) noexcept :
-            BaseT(other) { }
-
-        mpublic BoxedBidirectionalIterator(ThisT rref other) noexcept :
-            BaseT(move(other)) { }
-
-        mpublic ThisT ref operator = (const ThisT ref other) noexcept
-        {
-            BaseT::operator = (other);
-            return ptr this;
-        }
-
-        mpublic ThisT ref operator = (ThisT rref other) noexcept
-        {
-            BaseT::operator = (move(other));
-            return ptr this;
-        }
-
-        mpublic template <typename TIterator>
-            BoxedBidirectionalIterator(const TIterator ref iterator) noexcept :
-            BaseT(iterator)
-        {
-            StaticAssertSubClass<IteratorT, TIterator>();
-        }
-
-        mpublic template <typename TIterator>
-            BoxedBidirectionalIterator(TIterator rref iterator) noexcept :
-            BaseT(move(iterator))
-        {
-            StaticAssertSubClass<IteratorT, TIterator>();
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////
-
-        mpublic IteratorT ref GetIterator() noexcept
-        {
-            return rcast<IteratorT ref>(BaseT::GetIterator());
-        }
-
-        mpublic const IteratorT ref GetIterator() const noexcept
-        {
-            return rcast<const IteratorT ref>(BaseT::GetIterator());
-        }
-
-        mpublic virtual void MoveBwd() const noexcept override
-        {
-            GetIterator().MoveBwd();
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////
-
-        mpublic operator BaseT () const noexcept
-        {
-            return BaseT(ptr this);
-        }
-    };
-
-    template <typename TElement>
-    class BoxedRandomAccessIterator :
-        public virtual BoxedBidirectionalIterator<TElement>,
-        public virtual RandomAccessIterator<TElement>
-    {
-        using ThisT = BoxedRandomAccessIterator<TElement>;
-        using BaseT = BoxedBidirectionalIterator<TElement>;
-        using IteratorT = RandomAccessIterator<TElement>;
-
-        ////////////////////////////////////////////////////////////////////////////////
-
-        mpublic BoxedRandomAccessIterator() : BaseT(null) { }
-
-        mpublic BoxedRandomAccessIterator(const ThisT ref other) noexcept :
-            BaseT(other) { }
-
-        mpublic BoxedRandomAccessIterator(ThisT rref other) noexcept :
-            BaseT(move(other)) { }
-
-        mpublic ThisT ref operator = (const ThisT ref other) noexcept
-        {
-            BaseT::operator = (other);
-            return ptr this;
-        }
-
-        mpublic ThisT ref operator = (ThisT rref other) noexcept
-        {
-            BaseT::operator = (move(other));
-            return ptr this;
-        }
-
-        mpublic template <typename TIterator>
-            BoxedRandomAccessIterator(const TIterator ref iterator) noexcept :
-            BaseT(iterator)
-        {
-            StaticAssertSubClass<IteratorT, TIterator>();
-        }
-
-        mpublic template <typename TIterator>
-            BoxedRandomAccessIterator(TIterator rref iterator) noexcept :
-            BaseT(move(iterator))
-        {
-            StaticAssertSubClass<IteratorT, TIterator>();
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////
-
-        mpublic IteratorT ref GetIterator() noexcept
-        {
-            return rcast<IteratorT ref>(BaseT::GetIterator());
-        }
-
-        mpublic const IteratorT ref GetIterator() const noexcept
-        {
-            return rcast<const IteratorT ref>(BaseT::GetIterator());
-        }
-
-        mpublic virtual void MoveFwdBy(const sizet steps) const noexcept override
-        {
-            GetIterator().MoveFwdBy(steps);
-        }
-
-        mpublic virtual void MoveBwdBy(const sizet steps) const noexcept override
-        {
-            GetIterator().MoveBwdBy(steps);
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////
-
-        mpublic operator BaseT () const noexcept
-        {
-            return BaseT(ptr this);
         }
     };
 }

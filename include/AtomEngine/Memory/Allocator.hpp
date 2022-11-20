@@ -147,7 +147,7 @@ namespace Atom
             {
                 try
                 {
-                    [src + i] ->TType::dtor TType();
+                    (src + i)->TType::dtor TType();
                 }
                 catch (const std::exception ref ex)
                 {

@@ -21,7 +21,7 @@ namespace Atom
         mprivate template <typename T>
             constexpr static bool IsBoxedObject = IsSubClass<IdentifierT, T>;
 
-        ////////////////////////////////////////////////////////////////////////////////
+        /// ----------------------------------------------------------------------------
 
         mpublic BoxedObject() : ThisT(null) { }
 
@@ -121,7 +121,7 @@ namespace Atom
             }
         }
 
-        ////////////////////////////////////////////////////////////////////////////////
+        /// ----------------------------------------------------------------------------
 
         mpublic template <typename TObject>
             void SetObject(const TObject ref object) noexcept
@@ -161,7 +161,7 @@ namespace Atom
             return mObject;
         }
 
-        ////////////////////////////////////////////////////////////////////////////////
+        /// ----------------------------------------------------------------------------
 
         mprotected memptr mAllocMem(const sizet size) noexcept
         {
@@ -258,7 +258,7 @@ namespace Atom
             }
         }
 
-        ////////////////////////////////////////////////////////////////////////////////
+        /// ----------------------------------------------------------------------------
 
         mprotected byte mStackMem[StackSize];
         mprotected AllocatorT mAllocator;

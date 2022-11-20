@@ -2,7 +2,7 @@
 #include "AtomEngine/Core.hpp"
 #include "AtomEngine/Callable/Callable.hpp"
 #include "AtomEngine/Memory.hpp"
-#include "AtomEngine/Containers/BoxedIterator.hpp"
+#include "AtomEngine/Containers/BoxedForwardIterator.hpp"
 
 namespace Atom
 {

@@ -16,7 +16,7 @@ namespace Atom
         mprotected using CallableT = Callable<TResult(TArgs...)>;
         mprotected using BoxedObjectT = BoxedObject<LegacyAllocator, 50>;
 
-        ////////////////////////////////////////////////////////////////////////////////
+        /// ----------------------------------------------------------------------------
 
         mpublic BoxedCallable() = default;
         mpublic BoxedCallable(const ThisT ref other) = default;
@@ -56,7 +56,7 @@ namespace Atom
             return ptr this;
         }
 
-        ////////////////////////////////////////////////////////////////////////////////
+        /// ----------------------------------------------------------------------------
 
         mpublic CallableT ref GetCallable() noexcept
         {

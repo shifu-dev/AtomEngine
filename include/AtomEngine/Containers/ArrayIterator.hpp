@@ -1,6 +1,6 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Containers/Iterator.hpp"
+#include "AtomEngine/Containers/RandomAccessIterator.hpp"
 
 namespace Atom
 {
