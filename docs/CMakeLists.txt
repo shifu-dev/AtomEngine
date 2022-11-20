@@ -9,6 +9,9 @@ set(DOXYGEN_CONFIG_IN ${CMAKE_CURRENT_SOURCE_DIR}/doxygen.conf)
 set(DOXYGEN_CONFIG ${DOXYGEN_CURRENT_BINARY_DIR}doxygen.conf)
 set(DOXYGEN_STAMP ${DOXYGEN_CURRENT_BINARY_DIR}doxygen.stamp)
 
+set(DOXYGEN_HTML_EXTRA_STYLESHEETS ${CMAKE_SOURCE_DIR}/vendors/doxygen-awesome-css/doxygen-awesome.css)
+set(DOXYGEN_HTML_LAYOUT ${CMAKE_CURRENT_LIST_DIR}/doxygen-layout.xml)
+
 configure_file(${DOXYGEN_CONFIG_IN} ${DOXYGEN_CONFIG})
 
 ######################################################################
@@ -35,6 +38,8 @@ add_custom_command(
     OUTPUT ${DOXYGEN_STAMP}
     DEPENDS ${DOXYGEN_INPUT_FILES}
     DEPENDS ${DOXYGEN_CONFIG_IN}
+    DEPENDS ${DOXYGEN_HTML_LAYOUT}
+    DEPENDS ${DOXYGEN_HTML_EXTRA_STYLESHEETS}
 
     COMMAND ${CMAKE_COMMAND} -E echo "Cleaning Docs..."
     COMMAND ${CMAKE_COMMAND} -E rm -rf ${DOXYGEN_OUTPUT}
