@@ -44,7 +44,7 @@ namespace Atom
         /// Moves Iterator forward to point to next element.
         ///
         /// @note
-        /// - Does not follow postfix definations, works same as prefeix.
+        /// - Does not follow postfix definations, works same as prefix.
         /// - Calls MoveFwd()
         mpublic const ThisT ref operator ++(int) const noexcept
         {
@@ -56,7 +56,7 @@ namespace Atom
         /// Moves Iterator forward to point to next element.
         ///
         /// @note
-        /// - Does not follow postfix definations, works same as prefeix.
+        /// - Does not follow postfix definations, works same as prefix.
         /// - Calls MoveFwd()
         mpublic ThisT ref operator ++(int) noexcept
         {
