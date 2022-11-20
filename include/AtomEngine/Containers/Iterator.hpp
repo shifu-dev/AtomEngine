@@ -9,60 +9,89 @@ namespace Atom
     template <typename TElement>
     class OutputIterator {};
 
+    /// ----------------------------------------------------------------------------
+    /// Object used to iterate over container elements.
+    ///
+    /// @tparam TElement Type of element Iterator iterates over.
     template <typename TElement>
     class Iterator : public virtual InputIterator<TElement>, public virtual OutputIterator<TElement>
     {
         using ThisT = Iterator<TElement>;
         using ElementT = TElement;
 
-        // **************************************************************
-
-        /// @brief current element value
-        /// @return return current element value by const ref
+        /// ----------------------------------------------------------------------------
+        /// Current element.
+        ///
+        /// @return @const ref to current element.
         mpublic virtual const ElementT ref Value() const noexcept abstract;
 
-        /// @brief current element value
-        /// @return return current element value by ref
+        /// ----------------------------------------------------------------------------
+        /// Current element.
+        ///
+        /// @return ref to current element.
         mpublic virtual ElementT ref Value() noexcept abstract;
 
-        /// @brief ptr operator to return current iteration value by const ref
-        /// @return value of current iteration
+        /// ----------------------------------------------------------------------------
+        /// Current element.
+        ///
+        /// @return @const ref to current element.
         mpublic const ElementT ref operator *() const noexcept
         {
             return Value();
         }
 
-        /// @brief ptr operator to return current iteration value by ref
-        /// @return value of current iteration
+        /// ----------------------------------------------------------------------------
+        /// Current element.
+        ///
+        /// @return ref to current element.
         mpublic ElementT ref operator *() noexcept
         {
             return Value();
         }
 
-        // **************************************************************
+        /// ----------------------------------------------------------------------------
+        /// Compares itself with other iterator.
+        ///
+        /// @param other Other Iterator to compare with.
+        /// @return
+        /// - = 0 if equal.
+        /// - > 0 if this is greater.
+        /// - < 0 if this is smaller.
+        /// 
+        /// @note
+        /// - This does not compares the element, but the Iterator.
+        mpublic virtual int Compare(const ThisT ref other) const noexcept abstract;
 
-        /// @brief compares with other iterator
-        /// @param rhs other iterator to compare with
-        /// @return 0 if equal, greater than 0 if this is greater else less than 0
-        mpublic virtual int Compare(const ThisT ref rhs) const noexcept abstract;
-
-        /// @brief compares with other iterator
-        /// @param rhs other iterator to compare with
-        /// @return true if both iterators represent same value
-        mpublic virtual bool operator ==(const ThisT ref rhs) const noexcept
+        /// ----------------------------------------------------------------------------
+        /// Compares itself with other iterator.
+        ///
+        /// @param other Other iterator to compare with.
+        /// @return @true if both iterators represent same value.
+        ///
+        /// @note
+        /// - Calls \p{Compare(other) is 0;}
+        /// 
+        /// @see
+        /// - Compare()
+        mpublic virtual bool operator ==(const ThisT ref other) const noexcept
         {
-            return Compare(rhs) is 0;
+            return Compare(other) is 0;
         }
 
-        /// @brief compares with other iterator
-        /// @param rhs other iterator to compare with
-        /// @return false if both iterators represent same value
+        /// ----------------------------------------------------------------------------
+        /// Compares itself with other iterator.
+        ///
+        /// @param other Other iterator to compare with.
+        /// @return @true if both iterators represent same value.
+        ///
+        /// @note
+        /// - Calls \p{Compare(other) isnot 0;}
         /// 
-        /// @note this operator is used by c++ range-based for loop
-        /// to check the end of iteration
-        mpublic virtual bool operator !=(const ThisT ref rhs) const noexcept
+        /// @see
+        /// - Compare()
+        mpublic virtual bool operator !=(const ThisT ref other) const noexcept
         {
-            return Compare(rhs) isnot 0;
+            return Compare(other) isnot 0;
         }
     };
 }
