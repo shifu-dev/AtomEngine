@@ -4,14 +4,21 @@
 namespace Atom
 {
     template <typename TBase, typename TDerived>
-    inline constexpr bool IsSubClass = std::is_convertible_v<
-        std::remove_reference_t<TDerived> ptr,
-        std::remove_reference_t<TBase> ptr>;
+    inline constexpr bool IsSubClass =
+    std::is_convertible_v
+    <
+        std::remove_const_t<
+        std::remove_volatile_t<
+        std::remove_reference_t<TDerived>>> ptr,
+
+        std::remove_const_t<
+        std::remove_volatile_t<
+        std::remove_reference_t<TBase>>> ptr
+    >;
 
     template <typename TBase, typename TDerived>
     constexpr void StaticAssertSubClass()
     {
-        // sassert(IsSubClass<TBase, TDerived>, nameof(TDerived) + " is not a subclass of " + nameof(TBase));
         sassert(IsSubClass<TBase, TDerived>, "Inappropriate SubClass");
     }
 
