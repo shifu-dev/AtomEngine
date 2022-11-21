@@ -27,14 +27,14 @@ namespace Atom
         ///         precedence over ForEach() accepting Callable object.
         /// 
         /// @param functor Functor object, this object is wrapped using @ref Callable::Create().
-        mpublic template <typename TFunctor, EnableIf<not IsSubClass<ConstForEachActionT, TFunctor>> = 0>
+        mpublic template <typename TFunctor>
             void ForEachT(const TFunctor ref functor) const
         {
             ForEach(ConstForEachActionT::Create(functor));
         }
 
         mpublic template <typename TFunctor>
-            void ForEachT(CallableFunctor<TFunctor, void, int ref> functor)
+            void ForEachT(const TFunctor ref functor)
         {
             ForEach(ForEachActionT::Create(functor));
         }
