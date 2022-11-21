@@ -1,6 +1,7 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
 #include "AtomEngine/Containers/Iterable.hpp"
+#include "AtomEngine/Containers/Comparer.hpp"
 
 namespace Atom
 {

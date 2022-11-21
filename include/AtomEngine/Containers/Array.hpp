@@ -31,7 +31,7 @@ namespace Atom
 
         // *******************************************************************
 
-        mpublic virtual void ForEach(const Callable<void(const ElementT ref)> ref callback) const final override
+        mpublic virtual void ForEach(const Action<const ElementT ref> ref callback) const final override
         {
             for (sizet i = 0; i < mCount; i++)
             {
@@ -39,7 +39,7 @@ namespace Atom
             }
         }
 
-        mpublic virtual void ForEach(const Callable<void(ElementT ref)> ref callback) final override
+        mpublic virtual void ForEach(const Action<ElementT ref> ref callback) final override
         {
             for (sizet i = 0; i < mCount; i++)
             {
@@ -47,51 +47,50 @@ namespace Atom
             }
         }
 
-        mpublic virtual IteratorT Begin() noexcept final override
+        mpublic IteratorT Begin() noexcept
         {
             return IteratorT(mArray + 0);
         }
 
-        mpublic virtual const IteratorT Begin() const noexcept final override
+        mpublic const IteratorT Begin() const noexcept
         {
             return IteratorT(mArray + 0);
         }
 
-        mpublic virtual IteratorT End() noexcept final override
+        mpublic IteratorT End() noexcept
         {
             return IteratorT(mArray + mCount);
         }
 
-        mpublic virtual const IteratorT End() const noexcept final override
+        mpublic const IteratorT End() const noexcept
         {
             return IteratorT(mArray + mCount);
+        }
+
+        mprotected BoxedForwardIteratorT mIterableBegin() noexcept final override
+        {
+            return BoxedForwardIteratorT(Begin());
+        }
+
+        mprotected const BoxedForwardIteratorT mIterableBegin() const noexcept final override
+        {
+            return BoxedForwardIteratorT(Begin());
+        }
+
+        mprotected BoxedForwardIteratorT mIterableEnd() noexcept final override
+        {
+            return BoxedForwardIteratorT(End());
+        }
+
+        mprotected const BoxedForwardIteratorT mIterableEnd() const noexcept final override
+        {
+            return BoxedForwardIteratorT(End());
         }
 
         mpublic IteratorT begin() noexcept { return Begin(); }
         mpublic const IteratorT begin() const noexcept { return Begin(); }
-
         mpublic IteratorT end() noexcept { return End(); }
         mpublic const IteratorT end() const noexcept { return End(); }
-
-        mprotected virtual const BoxedForwardIteratorT Iterable_begin() const noexcept override
-        {
-            return BoxedForwardIteratorT(Begin());
-        }
-
-        mprotected virtual BoxedForwardIteratorT Iterable_begin() noexcept override
-        {
-            return BoxedForwardIteratorT(Begin());
-        }
-
-        mprotected virtual const BoxedForwardIteratorT Iterable_end() const noexcept override
-        {
-            return BoxedForwardIteratorT(End());
-        }
-
-        mprotected virtual BoxedForwardIteratorT Iterable_end() noexcept override
-        {
-            return BoxedForwardIteratorT(End());
-        }
 
         // *******************************************************************
 
