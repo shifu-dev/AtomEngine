@@ -1,8 +1,8 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Memory/BoxedObject.hpp"
-#include "AtomEngine/Memory/LegacyAllocator.hpp"
 #include "AtomEngine/Callable/Callable.hpp"
+#include "AtomEngine/Memory/BoxedObject.hpp"
+#include "AtomEngine/Memory/DefaultAllocator.hpp"
 
 namespace Atom
 {
@@ -10,11 +10,11 @@ namespace Atom
     template <typename TResult, typename... TArgs>
     class BoxedCallable<TResult(TArgs...)> :
         public Callable<TResult(TArgs...)>,
-        public BoxedObject<LegacyAllocator, 50>
+        public BoxedObject<DefaultAllocator, 50>
     {
         mprivate using ThisT = BoxedCallable<TResult(TArgs...)>;
         mprotected using CallableT = Callable<TResult(TArgs...)>;
-        mprotected using BoxedObjectT = BoxedObject<LegacyAllocator, 50>;
+        mprotected using BoxedObjectT = BoxedObject<DefaultAllocator, 50>;
 
         /// ----------------------------------------------------------------------------
 

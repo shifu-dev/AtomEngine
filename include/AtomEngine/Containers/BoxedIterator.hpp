@@ -2,7 +2,7 @@
 #include "AtomEngine/Core.hpp"
 #include "AtomEngine/Containers/Iterator.hpp"
 #include "AtomEngine/Memory/BoxedObject.hpp"
-#include "AtomEngine/Memory/LegacyAllocator.hpp"
+#include "AtomEngine/Memory/DefaultAllocator.hpp"
 
 namespace Atom
 {
@@ -14,13 +14,13 @@ namespace Atom
     /// - This class acts like a unique ptr with functionality of iterators.
     template <typename TElement>
     class BoxedIterator : public virtual Iterator<TElement>,
-        public BoxedObject<LegacyAllocator, 500>
+        public BoxedObject<DefaultAllocator, 500>
     {
         using ThisT = BoxedIterator<TElement>;
-        using BoxedObjectT = BoxedObject<LegacyAllocator, 500>;
+        using BoxedObjectT = BoxedObject<DefaultAllocator, 500>;
         using ElementT = TElement;
         using IteratorT = Iterator<ElementT>;
-        using AllocatorT = LegacyAllocator;
+        using AllocatorT = DefaultAllocator;
 
         /// ----------------------------------------------------------------------------
 

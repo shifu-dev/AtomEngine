@@ -1,7 +1,7 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
 #include "AtomEngine/Memory/Allocator.hpp"
-#include "AtomEngine/Memory/LegacyAllocator.hpp"
+#include "AtomEngine/Memory/DefaultAllocator.hpp"
 
 namespace Atom
 {
@@ -34,7 +34,7 @@ namespace Atom
         mprotected TType ptr mPtr;
     };
 
-    template <typename TType, typename TAllocator = LegacyAllocator>
+    template <typename TType, typename TAllocator = DefaultAllocator>
     struct UniquePtr : public Ptr<TType>
     {
         using TThis = UniquePtr<TType, TAllocator>;
@@ -46,7 +46,7 @@ namespace Atom
         mpublic template <typename... Args>
             static TThis Create(Args... args)
         {
-            return Create(LegacyAllocator(), forward(args...));
+            return Create(DefaultAllocator(), forward(args...));
         }
 
         mpublic template <typename... Args>
