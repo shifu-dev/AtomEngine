@@ -279,10 +279,4 @@ namespace Atom
         {
             RemoveIfCallable(PredicateT::Create(func));
         }
-    };
-
-    /// @brief list like structure that can manage memory dynamically
-    /// @tparam TElement type of element to store
-    template <typename TElement>
-    class DynamicList : public virtual List<TElement>, public virtual DynamicCollection<TElement> {};
-}
+    };}
