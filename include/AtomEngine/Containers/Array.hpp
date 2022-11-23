@@ -94,35 +94,22 @@ namespace Atom
 
         // *******************************************************************
 
-        mpublic virtual ElementT ref ElementAt(const sizet index) final override
-        {
-            AssertIndex(index);
-
-            return mArray[index];
-        }
-
-        mpublic virtual const ElementT ref ElementAt(const sizet index) const final override
-        {
-            AssertIndex(index);
-
-            return mArray[index];
-        }
-
-        // *******************************************************************
-
-        mpublic ElementT ptr RawData() noexcept
+        /// @{ ----------------------------------------------------------------------------
+        /// @return Pointer to the underlying array.
+        mpublic ElementT ptr Data() noexcept
         {
             return mArray;
         }
 
-        mpublic const ElementT ptr RawData() const noexcept
+        mpublic const ElementT ptr Data() const noexcept
         {
             return mArray;
         }
+        /// @} ----------------------------------------------------------------------------
 
         // *******************************************************************
 
-        mpublic virtual sizet FirstIndexOf(const ElementT ref element, const EqualityComparerT ref comparer) const final override
+        mpublic virtual sizet FirstIndexOf(const ElementT ref element, const EqualityComparerT ref comparer) const noexcept final override
         {
             for (sizet i = 0; i < mCount; i++)
             {
@@ -135,7 +122,7 @@ namespace Atom
             return NPOS;
         }
 
-        mpublic virtual sizet LastIndexOf(const ElementT ref element, const EqualityComparerT ref comparer) const final override
+        mpublic virtual sizet LastIndexOf(const ElementT ref element, const EqualityComparerT ref comparer) const noexcept final override
         {
             for (sizet i = mCount; i >= 0; i--)
             {
@@ -159,8 +146,8 @@ namespace Atom
 
         mpublic virtual void InsertAt(const sizet index, const ElementT ref element) final override
         {
-            AssertIndex(index);
-            AssertCapacityFor(1);
+            mAssertIndexIsInBounds(index);
+            mAssertCapacityFor(1);
 
             for (sizet i = mCount; i >= index; i--)
             {
@@ -173,14 +160,14 @@ namespace Atom
 
         mpublic virtual void InsertBack(const ElementT ref element) final override
         {
-            AssertCapacityFor(1);
+            mAssertCapacityFor(1);
             mArray[mCount] = element;
             mCount++;
         }
 
         mpublic virtual void RemoveBack() final override
         {
-            AssertIndex(0);
+            mAssertIndexIsInBounds(0);
 
             mArray[mCount] = ElementT();
             mCount--;
@@ -190,8 +177,8 @@ namespace Atom
 
         mpublic virtual void InsertAt(const sizet index, const ForwardIteratorT ref it, const sizet count) final override
         {
-            AssertIndex(index);
-            AssertCapacityFor(count);
+            mAssertIndexIsInBounds(index);
+            mAssertCapacityFor(count);
 
             for (sizet i = mCount; i >= index; i--)
             {
@@ -210,7 +197,7 @@ namespace Atom
 
         mpublic virtual void RemoveAt(const sizet index) final override
         {
-            AssertIndex(index);
+            mAssertIndexIsInBounds(index);
 
             for (sizet i = index; i < mCount; i++)
             {
@@ -257,19 +244,16 @@ namespace Atom
 
         // *******************************************************************
 
-        mprotected void AssertIndex(const sizet index) const
+        mprotected void mAssertIndexIsInBounds(const sizet index) const override final
         {
-            if (index > (mCount - 1))
-            {
-                throw std::out_of_range("index was out of range");
-            }
+            this->List<TElement>::mAssertIndexIsInBounds(index);
         }
 
         /// @brief checks capcity and resizes if required
         /// @param count count of elements to insert
         /// @note this function is called every time any number
         /// of elements are to be inserted irrelevance of their position
-        mprotected void AssertCapacityFor(const sizet count)
+        mprotected void mAssertCapacityFor(const sizet count)
         {
             if (mCount >= mCapacity)
             {
