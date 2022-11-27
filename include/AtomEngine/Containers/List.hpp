@@ -15,12 +15,14 @@ namespace Atom
         using ElementT = TElement;                                             ///< ----
         using IterableT = Iterable<ElementT>;                                  ///< ----
         using CollectionT = Collection<ElementT>;                              ///< ----
+        using ConstCollectionT = ConstCollection<ElementT>;                    ///< ----
         using ComparerT = Comparer<ElementT>;                                  ///< ----
         using EqualityComparerT = EqualityComparer<ElementT>;                  ///< ----
         using DefaultEqualityComparerT = DefaultEqualityComparer<ElementT>;    ///< ----
         using ForwardIteratorT = ForwardIterator<ElementT>;                    ///< ----
         using PredicateT = Predicate<const ElementT ref, sizet>;               ///< ----
-        using CollectionT::Count;
+        mpublic using ConstCollectionT::Contains;
+        mpublic using CollectionT::Count;
 
         /// @{ ----------------------------------------------------------------------------
         /// Access element at index \p{index} without bounds checking.
