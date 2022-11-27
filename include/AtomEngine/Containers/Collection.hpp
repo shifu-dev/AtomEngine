@@ -5,36 +5,63 @@
 
 namespace Atom
 {
-    /// @brief a data structure that can modify elements
-    /// @tparam TElement type of element to store
+    /// ----------------------------------------------------------------------------
+    /// Represents a modifiable collection of elements.
+    /// 
+    /// @tparam TElement type this collection contains.
     template <typename TElement>
     class Collection : public virtual Iterable<TElement>
     {
-        using ElementT = TElement;
-        using EqualityComparerT = EqualityComparer<ElementT>;
+        using ElementT = TElement;                                             ///< ----
+        using EqualityComparerT = EqualityComparer<ElementT>;                  ///< ----
+        using DefaultEqualityComparerT = DefaultEqualityComparer<ElementT>;    ///< ----
 
-        /// @brief current count of elements
-        /// @return count of elements
+        /// ----------------------------------------------------------------------------
+        /// Current count of elements.
+        /// 
+        /// @return Count of elements.
         mpublic virtual sizet Count() const noexcept abstract;
 
+        /// ----------------------------------------------------------------------------
+        /// Is the conatiner empty.
+        /// 
+        /// @return @true if collection is empty, @false otherwise.
         mpublic virtual bool IsEmpty() const noexcept
         {
             return Count() == 0;
         }
 
-        /// @brief checks if given element is present in collection
-        /// @param element element to compare with
-        /// @param comparer comparer used to compare elements
-        /// @return true if element is present in the collection
+        /// ----------------------------------------------------------------------------
+        /// Checks if given element is present in the containter.
+        /// 
+        /// @param element Element to compare with.
+        /// @param comparer Comparer used to compare elements.
+        /// @return @true if element is present in the collection, @false otherwise.
         mpublic virtual bool Contains(const ElementT ref element, const EqualityComparerT ref comparer) const noexcept abstract;
 
-        /// @brief adds element to collection
-        /// @param element element to store
-        /// @note position of element is implementation dependent
+        /// ----------------------------------------------------------------------------
+        /// Checks if given element is present in the containter.
+        /// 
+        /// @param element Element to compare with.
+        /// @param comparer Comparer used to compare elements.
+        /// @return @true if element is present in the collection, @false otherwise.
+        mpublic bool Contains(const ElementT ref element) const noexcept
+        {
+            return Contains(element, DefaultEqualityComparerT());
+        }
+
+        /// ----------------------------------------------------------------------------
+        /// Inserts an element in the collection.
+        /// 
+        /// @param element Element to insert.
+        /// 
+        /// @note Position of element is implementation dependent.
         mpublic virtual void Insert(const ElementT ref element) abstract;
 
-        /// @brief removed element from collection
-        /// @param element element to remove
+        /// ----------------------------------------------------------------------------
+        /// Removes element from the collection.
+        /// 
+        /// @param element Element to remove.
         mpublic virtual void Remove(const ElementT ref element) abstract;
     };
 }
