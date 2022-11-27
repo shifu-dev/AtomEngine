@@ -11,6 +11,7 @@ namespace Atom
     class Array : public virtual List<TElement>
     {
         using ElementT = TElement;
+        using ConstListT = ConstList<ElementT>;
         using ForwardIteratorT = ForwardIterator<ElementT>;
         using BoxedForwardIteratorT = BoxedForwardIterator<ElementT>;
         using EqualityComparerT = EqualityComparer<ElementT>;
@@ -246,7 +247,7 @@ namespace Atom
 
         mprotected void mAssertIndexIsInBounds(const sizet index) const override final
         {
-            this->List<TElement>::mAssertIndexIsInBounds(index);
+            ConstListT::mAssertIndexIsInBounds(index);
         }
 
         /// @brief checks capcity and resizes if required
