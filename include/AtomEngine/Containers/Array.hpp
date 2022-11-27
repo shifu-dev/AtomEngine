@@ -88,11 +88,6 @@ namespace Atom
             return BoxedForwardIteratorT(End());
         }
 
-        mpublic IteratorT begin() noexcept { return Begin(); }
-        mpublic const IteratorT begin() const noexcept { return Begin(); }
-        mpublic IteratorT end() noexcept { return End(); }
-        mpublic const IteratorT end() const noexcept { return End(); }
-
         // *******************************************************************
 
         /// @{ ----------------------------------------------------------------------------

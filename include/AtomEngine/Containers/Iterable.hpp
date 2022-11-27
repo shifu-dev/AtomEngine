@@ -93,40 +93,6 @@ namespace Atom
         /// @} ----------------------------------------------------------------------------
 
         /// @{ ----------------------------------------------------------------------------
-        /// This is used by range based for loop.
-        /// See Begin() for implementation.
-        /// 
-        /// @note AtomEngine does not use begin() becuase it does not
-        ///       follow our naming standards.
-        mpublic BoxedForwardIteratorT begin() noexcept
-        {
-            return Begin();
-        }
-
-        mpublic const BoxedForwardIteratorT begin() const noexcept
-        {
-            return Begin();
-        }
-        /// @} ----------------------------------------------------------------------------
-
-        /// @{ ----------------------------------------------------------------------------
-        /// This is used by range based for loop.
-        /// See End() for implementation.
-        /// 
-        /// @note AtomEngine does not use end() becuase it does not
-        ///       follow our naming standards.
-        mpublic BoxedForwardIteratorT end() noexcept
-        {
-            return End();
-        }
-
-        mpublic const BoxedForwardIteratorT end() const noexcept
-        {
-            return End();
-        }
-        /// @} ----------------------------------------------------------------------------
-
-        /// @{ ----------------------------------------------------------------------------
         /// Implementation function for Begin().
         mprotected virtual BoxedForwardIteratorT mIterableBegin() noexcept abstract;
 
@@ -139,5 +105,48 @@ namespace Atom
 
         mprotected virtual const BoxedForwardIteratorT mIterableEnd() const noexcept abstract;
         /// @} ----------------------------------------------------------------------------
+    };
+
+    template <typename TIterable>
+    class iterate
+    {
+        mpublic Iterate(TIterable ref iterable) :
+            mIterable(iterable) { }
+
+        /// @{ ----------------------------------------------------------------------------
+        /// This is used by range based for loop.
+        /// See Begin() for implementation.
+        /// 
+        /// @note AtomEngine does not use begin() becuase it does not
+        ///       follow our naming standards.
+        mpublic auto begin() noexcept
+        {
+            return mIterable.Begin();
+        }
+
+        mpublic const auto begin() const noexcept
+        {
+            return mIterable.Begin();
+        }
+        /// @} ----------------------------------------------------------------------------
+
+        /// @{ ----------------------------------------------------------------------------
+        /// This is used by range based for loop.
+        /// See End() for implementation.
+        /// 
+        /// @note AtomEngine does not use end() becuase it does not
+        ///       follow our naming standards.
+        mpublic auto end() noexcept
+        {
+            return mIterable.End();
+        }
+
+        mpublic const auto end() const noexcept
+        {
+            return mIterable.End();
+        }
+        /// @} ----------------------------------------------------------------------------
+
+        mprivate TIterable ref mIterable;
     };
 }
