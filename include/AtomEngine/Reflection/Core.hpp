@@ -19,7 +19,7 @@ namespace Atom
     template <typename TBase, typename TDerived>
     constexpr void StaticAssertSubClass()
     {
-        sassert(IsSubClass<TBase, TDerived>, "Inappropriate SubClass");
+        SASSERT(IsSubClass<TBase, TDerived>, "Inappropriate SubClass");
     }
 
     template <bool Enable, typename TType = bool>

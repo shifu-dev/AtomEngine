@@ -6,7 +6,7 @@ using namespace Atom;
 
 TEST_CASE("Byte", "[Implmentation]")
 {
-    sassert(sizeof(byte) == 1, "sizeof(byte) != 1");
+    SASSERT(sizeof(byte) == 1, "sizeof(byte) != 1");
 
     byte value;
 
@@ -23,6 +23,6 @@ TEST_CASE("Byte", "[Implmentation]")
     CHECK(g == 99U);
 
     byte d = 4;
-    CHECK(scast<int>(d << 1) == 8);
-    CHECK(scast<int>(d >> 1) == 2);
+    CHECK(SCAST(int, d << 1) == 8);
+    CHECK(SCAST(int, d >> 1) == 2);
 }

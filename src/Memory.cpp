@@ -11,7 +11,7 @@ namespace Atom
         mpublic virtual memptr mAllocateMemory(const sizet size) override
         {
             // default implementation uses global mem pool
-            return scast<memptr>(malloc(size));
+            return SCAST(memptr, malloc(size));
         }
 
         mpublic virtual void mDeallocateMemory(memptr mem, const sizet size) override

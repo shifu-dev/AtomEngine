@@ -24,9 +24,9 @@
 #define typeof(T) typeid(T)
 #define nameof(T) typeid(T).name()
 
-#define scast static_cast
-#define dcast dynamic_cast
-#define rcast reinterpret_cast
+#define SCAST(TType, arg) static_cast<TType>(arg)
+#define DCAST(TType, arg) dynamic_cast<TType>(arg)
+#define RCAST(TType, arg) reinterpret_cast<TType>(arg)
 
-#define sassert static_assert
-#define sthrow(msg) sassert(false, msg)
+#define SASSERT static_assert
+#define STHROW(msg) SASSERT(false, msg)

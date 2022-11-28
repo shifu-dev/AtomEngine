@@ -47,7 +47,7 @@ namespace Atom
 
         mpublic virtual int Compare(const IteratorT ref rhs) const noexcept override
         {
-            const ThisT ptr rhsPtr = dcast<const ThisT ptr>(ref rhs);
+            const ThisT ptr rhsPtr = DCAST(const ThisT ptr, ref rhs);
             if (rhsPtr isnot null)
             {
                 return Compare(ptr rhsPtr);
@@ -58,7 +58,7 @@ namespace Atom
 
         mpublic virtual int Compare(const ThisT ref rhs) const noexcept
         {
-            return scast<int>(mPtr - rhs.mPtr);
+            return SCAST(int, mPtr - rhs.mPtr);
         }
 
         mprotected mutable ElementT ptr mPtr;

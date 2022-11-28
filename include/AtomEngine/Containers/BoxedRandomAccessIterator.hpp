@@ -54,12 +54,12 @@ namespace Atom
 
         mpublic IteratorT ref GetIterator() noexcept
         {
-            return rcast<IteratorT ref>(BaseT::GetIterator());
+            return RCAST(IteratorT ref, BaseT::GetIterator());
         }
 
         mpublic const IteratorT ref GetIterator() const noexcept
         {
-            return rcast<const IteratorT ref>(BaseT::GetIterator());
+            return RCAST(const IteratorT ref, BaseT::GetIterator());
         }
 
         mpublic virtual void MoveFwdBy(const sizet steps) const noexcept override

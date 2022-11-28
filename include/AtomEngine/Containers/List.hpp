@@ -170,10 +170,10 @@ namespace Atom
         /// 
         /// @note
         /// - Calls InsertAt(const sizet index, const IterableT ref elements, const sizet count)
-        ///   with index: index, elements: scast<const IterableT ref>(elements), count: elements.Count().
+        ///   with index: index, elements: SCAST(const IterableT ref, elements), count: elements.Count().
         mpublic virtual void InsertAt(const sizet index, const CollectionT ref elements)
         {
-            InsertAt(index, scast<const IterableT ref>(elements), elements.Count());
+            InsertAt(index, SCAST(const IterableT ref, elements), elements.Count());
         }
 
         /// ----------------------------------------------------------------------------

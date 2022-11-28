@@ -32,14 +32,14 @@ namespace Atom
     template <typename TType>
     constexpr TType rref forward(typename std::remove_reference<TType>::type ref arg) noexcept
     {
-        return scast<TType rref>(arg);
+        return SCAST(TType rref, arg);
     }
 
     template <class TType>
     [[nodiscard]] constexpr std::remove_reference_t<TType> rref move(TType rref args) noexcept
     {
         // forward args as movable
-        return scast<std::remove_reference_t<TType> rref>(args);
+        return SCAST(std::remove_reference_t<TType> rref, args);
     }
 
     template <typename TType>

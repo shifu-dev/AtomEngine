@@ -30,13 +30,13 @@ namespace Atom
         mpublic template <typename TInt, EnableIfIntegral<TInt> = 0>
             constexpr byte(const TInt num) noexcept : value(0)
         {
-            value = scast<uchar>(num);
+            value = SCAST(uchar, num);
         }
 
         mpublic template <typename TInt, EnableIfIntegral<TInt> = 0>
             constexpr operator TInt() const noexcept
         {
-            return scast<TInt>(value);
+            return SCAST(TInt, value);
         }
 
         /// ----------------------------------------------------------------------------
@@ -45,37 +45,37 @@ namespace Atom
         template <typename TInt, EnableIfIntegral<TInt> = 0>
         [[nodiscard]] constexpr byte operator << (const TInt shift) const noexcept
         {
-            return byte(scast<uint>(value) << shift);
+            return byte(SCAST(uint, value) << shift);
         }
 
         template <typename TInt, EnableIfIntegral<TInt> = 0>
         [[nodiscard]] constexpr byte operator >> (const TInt shift) const noexcept
         {
-            return byte(scast<uint>(value) >> shift);
+            return byte(SCAST(uint, value) >> shift);
         }
 
         [[nodiscard]]
         constexpr byte operator | (const byte right) const noexcept
         {
-            return byte(scast<uint>(value) | scast<uint>(right.value));
+            return byte(SCAST(uint, value) | SCAST(uint, right.value));
         }
 
         [[nodiscard]]
         constexpr byte operator & (const byte right) const noexcept
         {
-            return byte(scast<uint>(value) & scast<uint>(right.value));
+            return byte(SCAST(uint, value) & SCAST(uint, right.value));
         }
 
         [[nodiscard]]
         constexpr byte operator ^ (const byte right) const noexcept
         {
-            return byte(scast<uint>(value) ^ scast<uint>(right.value));
+            return byte(SCAST(uint, value) ^ SCAST(uint, right.value));
         }
 
         [[nodiscard]]
         constexpr byte operator ~ () const noexcept
         {
-            return byte(~scast<uint>(value));
+            return byte(~SCAST(uint, value));
         }
 
         template <typename TInt, EnableIfIntegral<TInt> = 0>

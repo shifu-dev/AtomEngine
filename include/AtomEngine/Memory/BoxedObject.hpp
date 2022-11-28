@@ -142,13 +142,13 @@ namespace Atom
         mpublic template <typename TObject>
             TObject ref GetObject() noexcept
         {
-            return ptr rcast<TObject ptr>(mObject);
+            return ptr RCAST(TObject ptr, mObject);
         }
 
         mpublic template <typename TObject>
             const TObject ref GetObject() const noexcept
         {
-            return ptr rcast<const TObject ptr>(mObject);
+            return ptr RCAST(const TObject ptr, mObject);
         }
 
         mpublic const memptr GetRawObject() const noexcept
