@@ -21,5 +21,5 @@ namespace Atom
         }
     };
 
-    ATOM_API Allocator ptr globalAllocator = new GlobalRootMemPool(0);
+    ATOM_API IAllocator ptr globalAllocator = new GlobalRootMemPool(0);
 }

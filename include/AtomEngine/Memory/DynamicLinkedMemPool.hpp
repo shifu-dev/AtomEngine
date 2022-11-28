@@ -1,12 +1,13 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
+#include "AtomEngine/Memory/IDynamicMemPool.hpp"
 #include "AtomEngine/Memory/LinkedMemPool.hpp"
 
 namespace Atom
 {
-    class DynamicLinkedMemPool :
-        public virtual LinkedMemPool,
-        public virtual DynamicMemPool
+    /// @todo Fix LinkedMemPool virtual inheritance
+    class DynamicLinkedMemPool : public virtual LinkedMemPool,
+        public virtual IDynamicMemPool
     {
         mpublic virtual void Shrink() override;
         mpublic virtual void Reserve(const sizet size) override;

@@ -1,18 +1,18 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Containers/BidirectionalIterator.hpp"
+#include "AtomEngine/Containers/IBidirectionalIterator.hpp"
 
 namespace Atom
 {
     /// ----------------------------------------------------------------------------
     /// Object to iterate over container elements.
-    /// \n RandomAccessIterator provides functionality to move randomly to any element.
+    /// \n IRandomAccessIterator provides functionality to move randomly to any element.
     ///
-    /// @tparam TElement Type of element Iterator iterates over.
+    /// @tparam TElement Type of element IIterator iterates over.
     template <typename TElement>
-    class RandomAccessIterator : public virtual BidirectionalIterator<TElement>
+    interface IRandomAccessIterator : public virtual IBidirectionalIterator<TElement>
     {
-        using ThisT = BidirectionalIterator<TElement>;      ///< ----
+        using ThisT = IBidirectionalIterator<TElement>;      ///< ----
 
         /// ----------------------------------------------------------------------------
         /// Moves iterator forward by count \p{steps}.

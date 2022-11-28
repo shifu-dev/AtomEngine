@@ -1,68 +1,67 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Containers/Iterator.hpp"
+#include "AtomEngine/Containers/IIterator.hpp"
 #include "AtomEngine/Memory/BoxedObject.hpp"
 #include "AtomEngine/Memory/DefaultAllocator.hpp"
 
 namespace Atom
 {
-    /// Pointer to iterator to provide iterface ability to Iterable.
+    /// Pointer to iterator to provide iterface ability to IIterable.
     ///
     /// @tparam TElement Type of value iterator points to.
     ///
     /// @note
     /// - This class acts like a unique ptr with functionality of iterators.
     template <typename TElement>
-    class BoxedIterator : public virtual Iterator<TElement>,
-        public BoxedObject<DefaultAllocator, 500>
+    class BoxedIterator : public BoxedObject<DefaultAllocator, 500>,
+        public virtual IIterator<TElement>
     {
         using ThisT = BoxedIterator<TElement>;
-        using BoxedObjectT = BoxedObject<DefaultAllocator, 500>;
+        using BaseT = BoxedObject<DefaultAllocator, 500>;
         using ElementT = TElement;
-        using IteratorT = Iterator<ElementT>;
-        using AllocatorT = DefaultAllocator;
+        using IIteratorT = IIterator<ElementT>;
 
         /// ----------------------------------------------------------------------------
 
-        mpublic BoxedIterator() : BoxedObjectT(null) { }
+        mpublic BoxedIterator() : BaseT(null) { }
 
         mpublic BoxedIterator(const ThisT ref other) noexcept :
-            BoxedObjectT(other) { }
+            BaseT(other) { }
 
         mpublic BoxedIterator(ThisT rref other) noexcept :
-            BoxedObjectT(move(other)) { }
+            BaseT(move(other)) { }
 
         mpublic ThisT ref operator = (const ThisT ref other) noexcept
         {
-            BoxedObjectT::operator = (other);
+            BaseT::operator = (other);
             return ptr this;
         }
 
         mpublic ThisT ref operator = (ThisT rref other) noexcept
         {
-            BoxedObjectT::operator = (move(other));
+            BaseT::operator = (move(other));
             return ptr this;
         }
 
         mpublic template <typename TIterator>
             BoxedIterator(const TIterator ref iterator) noexcept :
-            BoxedObjectT(iterator)
+            BaseT(iterator)
         {
-            StaticAssertSubClass<IteratorT, TIterator>();
+            StaticAssertSubClass<IIteratorT, TIterator>();
         }
 
         mpublic template <typename TIterator>
             BoxedIterator(TIterator rref iterator) noexcept :
-            BoxedObjectT(move(iterator))
+            BaseT(move(iterator))
         {
-            StaticAssertSubClass<IteratorT, TIterator>();
+            StaticAssertSubClass<IIteratorT, TIterator>();
         }
 
         mpublic template <typename TIterator>
             ThisT ref operator = (const TIterator ref iterator) noexcept
         {
-            StaticAssertSubClass<IteratorT, TIterator>();
-            BoxedObjectT::operator = (iterator);
+            StaticAssertSubClass<IIteratorT, TIterator>();
+            BaseT::operator = (iterator);
 
             return ptr this;
         }
@@ -70,22 +69,22 @@ namespace Atom
         mpublic template <typename TIterator>
             ThisT ref operator = (TIterator rref iterator) noexcept
         {
-            StaticAssertSubClass<IteratorT, TIterator>();
-            BoxedObjectT::operator = (move(iterator));
+            StaticAssertSubClass<IIteratorT, TIterator>();
+            BaseT::operator = (move(iterator));
 
             return ptr this;
         }
 
         /// ----------------------------------------------------------------------------
 
-        mpublic IteratorT ref GetIterator() noexcept
+        mpublic IIteratorT ref GetIterator() noexcept
         {
-            return BoxedObjectT::GetObject<IteratorT>();
+            return BaseT::GetObject<IIteratorT>();
         }
 
-        mpublic const IteratorT ref GetIterator() const noexcept
+        mpublic const IIteratorT ref GetIterator() const noexcept
         {
-            return BoxedObjectT::GetObject<IteratorT>();
+            return BaseT::GetObject<IIteratorT>();
         }
 
         mpublic virtual ElementT ref Value() noexcept final override
@@ -98,7 +97,7 @@ namespace Atom
             return GetIterator().Value();
         }
 
-        mpublic virtual int Compare(const IteratorT ref rhs) const noexcept final override
+        mpublic virtual int Compare(const IIteratorT ref rhs) const noexcept final override
         {
             return GetIterator().Compare(rhs);
         }

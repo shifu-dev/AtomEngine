@@ -1,18 +1,17 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
 #include "AtomEngine/Containers/BoxedIterator.hpp"
-#include "AtomEngine/Containers/ForwardIterator.hpp"
+#include "AtomEngine/Containers/IForwardIterator.hpp"
 
 namespace Atom
 {
     template <typename TElement>
-    class BoxedForwardIterator :
-        public virtual BoxedIterator<TElement>,
-        public virtual ForwardIterator<TElement>
+    class BoxedForwardIterator : public BoxedIterator<TElement>,
+        public virtual IForwardIterator<TElement>
     {
         using ThisT = BoxedForwardIterator<TElement>;
         using BaseT = BoxedIterator<TElement>;
-        using IteratorT = ForwardIterator<TElement>;
+        using IForwardIteratorT = IForwardIterator<TElement>;
 
         /// ----------------------------------------------------------------------------
 
@@ -40,26 +39,26 @@ namespace Atom
             BoxedForwardIterator(const TIterator ref iterator) noexcept :
             BaseT(iterator)
         {
-            StaticAssertSubClass<IteratorT, TIterator>();
+            StaticAssertSubClass<IForwardIteratorT, TIterator>();
         }
 
         mpublic template <typename TIterator>
             BoxedForwardIterator(TIterator rref iterator) noexcept :
             BaseT(move(iterator))
         {
-            StaticAssertSubClass<IteratorT, TIterator>();
+            StaticAssertSubClass<IForwardIteratorT, TIterator>();
         }
 
         /// ----------------------------------------------------------------------------
 
-        mpublic IteratorT ref GetIterator() noexcept
+        mpublic IForwardIteratorT ref GetIterator() noexcept
         {
-            return RCAST(IteratorT ref, BaseT::GetIterator());
+            return RCAST(IForwardIteratorT ref, BaseT::GetIterator());
         }
 
-        mpublic const IteratorT ref GetIterator() const noexcept
+        mpublic const IForwardIteratorT ref GetIterator() const noexcept
         {
-            return RCAST(const IteratorT ref, BaseT::GetIterator());
+            return RCAST(const IForwardIteratorT ref, BaseT::GetIterator());
         }
 
         mpublic virtual void MoveFwd() const noexcept override

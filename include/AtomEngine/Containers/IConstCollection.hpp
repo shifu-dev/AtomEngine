@@ -1,7 +1,7 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Containers/Iterable.hpp"
-#include "AtomEngine/Containers/Comparer.hpp"
+#include "AtomEngine/Containers/IIterable.hpp"
+#include "AtomEngine/Containers/IComparer.hpp"
 
 namespace Atom
 {
@@ -10,10 +10,10 @@ namespace Atom
     /// 
     /// @tparam TElement type this collection contains.
     template <typename TElement>
-    class ConstCollection : public virtual Iterable<TElement>
+    interface IConstCollection : public virtual IIterable<TElement>
     {
         using ElementT = TElement;                                             ///< ----
-        using EqualityComparerT = EqualityComparer<ElementT>;                  ///< ----
+        using IEqualityComparerT = IEqualityComparer<ElementT>;                ///< ----
         using DefaultEqualityComparerT = DefaultEqualityComparer<ElementT>;    ///< ----
 
         /// ----------------------------------------------------------------------------
@@ -35,15 +35,15 @@ namespace Atom
         /// Checks if given element is present in the containter.
         /// 
         /// @param element Element to compare with.
-        /// @param comparer Comparer used to compare elements.
+        /// @param comparer IComparer used to compare elements.
         /// @return @true if element is present in the collection, @false otherwise.
-        mpublic virtual bool Contains(const ElementT ref element, const EqualityComparerT ref comparer) const noexcept abstract;
+        mpublic virtual bool Contains(const ElementT ref element, const IEqualityComparerT ref comparer) const noexcept abstract;
 
         /// ----------------------------------------------------------------------------
         /// Checks if given element is present in the containter.
         /// 
         /// @param element Element to compare with.
-        /// @param comparer Comparer used to compare elements.
+        /// @param comparer IComparer used to compare elements.
         /// @return @true if element is present in the collection, @false otherwise.
         mpublic bool Contains(const ElementT ref element) const noexcept
         {

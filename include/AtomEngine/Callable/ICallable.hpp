@@ -6,11 +6,11 @@ namespace Atom
     template <typename TFunctor, typename TResult, typename... TArgs>
     class CallableFunctor;
 
-    template <typename TResult, typename... TArgs> class Callable;
+    template <typename TResult, typename... TArgs> class ICallable;
     template <typename TResult, typename... TArgs>
-    class Callable <TResult(TArgs...)>
+    class ICallable <TResult(TArgs...)>
     {
-        using ThisT = Callable<TResult(TArgs...)>;
+        using ThisT = ICallable<TResult(TArgs...)>;
 
         mpublic template <typename TFunctor>
             static CallableFunctor<TFunctor, TResult, TArgs...> Create(const TFunctor ref func)
@@ -27,13 +27,13 @@ namespace Atom
     };
 
     template <typename... TArgs>
-    using Predicate = Callable<bool(TArgs...)>;
+    using IPredicate = ICallable<bool(TArgs...)>;
 
     template <typename... TArgs>
-    using Action = Callable<void(TArgs...)>;
+    using IAction = ICallable<void(TArgs...)>;
 
     template <typename TFunctor, typename TResult, typename... TArgs>
-    class CallableFunctor : public Callable<TResult(TArgs...)>
+    class CallableFunctor : public ICallable<TResult(TArgs...)>
     {
         mpublic CallableFunctor(const TFunctor ref func) : func(func) { }
 

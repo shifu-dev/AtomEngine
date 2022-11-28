@@ -1,9 +1,9 @@
 #pragma once
-#include "AtomEngine/Memory/Allocator.hpp"
+#include "AtomEngine/Memory/IAllocator.hpp"
 
 namespace Atom
 {
-    ATOM_API extern Allocator ptr globalAllocator;
+    ATOM_API extern IAllocator ptr globalAllocator;
 
     inline memptr alloc(const sizet size)
     {

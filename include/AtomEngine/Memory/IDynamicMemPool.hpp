@@ -1,18 +1,11 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Memory/Allocator.hpp"
+#include "AtomEngine/Memory/IMemPool.hpp"
 
 namespace Atom
 {
-    /// @brief MemPool is the base abstract type to manage memory pool.
-    class MemPool : public virtual Allocator
-    {
-        /// @brief Count of memory units managed by this pool.
-        mpublic virtual sizet Size() const noexcept abstract;
-    };
-
-    /// @brief DynamicMemPool represents resizable memory pool.
-    class DynamicMemPool : public virtual MemPool
+    /// @brief IDynamicMemPool represents resizable memory pool.
+    interface IDynamicMemPool : public virtual IMemPool
     {
         /// @brief Shrinks the pool as much as possible.
         mpublic virtual void Shrink() abstract;
@@ -20,7 +13,7 @@ namespace Atom
         /// @brief Reserves specified memory.
         /// @param size Minimum count of memory units to reserve.
         /// 
-        /// After this call MemPool is gaurenteed to have at least size memory.
+        /// After this call IMemPool is gaurenteed to have at least size memory.
         mpublic virtual void Reserve(const sizet size) abstract;
 
         /// @brief Reserves specified memory, over currently reserved memory.

@@ -4,19 +4,19 @@
 namespace Atom
 {
     template <typename Type>
-    struct Comparer
+    interface IComparer
     {
         virtual int Compare(const Type ref lhs, const Type ref rhs) const noexcept abstract;
     };
 
     template <typename Type>
-    struct EqualityComparer
+    interface IEqualityComparer
     {
         virtual bool Compare(const Type ref lhs, const Type ref rhs) const noexcept abstract;
     };
 
     template <typename Type>
-    struct DefaultEqualityComparer : public EqualityComparer<Type>
+    struct DefaultEqualityComparer : public virtual IEqualityComparer<Type>
     {
         virtual bool Compare(const Type ref lhs, const Type ref rhs) const noexcept override
         {

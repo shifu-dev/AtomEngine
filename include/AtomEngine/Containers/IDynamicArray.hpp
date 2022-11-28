@@ -1,7 +1,7 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Containers/Array.hpp"
-#include "AtomEngine/Containers/DynamicList.hpp"
+#include "AtomEngine/Containers/IArray.hpp"
+#include "AtomEngine/Containers/IDynamicList.hpp"
 
 namespace Atom
 {
@@ -9,7 +9,7 @@ namespace Atom
     /// 
     /// @tparam TElement Type of element this array contains.
     template <typename TElement>
-    class DynamicArray : public virtual Array<TElement>, public virtual DynamicList<TElement>
+    interface IDynamicArray : public virtual IArray<TElement>, public virtual IDynamicList<TElement>
     {
     };
 }

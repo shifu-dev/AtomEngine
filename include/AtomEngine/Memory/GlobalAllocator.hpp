@@ -1,11 +1,11 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Memory/Allocator.hpp"
+#include "AtomEngine/Memory/IAllocator.hpp"
 #include "AtomEngine/Memory/GlobalAllocation.hpp"
 
 namespace Atom
 {
-    class GlobalAllocator : Allocator
+    class GlobalAllocator : IAllocator
     {
         mpublic memptr AllocateRaw(const sizet count, bool clear = true) override final
         {

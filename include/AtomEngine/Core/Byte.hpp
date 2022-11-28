@@ -40,7 +40,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------
-        //// Arithmetic Operations
+        /// Arithmetic Operations
 
         template <typename TInt, EnableIfIntegral<TInt> = 0>
         [[nodiscard]] constexpr byte operator << (const TInt shift) const noexcept

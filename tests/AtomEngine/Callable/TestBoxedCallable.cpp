@@ -18,18 +18,18 @@ static int testFunc(int a, char b, uint c)
 
 TEST_CASE("BoxedCallable", "[Implementation]")
 {
-    using CallableT = Callable<int(int, char, uint)>;
+    using ICallableT = ICallable<int(int, char, uint)>;
     using BoxedCallableT = BoxedCallable<int(int, char, uint)>;
 
-    BoxedCallableT function = CallableT::Create(ref testFunc);
-    BoxedCallableT functor = CallableT::Create(Functor());
-    BoxedCallableT lambda = CallableT::Create(
+    BoxedCallableT function = ICallableT::Create(ref testFunc);
+    BoxedCallableT functor = ICallableT::Create(Functor());
+    BoxedCallableT lambda = ICallableT::Create(
         [](int a, char b, uint c)
         {
             return 2;
         });
 
-    BoxedCallableT capturedLambda = CallableT::Create(
+    BoxedCallableT capturedLambda = ICallableT::Create(
         [&](int a, char b, uint c)
         {
             return 3;

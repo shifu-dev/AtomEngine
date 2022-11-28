@@ -1,6 +1,6 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Containers/ConstList.hpp"
+#include "AtomEngine/Containers/IConstList.hpp"
 #include "AtomEngine/Containers/ArrayIterator.hpp"
 
 namespace Atom
@@ -9,22 +9,21 @@ namespace Atom
     /// 
     /// @tparam TElement Type of element this array contains.
     template <typename TElement>
-    class ConstArray : public virtual ConstList<TElement>
+    interface IConstArray : public virtual IConstList<TElement>
     {
         using ElementT = TElement;
-        using ConstListT = ConstList<ElementT>;
-        using ForwardIteratorT = ForwardIterator<ElementT>;
+        using IConstListT = IConstList<ElementT>;
+        using IForwardIteratorT = IForwardIterator<ElementT>;
         using BoxedForwardIteratorT = BoxedForwardIterator<ElementT>;
-        using EqualityComparerT = EqualityComparer<ElementT>;
-        using PredicateT = Predicate<const ElementT ref, sizet>;
-        using IteratorT = ArrayIterator<ElementT>;
+        using IEqualityComparerT = IEqualityComparer<ElementT>;
+        using ArrayIteratorT = ArrayIterator<ElementT>;
 
         mpublic virtual const ElementT ref operator[](sizet index) const noexcept final override
         {
             return mArray[index];
         }
 
-        mpublic virtual void ForEach(const Action<const ElementT ref> ref callback) const final override
+        mpublic virtual void ForEach(const IAction<const ElementT ref> ref callback) const final override
         {
             for (sizet i = 0; i < mCount; i++)
             {
@@ -32,14 +31,14 @@ namespace Atom
             }
         }
 
-        mpublic const IteratorT Begin() const noexcept
+        mpublic const ArrayIteratorT Begin() const noexcept
         {
-            return IteratorT(mArray + 0);
+            return ArrayIteratorT(mArray + 0);
         }
 
-        mpublic const IteratorT End() const noexcept
+        mpublic const ArrayIteratorT End() const noexcept
         {
-            return IteratorT(mArray + mCount);
+            return ArrayIteratorT(mArray + mCount);
         }
 
         mprotected BoxedForwardIteratorT mIterableBegin() noexcept final override
@@ -69,7 +68,7 @@ namespace Atom
             return mArray;
         }
 
-        mpublic virtual sizet FirstIndexOf(const ElementT ref element, const EqualityComparerT ref comparer) const noexcept final override
+        mpublic virtual sizet FirstIndexOf(const ElementT ref element, const IEqualityComparerT ref comparer) const noexcept final override
         {
             for (sizet i = 0; i < mCount; i++)
             {
@@ -82,7 +81,7 @@ namespace Atom
             return NPOS;
         }
 
-        mpublic virtual sizet LastIndexOf(const ElementT ref element, const EqualityComparerT ref comparer) const noexcept final override
+        mpublic virtual sizet LastIndexOf(const ElementT ref element, const IEqualityComparerT ref comparer) const noexcept final override
         {
             for (sizet i = mCount; i >= 0; i--)
             {
@@ -104,7 +103,7 @@ namespace Atom
 
         mprotected void mAssertIndexIsInBounds(const sizet index) const override final
         {
-            ConstListT::mAssertIndexIsInBounds(index);
+            IConstListT::mAssertIndexIsInBounds(index);
         }
 
         // *******************************************************************

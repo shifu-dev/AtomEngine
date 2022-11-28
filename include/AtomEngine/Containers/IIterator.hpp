@@ -4,20 +4,20 @@
 namespace Atom
 {
     template <typename TElement>
-    class InputIterator {};
+    interface IInputIterator {};
 
     template <typename TElement>
-    class OutputIterator {};
+    interface IOutputIterator {};
 
     /// ----------------------------------------------------------------------------
     /// Object to iterate over container elements.
     ///
-    /// @tparam TElement Type of element Iterator iterates over.
+    /// @tparam TElement Type of element IIterator iterates over.
     template <typename TElement>
-    class Iterator : public virtual InputIterator<TElement>, public virtual OutputIterator<TElement>
+    interface IIterator : public virtual IInputIterator<TElement>, public virtual IOutputIterator<TElement>
     {
-        using ThisT = Iterator<TElement>;           ///< ----
-        using ElementT = TElement;                  ///< ----
+        using ThisT = IIterator<TElement>;           ///< ----
+        using ElementT = TElement;                   ///< ----
     
         /// ----------------------------------------------------------------------------
         /// Get cuurrent element by ref.
@@ -52,14 +52,14 @@ namespace Atom
         /// ----------------------------------------------------------------------------
         /// Compares itself with other iterator.
         ///
-        /// @param other Other Iterator to compare with.
+        /// @param other Other IIterator to compare with.
         /// @return
         /// - = 0 if equal.
         /// - > 0 if this is greater.
         /// - < 0 if this is smaller.
         /// 
         /// @note
-        /// - This does not compares the element, but the Iterator.
+        /// - This does not compares the element, but the IIterator.
         mpublic virtual int Compare(const ThisT ref other) const noexcept abstract;
 
         /// ----------------------------------------------------------------------------

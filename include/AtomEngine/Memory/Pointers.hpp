@@ -1,6 +1,6 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Memory/Allocator.hpp"
+#include "AtomEngine/Memory/IAllocator.hpp"
 #include "AtomEngine/Memory/DefaultAllocator.hpp"
 
 namespace Atom

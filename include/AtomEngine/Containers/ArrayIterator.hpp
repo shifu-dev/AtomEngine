@@ -1,20 +1,21 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Containers/RandomAccessIterator.hpp"
+#include "AtomEngine/Containers/IRandomAccessIterator.hpp"
 
 namespace Atom
 {
     template <typename TElement>
-    class Array;
+    interface IArray;
 
-    /// @brief iterator for stack array
-    /// @tparam TElement type of element stack array holds
+    /// Iterator for array.
+    /// 
+    /// @tparam TElement Type of element iterator iterates over.
     template <typename TElement>
-    class ArrayIterator : public virtual RandomAccessIterator<TElement>
+    interface ArrayIterator : public virtual IRandomAccessIterator<TElement>
     {
         using ThisT = ArrayIterator<TElement>;
         using ElementT = TElement;
-        using IteratorT = Iterator<ElementT>;
+        using IIteratorT = IIterator<ElementT>;
 
         mpublic ArrayIterator(ElementT ptr elementPtr)
             : mPtr(elementPtr) { }
@@ -45,7 +46,7 @@ namespace Atom
             mPtr = mPtr - steps;
         }
 
-        mpublic virtual int Compare(const IteratorT ref rhs) const noexcept override
+        mpublic virtual int Compare(const IIteratorT ref rhs) const noexcept override
         {
             const ThisT ptr rhsPtr = DCAST(const ThisT ptr, ref rhs);
             if (rhsPtr isnot null)

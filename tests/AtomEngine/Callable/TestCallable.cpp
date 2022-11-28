@@ -1,5 +1,5 @@
 #include "catch2/catch_all.hpp"
-#include "AtomEngine/Callable/Callable.hpp"
+#include "AtomEngine/Callable/ICallable.hpp"
 
 using namespace Atom;
 
@@ -20,13 +20,13 @@ static int testFunc(int a, char b, uint c)
 
 TEST_CASE("Callable")
 {
-    using CallableT = Callable<int(int, char, uint)>;
+    using ICallableT = ICallable<int(int, char, uint)>;
 
-    const CallableT ref functionCallable = CallableT::Create(ref testFunc);
+    const ICallableT ref functionCallable = ICallableT::Create(ref testFunc);
 
-    const CallableT ref functorCallable = CallableT::Create(ref testFunc);
+    const ICallableT ref functorCallable = ICallableT::Create(ref testFunc);
 
-    const CallableT ref lambdaCallable = CallableT::Create(
+    const ICallableT ref lambdaCallable = ICallableT::Create(
         [](int a, char b, uint c)
         {
             // std::cout << "Hi! I am lambda()" << std::endl;
@@ -34,7 +34,7 @@ TEST_CASE("Callable")
         }
     );
 
-    const CallableT ref captureLambdaCallable = CallableT::Create(
+    const ICallableT ref captureLambdaCallable = ICallableT::Create(
         [&](int a, char b, uint c)
         {
             // std::cout << "Hi! I am captureLambda()" << std::endl;

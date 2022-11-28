@@ -1,38 +1,38 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Containers/Collection.hpp"
-#include "AtomEngine/Containers/ConstList.hpp"
+#include "AtomEngine/Containers/ICollection.hpp"
+#include "AtomEngine/Containers/IConstList.hpp"
 
 namespace Atom
 {
-    /// List represents an array like structure, where elements 
+    /// IList represents an array like structure, where elements 
     /// can be accessed using their index value.
     /// 
     /// @tparam TElement Type of element this container stores.
     template <typename TElement>
-    class List : public virtual ConstList<TElement>, public virtual Collection<TElement>
+    interface IList : public virtual IConstList<TElement>, public virtual ICollection<TElement>
     {
-        using ElementT = TElement;                                             ///< ----
-        using IterableT = Iterable<ElementT>;                                  ///< ----
-        using CollectionT = Collection<ElementT>;                              ///< ----
-        using ConstCollectionT = ConstCollection<ElementT>;                    ///< ----
-        using ConstListT = ConstList<ElementT>;                                ///< ----
-        using EqualityComparerT = EqualityComparer<ElementT>;                  ///< ----
-        using DefaultEqualityComparerT = DefaultEqualityComparer<ElementT>;    ///< ----
-        using ForwardIteratorT = ForwardIterator<ElementT>;                    ///< ----
-        using PredicateT = Predicate<const ElementT ref, sizet>;               ///< ----
+        using ElementT = TElement;                                               ///< ----
+        using IIterableT = IIterable<ElementT>;                                  ///< ----
+        using ICollectionT = ICollection<ElementT>;                              ///< ----
+        using IConstCollectionT = IConstCollection<ElementT>;                    ///< ----
+        using IConstListT = IConstList<ElementT>;                                ///< ----
+        using IEqualityComparerT = IEqualityComparer<ElementT>;                  ///< ----
+        using DefaultEqualityComparerT = DefaultEqualityComparer<ElementT>;      ///< ----
+        using IForwardIteratorT = IForwardIterator<ElementT>;                    ///< ----
+        using IPredicateT = IPredicate<const ElementT ref, sizet>;               ///< ----
 
-        mpublic using ConstListT::FirstIndexOf;
-        mpublic using ConstListT::LastIndexOf;
-        mpublic using ConstCollectionT::Count;
-        mprotected using ConstListT::mAssertIndexIsInBounds;
+        mpublic using IConstListT::FirstIndexOf;
+        mpublic using IConstListT::LastIndexOf;
+        mpublic using IConstCollectionT::Count;
+        mprotected using IConstListT::mAssertIndexIsInBounds;
 
         /// ----------------------------------------------------------------------------
-        /// @copydoc ConstList::operator[](const sizet index)
+        /// @copydoc IConstList::operator[](const sizet index)
         mpublic virtual ElementT ref operator[](const sizet index) noexcept abstract;
 
         /// ----------------------------------------------------------------------------
-        /// @copydoc ConstList::ElementAt[](const sizet index)
+        /// @copydoc IConstList::ElementAt[](const sizet index)
         mpublic virtual ElementT ref ElementAt(const sizet index)
         {
             mAssertIndexIsInBounds(index);
@@ -40,14 +40,14 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------
-        /// @copydoc ConstList::ElementFront()
+        /// @copydoc IConstList::ElementFront()
         mpublic ElementT ref ElementFront()
         {
             return ElementAt(0);
         }
 
         /// ----------------------------------------------------------------------------
-        /// @copydoc ConstList::ElementBack()
+        /// @copydoc IConstList::ElementBack()
         mpublic ElementT ref ElementBack()
         {
             return ElementAt(Count() - 1);
@@ -102,9 +102,9 @@ namespace Atom
         /// Insert multiple elements at index \p{index}.
         /// 
         /// @param[in] index Index to insert elements at.
-        /// @param[in] it ForwardIterator pointing to the begining of elements.
+        /// @param[in] it IForwardIterator pointing to the begining of elements.
         /// @param[in] count Count of elements to insert.
-        mpublic virtual void InsertAt(const sizet index, const ForwardIteratorT ref it, const sizet count) abstract;
+        mpublic virtual void InsertAt(const sizet index, const IForwardIteratorT ref it, const sizet count) abstract;
 
         /// ----------------------------------------------------------------------------
         /// Insert multiple elements at index \p{index}.
@@ -112,9 +112,9 @@ namespace Atom
         /// Counts the number of elements first, using iterators.
         /// 
         /// @param index Index to insert elements at.
-        /// @param begin ForwardIterator pointing to the begining of elements.
-        /// @param end ForwardIterator pointing to the end of elements.
-        mpublic virtual void InsertAt(const sizet index, const ForwardIteratorT ref begin, const ForwardIteratorT ref end)
+        /// @param begin IForwardIterator pointing to the begining of elements.
+        /// @param end IForwardIterator pointing to the end of elements.
+        mpublic virtual void InsertAt(const sizet index, const IForwardIteratorT ref begin, const IForwardIteratorT ref end)
         {
             sizet count = 0;
             for (auto ref it = begin; it isnot end; ++it)
@@ -126,54 +126,54 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------
-        /// Inserts \p{count} elements from Iterable \p{elements} at index \p{index}.
+        /// Inserts \p{count} elements from IIterable \p{elements} at index \p{index}.
         /// 
         /// @param index Index to insert elements at.
-        /// @param elements Iterable to insert elements from.
+        /// @param elements IIterable to insert elements from.
         /// @param count Count of elements to insert.
         /// 
         /// @note
-        /// - Calls InsertAt(const sizet index, const ForwardIteratorT ref begin, const sizet count)
+        /// - Calls InsertAt(const sizet index, const IForwardIteratorT ref begin, const sizet count)
         ///   with begin: elements.Begin(), count: count.
-        mpublic virtual void InsertAt(const sizet index, const IterableT ref elements, const sizet count)
+        mpublic virtual void InsertAt(const sizet index, const IIterableT ref elements, const sizet count)
         {
             InsertAt(index, elements.Begin(), count);
         }
 
         /// ----------------------------------------------------------------------------
-        /// Inserts all elements from Iterable \p{elements} at index \p{index}.
+        /// Inserts all elements from IIterable \p{elements} at index \p{index}.
         /// 
         /// @param[in] index Index to insert elements at.
-        /// @param[in] elements Iterable to insert elements from.
+        /// @param[in] elements IIterable to insert elements from.
         /// 
         /// @note
-        /// - Calls InsertAt(const sizet index, const ForwardIteratorT ref begin, const ForwardIteratorT ref end)
+        /// - Calls InsertAt(const sizet index, const IForwardIteratorT ref begin, const IForwardIteratorT ref end)
         ///   with begin: elements.Begin(), end: elements.End().
-        mpublic virtual void InsertAt(const sizet index, const IterableT ref elements)
+        mpublic virtual void InsertAt(const sizet index, const IIterableT ref elements)
         {
             InsertAt(index, elements.Begin(), elements.End());
         }
 
         /// ----------------------------------------------------------------------------
-        /// Inserts all elements from Collection \p{elements}.
+        /// Inserts all elements from ICollection \p{elements}.
         /// 
-        /// This function is preferred over InsertAt(const sizet index, const IterableT ref elements)
-        /// becuase Collection provides function Collection::Count() 
+        /// This function is preferred over InsertAt(const sizet index, const IIterableT ref elements)
+        /// becuase ICollection provides function ICollection::Count() 
         /// which specifies the count of elements to insert. This helps to preallocate 
         /// memory instead of checking on each iteration.
         /// 
         /// @param[in] index Index to insert elements at.
-        /// @param[in] elements Collection reference to insert elements from.
+        /// @param[in] elements ICollection reference to insert elements from.
         /// 
         /// @exceptsafe
         /// \p{Strong Exception Safety}
         /// 
         /// @note
-        /// - Calls InsertAt(const sizet index, const IterableT ref elements, const sizet count)
-        ///   with index: index, elements: SCAST(const IterableT ref, elements), count: elements.Count().
-        mpublic virtual void InsertAt(const sizet index, const CollectionT ref elements)
+        /// - Calls InsertAt(const sizet index, const IIterableT ref elements, const sizet count)
+        ///   with index: index, elements: SCAST(const IIterableT ref, elements), count: elements.Count().
+        mpublic virtual void InsertAt(const sizet index, const ICollectionT ref elements)
         {
-            InsertAt(index, SCAST(const IterableT ref, elements), elements.Count());
+            InsertAt(index, SCAST(const IIterableT ref, elements), elements.Count());
         }
 
         /// ----------------------------------------------------------------------------
@@ -183,7 +183,7 @@ namespace Atom
         /// @param index Index to insert elements at.
         /// 
         /// @note
-        /// - Calls InsertAt(const sizet index, const ForwardIteratorT ref it, const sizet count).
+        /// - Calls InsertAt(const sizet index, const IForwardIteratorT ref it, const sizet count).
         ///   with index: index, it: ArrayIterator(elements), count: "count of elements";
         mpublic template <ElementT... TElements>
             void InsertAt(const sizet index)
@@ -193,41 +193,41 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------
-        /// - Calls InsertAt(const sizet index, const ForwardIteratorT ref it, const sizet count).
+        /// - Calls InsertAt(const sizet index, const IForwardIteratorT ref it, const sizet count).
         ///   with index: 0, it: it, count: count.
-        mpublic virtual void InsertFront(const ForwardIteratorT ref it, const sizet count)
+        mpublic virtual void InsertFront(const IForwardIteratorT ref it, const sizet count)
         {
             InsertAt(0, it, count);
         }
 
         /// ----------------------------------------------------------------------------
-        /// - Calls InsertAt(const sizet index, const ForwardIteratorT ref begin, const ForwardIteratorT ref end).
+        /// - Calls InsertAt(const sizet index, const IForwardIteratorT ref begin, const IForwardIteratorT ref end).
         ///   with index: 0, begin: begin, end: end.
-        mpublic virtual void InsertFront(const ForwardIteratorT ref begin, const ForwardIteratorT ref end)
+        mpublic virtual void InsertFront(const IForwardIteratorT ref begin, const IForwardIteratorT ref end)
         {
             InsertAt(0, begin, end);
         }
 
         /// ----------------------------------------------------------------------------
-        /// - Calls InsertAt(const sizet index, const IterableT ref elements, const sizet count).
+        /// - Calls InsertAt(const sizet index, const IIterableT ref elements, const sizet count).
         ///   with index: 0, elements: elements, count: count.
-        mpublic virtual void InsertFront(const IterableT ref elements, const sizet count)
+        mpublic virtual void InsertFront(const IIterableT ref elements, const sizet count)
         {
             InsertAt(0, elements, count);
         }
 
         /// ----------------------------------------------------------------------------
-        /// - Calls InsertAt(const sizet index, const IterableT ref elements, const sizet count).
+        /// - Calls InsertAt(const sizet index, const IIterableT ref elements, const sizet count).
         ///   with index: 0, elements: elements, count: count.
-        mpublic virtual void InsertFront(const IterableT ref elements)
+        mpublic virtual void InsertFront(const IIterableT ref elements)
         {
             InsertAt(0, elements);
         }
 
         /// ----------------------------------------------------------------------------
-        /// - Calls InsertAt(const sizet index, const CollectionT ref elements).
+        /// - Calls InsertAt(const sizet index, const ICollectionT ref elements).
         ///   with index: 0, elements: elements.
-        mpublic virtual void InsertFront(const CollectionT ref elements)
+        mpublic virtual void InsertFront(const ICollectionT ref elements)
         {
             InsertAt(0, elements);
         }
@@ -243,41 +243,41 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------
-        /// - Calls InsertAt(const sizet index, const ForwardIteratorT ref it, const sizet count).
+        /// - Calls InsertAt(const sizet index, const IForwardIteratorT ref it, const sizet count).
         ///   with index: Count() - 1, it: it, count: count.
-        mpublic virtual void InsertBack(const ForwardIteratorT ref it, const sizet count)
+        mpublic virtual void InsertBack(const IForwardIteratorT ref it, const sizet count)
         {
             InsertAt(Count() - 1, it, count);
         }
 
         /// ----------------------------------------------------------------------------
-        /// - Calls InsertAt(const sizet index, const ForwardIteratorT ref begin, const ForwardIteratorT ref end).
+        /// - Calls InsertAt(const sizet index, const IForwardIteratorT ref begin, const IForwardIteratorT ref end).
         ///   with index: Count() - 1, begin: begin, end: end.
-        mpublic virtual void InsertBack(const ForwardIteratorT ref begin, const ForwardIteratorT ref end)
+        mpublic virtual void InsertBack(const IForwardIteratorT ref begin, const IForwardIteratorT ref end)
         {
             InsertAt(Count() - 1, begin, end);
         }
 
         /// ----------------------------------------------------------------------------
-        /// - Calls InsertAt(const sizet index, const IterableT ref elements, const sizet count).
+        /// - Calls InsertAt(const sizet index, const IIterableT ref elements, const sizet count).
         ///   with index: Count() - 1, elements: elements, count: count.
-        mpublic virtual void InsertBack(const IterableT ref elements, const sizet count)
+        mpublic virtual void InsertBack(const IIterableT ref elements, const sizet count)
         {
             InsertAt(Count() - 1, elements, count);
         }
 
         /// ----------------------------------------------------------------------------
-        /// - Calls InsertAt(const sizet index, const IterableT ref elements, const sizet count).
+        /// - Calls InsertAt(const sizet index, const IIterableT ref elements, const sizet count).
         ///   with index: Count() - 1, elements: elements, count: count.
-        mpublic virtual void InsertBack(const IterableT ref elements)
+        mpublic virtual void InsertBack(const IIterableT ref elements)
         {
             InsertAt(Count() - 1, elements);
         }
 
         /// ----------------------------------------------------------------------------
-        /// - Calls InsertAt(const sizet index, const CollectionT ref elements).
+        /// - Calls InsertAt(const sizet index, const ICollectionT ref elements).
         ///   with index: Count() - 1, elements: elements.
-        mpublic virtual void InsertBack(const CollectionT ref elements)
+        mpublic virtual void InsertBack(const ICollectionT ref elements)
         {
             InsertAt(Count() - 1, elements);
         }
@@ -326,13 +326,13 @@ namespace Atom
         /// Removes the first element matching element \p{element}.
         /// 
         /// @note
-        /// - Calls FirstIndexOf(const ElementT ref element, const EqualityComparerT comparer)
+        /// - Calls FirstIndexOf(const ElementT ref element, const IEqualityComparerT comparer)
         ///   with element: element, comparer: comparer
         ///   to find the element to remove.
         /// 
         /// - Calls RemoveAt(const sizet index)
         ///   with index: FindFirstOf(element, comparer) if \p{index isnot NPOS}.
-        mpublic virtual void RemoveFront(const ElementT ref element, const EqualityComparerT ref comparer)
+        mpublic virtual void RemoveFront(const ElementT ref element, const IEqualityComparerT ref comparer)
         {
             if (sizet index = FirstIndexOf(element, comparer) isnot NPOS)
             {
@@ -342,7 +342,7 @@ namespace Atom
 
         /// ----------------------------------------------------------------------------
         /// @note 
-        /// - Calls RemoveFront(const ElementT ref element, const EqualityComparerT ref comparer)
+        /// - Calls RemoveFront(const ElementT ref element, const IEqualityComparerT ref comparer)
         ///   with element: element, comparer: DefaultEqualityComparerT().
         mpublic virtual void RemoveFront(const ElementT ref element)
         {
@@ -353,13 +353,13 @@ namespace Atom
         /// Removes the last element matching element \p{element}.
         /// 
         /// @note
-        /// - Calls LastIndexOf(const ElementT ref element, const EqualityComparerT comparer)
+        /// - Calls LastIndexOf(const ElementT ref element, const IEqualityComparerT comparer)
         ///   with element: element, comparer: comparer
         ///   to find the element to remove.
         /// 
         /// - Calls RemoveAt(const sizet index)
         ///   with index: FindFirstOf(element, comparer) if \p{index isnot NPOS}.
-        mpublic virtual void RemoveBack(const ElementT ref element, const EqualityComparerT ref comparer)
+        mpublic virtual void RemoveBack(const ElementT ref element, const IEqualityComparerT ref comparer)
         {
             if (sizet index = LastIndexOf(element, comparer) isnot NPOS)
             {
@@ -369,7 +369,7 @@ namespace Atom
 
         /// ----------------------------------------------------------------------------
         /// @note 
-        /// - Calls RemoveBack(const ElementT ref element, const EqualityComparerT ref comparer)
+        /// - Calls RemoveBack(const ElementT ref element, const IEqualityComparerT ref comparer)
         ///   with element: element, comparer: DefaultEqualityComparerT().
         mpublic virtual void RemoveBack(const ElementT ref element)
         {
@@ -406,25 +406,25 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------
-        /// Removes single element if Predicate \p{pred} returns true.
+        /// Removes single element if IPredicate \p{pred} returns true.
         /// 
-        /// @param pred Predicate to check whether to remove element or not.
-        mpublic virtual void RemoveIfCallable(const PredicateT ref pred) noexcept abstract;
+        /// @param pred IPredicate to check whether to remove element or not.
+        mpublic virtual void RemoveIfCallable(const IPredicateT ref pred) noexcept abstract;
 
         /// ----------------------------------------------------------------------------
-        /// Helper function for RemoveIfCallable(const PredicateT ref pred).
+        /// Helper function for RemoveIfCallable(const IPredicateT ref pred).
         /// 
-        /// @tparam TFunctor Type of functor object. This object is wrapped using Callable.
+        /// @tparam TFunctor Type of functor object. This object is wrapped using ICallable.
         /// @param func Functor object.
         /// 
         /// @note
-        /// - Wraps functor object \p{func} using PredicateT::Create(func) and 
-        ///   Calls RemoveIfCallable(const PredicateT ref pred)
-        ///   with pred: PredicateT::Create(func).
+        /// - Wraps functor object \p{func} using IPredicateT::Create(func) and 
+        ///   Calls RemoveIfCallable(const IPredicateT ref pred)
+        ///   with pred: IPredicateT::Create(func).
         mpublic template <typename TFunctor>
             void RemoveIf(const TFunctor ref func) noexcept
         {
-            RemoveIfCallable(PredicateT::Create(func));
+            RemoveIfCallable(IPredicateT::Create(func));
         }
     };
 }

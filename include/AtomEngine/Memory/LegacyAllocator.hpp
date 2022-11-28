@@ -1,11 +1,11 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Memory/Allocator.hpp"
+#include "AtomEngine/Memory/IAllocator.hpp"
 #include "AtomEngine/Memory/GlobalAllocation.hpp"
 
 namespace Atom
 {
-    struct LegacyAllocator : public Allocator
+    struct LegacyAllocator : public IAllocator
     {
         virtual memptr AllocateRaw(const sizet count, bool clear = true) override;
         virtual void DeallocateRaw(memptr src, const sizet count) override;

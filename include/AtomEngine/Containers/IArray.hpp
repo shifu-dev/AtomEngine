@@ -1,7 +1,7 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Containers/ConstArray.hpp"
-#include "AtomEngine/Containers/List.hpp"
+#include "AtomEngine/Containers/IConstArray.hpp"
+#include "AtomEngine/Containers/IList.hpp"
 
 namespace Atom
 {
@@ -9,20 +9,17 @@ namespace Atom
     /// 
     /// @tparam TElement Type of element this array contains.
     template <typename TElement>
-    class Array : public virtual ConstArray<TElement>, public virtual List<TElement>
+    interface IArray : public virtual IConstArray<TElement>, public virtual IList<TElement>
     {
         using ElementT = TElement;
-        using ConstArrayT = ConstArray<ElementT>;
-        using ConstListT = ConstList<ElementT>;
-        using ForwardIteratorT = ForwardIterator<ElementT>;
-        using BoxedForwardIteratorT = BoxedForwardIterator<ElementT>;
-        using EqualityComparerT = EqualityComparer<ElementT>;
-        using PredicateT = Predicate<const ElementT ref, sizet>;
-        using IteratorT = ArrayIterator<ElementT>;
+        using IConstArrayT = IConstArray<ElementT>;
+        using IPredicateT = IPredicate<const ElementT ref, sizet>;
+        using IForwardIteratorT = IForwardIterator<ElementT>;
+        using ArrayIteratorT = ArrayIterator<ElementT>;
 
-        mprotected using ConstArrayT::mAssertIndexIsInBounds;
-        mprotected using ConstArrayT::mArray;
-        mprotected using ConstArrayT::mCount;
+        mprotected using IConstArrayT::mAssertIndexIsInBounds;
+        mprotected using IConstArrayT::mArray;
+        mprotected using IConstArrayT::mCount;
 
         // *******************************************************************
 
@@ -33,7 +30,7 @@ namespace Atom
 
         // *******************************************************************
 
-        mpublic virtual void ForEach(const Action<ElementT ref> ref callback) final override
+        mpublic virtual void ForEach(const IAction<ElementT ref> ref callback) final override
         {
             for (sizet i = 0; i < mCount; i++)
             {
@@ -41,14 +38,14 @@ namespace Atom
             }
         }
 
-        mpublic IteratorT Begin() noexcept
+        mpublic ArrayIteratorT Begin() noexcept
         {
-            return IteratorT(mArray + 0);
+            return ArrayIteratorT(mArray + 0);
         }
 
-        mpublic IteratorT End() noexcept
+        mpublic ArrayIteratorT End() noexcept
         {
-            return IteratorT(mArray + mCount);
+            return ArrayIteratorT(mArray + mCount);
         }
 
         // *******************************************************************
@@ -93,7 +90,7 @@ namespace Atom
 
         // *******************************************************************
 
-        mpublic virtual void InsertAt(const sizet index, const ForwardIteratorT ref it, const sizet count) final override
+        mpublic virtual void InsertAt(const sizet index, const IForwardIteratorT ref it, const sizet count) final override
         {
             mAssertIndexIsInBounds(index);
             mAssertCapacityFor(count);
@@ -145,7 +142,7 @@ namespace Atom
 
         // *******************************************************************
 
-        mpublic virtual void RemoveIfCallable(const PredicateT ref pred) noexcept final override
+        mpublic virtual void RemoveIfCallable(const IPredicateT ref pred) noexcept final override
         {
             sizet count = mCount;
             for (sizet i = 0; i < count; i++)

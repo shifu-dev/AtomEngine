@@ -1,13 +1,13 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Containers/Collection.hpp"
+#include "AtomEngine/Containers/ICollection.hpp"
 
 namespace Atom
 {
     /// @brief base class for collections which can manage memory dynamically
     /// @tparam TElement type of element to store
     template <typename TElement>
-    class DynamicCollection : public virtual Collection<TElement>
+    interface IDynamicCollection : public virtual ICollection<TElement>
     {
         /// @brief resizes the underlying memory
         /// @param count count of objects to allocate memor for

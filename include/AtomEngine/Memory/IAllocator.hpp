@@ -5,13 +5,13 @@
 namespace Atom
 {
     /// Base type used to allocate and deallocate memory.
-    class Allocator
+    interface IAllocator
     {
-        mpublic constexpr Allocator() = default;
-        mpublic constexpr Allocator(const Allocator ref other) = default;
-        mpublic constexpr Allocator(Allocator rref other) = default;
-        mpublic constexpr Allocator ref operator =(const Allocator ref other) = default;
-        mpublic constexpr Allocator ref operator =(Allocator rref other) = default;
+        mpublic constexpr IAllocator() = default;
+        mpublic constexpr IAllocator(const IAllocator ref other) = default;
+        mpublic constexpr IAllocator(IAllocator rref other) = default;
+        mpublic constexpr IAllocator ref operator =(const IAllocator ref other) = default;
+        mpublic constexpr IAllocator ref operator =(IAllocator rref other) = default;
 
         /// ----------------------------------------------------------------------------
         /// Allocates memory and Constructs an object with given args.
@@ -117,13 +117,13 @@ namespace Atom
     };
 
     template <typename TType, typename... TArgs>
-    inline TType ptr Allocator::Construct(TArgs ref... args)
+    inline TType ptr IAllocator::Construct(TArgs ref... args)
     {
         return ConstructMultiple<TType>(1, forward<TArgs>(args)...);
     }
 
     template <typename TType, typename... TArgs>
-    inline TType ptr Allocator::ConstructMultiple(const sizet count, TArgs ref... args)
+    inline TType ptr IAllocator::ConstructMultiple(const sizet count, TArgs ref... args)
     {
         TType ptr src = Allocate<TType>(count);
 
@@ -139,7 +139,7 @@ namespace Atom
     }
 
     template <typename TType>
-    inline void Allocator::Destruct(TType ptr src, const sizet count)
+    inline void IAllocator::Destruct(TType ptr src, const sizet count)
     {
         if (src isnot null)
         {
@@ -159,13 +159,13 @@ namespace Atom
     }
 
     template <typename TType>
-    inline TType ptr Allocator::Allocate(const sizet count)
+    inline TType ptr IAllocator::Allocate(const sizet count)
     {
         return (TType ptr) AllocateRaw(count * sizeof(TType));
     }
 
     template <>
-    inline void ptr Allocator::Allocate<void>(const sizet count)
+    inline void ptr IAllocator::Allocate<void>(const sizet count)
     {
         // explicit specialization for void type,
         // to avoid call to sizeof() operator on void type
@@ -174,13 +174,13 @@ namespace Atom
     }
 
     template <typename TType>
-    inline void Allocator::Deallocate(TType ptr src, const sizet count)
+    inline void IAllocator::Deallocate(TType ptr src, const sizet count)
     {
         DeallocateRaw(RCAST(memptr, src), sizeof(TType) * count);
     }
 
     template <>
-    inline void Allocator::Deallocate(void ptr src, const sizet count)
+    inline void IAllocator::Deallocate(void ptr src, const sizet count)
     {
         // explicit specialization for void type,
         // to avoid call to sizeof() operator on void type

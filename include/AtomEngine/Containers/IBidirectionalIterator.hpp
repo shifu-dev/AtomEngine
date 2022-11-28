@@ -1,25 +1,25 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Containers/ForwardIterator.hpp"
+#include "AtomEngine/Containers/IForwardIterator.hpp"
 
 namespace Atom
 {
     /// ----------------------------------------------------------------------------
     /// Object to iterate over container elements.
-    /// \n BidirectionalIterator provides functionality to move iterator backward and forward.
+    /// \n IBidirectionalIterator provides functionality to move iterator backward and forward.
     ///
-    /// @tparam TElement Type of element Iterator iterates over.
+    /// @tparam TElement Type of element IIterator iterates over.
     template <typename TElement>
-    class BidirectionalIterator : public virtual ForwardIterator<TElement>
+    interface IBidirectionalIterator : public virtual IForwardIterator<TElement>
     {
-        using ThisT = BidirectionalIterator<TElement>;          ///< ----
+        using ThisT = IBidirectionalIterator<TElement>;          ///< ----
 
         /// ----------------------------------------------------------------------------
-        /// Moves Iterator backward to point to previous element.
+        /// Moves IIterator backward to point to previous element.
         mpublic virtual void MoveBwd() const noexcept abstract;
 
         /// ----------------------------------------------------------------------------
-        /// Moves Iterator backward to point to previous element.
+        /// Moves IIterator backward to point to previous element.
         ///
         /// @note
         /// - Calls MoveBwd()
@@ -30,7 +30,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------
-        /// Moves Iterator backward to point to previous element.
+        /// Moves IIterator backward to point to previous element.
         ///
         /// @note
         /// - Calls MoveBwd()
@@ -41,7 +41,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------
-        /// Moves Iterator backward to point to previous element.
+        /// Moves IIterator backward to point to previous element.
         ///
         /// @note
         /// - Does not follow postfix definations, works same as prefix.
@@ -53,7 +53,7 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------
-        /// Moves Iterator backward to point to previous element.
+        /// Moves IIterator backward to point to previous element.
         ///
         /// @note
         /// - Does not follow postfix definations, works same as prefix.

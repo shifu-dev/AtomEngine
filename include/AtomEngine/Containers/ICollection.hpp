@@ -1,6 +1,6 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Containers/ConstCollection.hpp"
+#include "AtomEngine/Containers/IConstCollection.hpp"
 
 namespace Atom
 {
@@ -9,7 +9,7 @@ namespace Atom
     /// 
     /// @tparam TElement type this collection contains.
     template <typename TElement>
-    class Collection : public virtual ConstCollection<TElement>
+    interface ICollection : public virtual IConstCollection<TElement>
     {
         using ElementT = TElement;                                             ///< ----
 

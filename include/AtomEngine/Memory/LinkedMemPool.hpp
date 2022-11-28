@@ -1,20 +1,20 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Memory/MemPool.hpp"
+#include "AtomEngine/Memory/IMemPool.hpp"
 #include "AtomEngine/Memory/GlobalAllocation.hpp"
 
 namespace Atom
 {
-    /// LinkedMemPool defines the base logic to implement a MemPool using LinkedData structure.
+    /// LinkedMemPool defines the base logic to implement a IMemPool using LinkedData structure.
     ///
     /// @note 
     /// - This type is not supposed to be used as an interface to recieve objects,
-    ///   as this just defines the base functionality for code reusage, instead use MemPool.
+    ///   as this just defines the base functionality for code reusage, instead use IMemPool.
     ///
     /// @todo
     /// - Redesign LinkedMemPool to use object memory(memory used by user during allocation) to
     ///   allocate Block objects.
-    class LinkedMemPool : public virtual MemPool
+    class LinkedMemPool : public virtual IMemPool
     {
         /// Used to manage memory blocks
         mprotected struct Block

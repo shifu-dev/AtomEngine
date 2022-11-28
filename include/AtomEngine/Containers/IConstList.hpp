@@ -1,22 +1,22 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Containers/ConstCollection.hpp"
+#include "AtomEngine/Containers/IConstCollection.hpp"
 
 namespace Atom
 {
-    /// List represents an array like structure, where elements 
+    /// IList represents an array like structure, where elements 
     /// can be accessed using their index value.
     /// 
     /// @tparam TElement Type of element this container stores.
     template <typename TElement>
-    class ConstList : public virtual ConstCollection<TElement>
+    interface IConstList : public virtual IConstCollection<TElement>
     {
         using ElementT = TElement;                                             ///< ----
-        using ConstCollectionT = ConstCollection<ElementT>;                    ///< ----
-        using EqualityComparerT = EqualityComparer<ElementT>;                  ///< ----
+        using IConstCollectionT = IConstCollection<ElementT>;                  ///< ----
+        using IEqualityComparerT = IEqualityComparer<ElementT>;                ///< ----
         using DefaultEqualityComparerT = DefaultEqualityComparer<ElementT>;    ///< ----
-        mpublic using ConstCollectionT::Contains;
-        mpublic using ConstCollectionT::Count;
+        mpublic using IConstCollectionT::Contains;
+        mpublic using IConstCollectionT::Count;
 
         /// ----------------------------------------------------------------------------
         /// Access element at index \p{index} without bounds checking.
@@ -38,7 +38,7 @@ namespace Atom
         /// 
         /// @exceptsafe
         /// \p{Strong Exception Safety}
-        mpublic virtual const ElementT ref ConstElementAt(const sizet index) const
+        mpublic virtual const ElementT ref IConstElementAt(const sizet index) const
         {
             mAssertIndexIsInBounds(index);
             return operator [] (index);
@@ -63,9 +63,9 @@ namespace Atom
         /// 
         /// @note
         /// - Calls ElementAt() with index:0.
-        mpublic const ElementT ref ConstElementFront() const
+        mpublic const ElementT ref IConstElementFront() const
         {
-            return ConstElementAt(0);
+            return IConstElementAt(0);
         }
 
         mpublic const ElementT ref ElementFront() const
@@ -86,9 +86,9 @@ namespace Atom
         /// 
         /// @note
         /// - Calls ElementAt() with index:Count() - 1.
-        mpublic const ElementT ref ConstElementBack() const
+        mpublic const ElementT ref IConstElementBack() const
         {
-            return ConstElementAt(Count() - 1);
+            return IConstElementAt(Count() - 1);
         }
 
         mpublic const ElementT ref ElementBack() const
@@ -101,9 +101,9 @@ namespace Atom
         /// Index of the first element matching element \p{element}.
         /// 
         /// @param[in] element Element to compare with.
-        /// @param[in] comparer Comparer used to compare this element with each element.
+        /// @param[in] comparer IComparer used to compare this element with each element.
         /// @return Index of first element matching element \p{element}, else \p{npos}.
-        mpublic virtual sizet FirstIndexOf(const ElementT ref element, const EqualityComparerT ref comparer) const noexcept abstract;
+        mpublic virtual sizet FirstIndexOf(const ElementT ref element, const IEqualityComparerT ref comparer) const noexcept abstract;
 
         /// ----------------------------------------------------------------------------
         /// Index of the first element matching element \p{element}.
@@ -112,7 +112,7 @@ namespace Atom
         /// @return Index of first element matching element \p{element}, else \p{npos}.
         /// 
         /// @note
-        /// - Calls FirstIndexOf(const ElementT ref element, const EqualityComparerT ref comparer)
+        /// - Calls FirstIndexOf(const ElementT ref element, const IEqualityComparerT ref comparer)
         ///   \n with \p{comparer}: DefaultEqualityComparerT.
         mpublic virtual sizet FirstIndexOf(const ElementT ref element) const noexcept
         {
@@ -123,9 +123,9 @@ namespace Atom
         /// Index of the last element matching element \p{element}.
         /// 
         /// @param[in] element Element to compare with.
-        /// @param[in] comparer Comparer used to compare this element with each element.
+        /// @param[in] comparer IComparer used to compare this element with each element.
         /// @return Index of last element matching element \p{element}, else \p{npos}.
-        mpublic virtual sizet LastIndexOf(const ElementT ref element, const EqualityComparerT ref comparer) const noexcept abstract;
+        mpublic virtual sizet LastIndexOf(const ElementT ref element, const IEqualityComparerT ref comparer) const noexcept abstract;
 
         /// ----------------------------------------------------------------------------
         /// Index of the last element matching element \p{element}.
@@ -137,7 +137,7 @@ namespace Atom
             return FirstIndexOf(element, DefaultEqualityComparerT());
         }
 
-        mpublic virtual bool Contains(const ElementT ref element, const EqualityComparerT ref comparer) const noexcept override
+        mpublic virtual bool Contains(const ElementT ref element, const IEqualityComparerT ref comparer) const noexcept override
         {
             return FirstIndexOf(element, comparer) isnot NPOS;
         }

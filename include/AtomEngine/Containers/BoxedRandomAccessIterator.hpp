@@ -1,18 +1,18 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
 #include "AtomEngine/Containers/BoxedBidirectionalIterator.hpp"
-#include "AtomEngine/Containers/RandomAccessIterator.hpp"
+#include "AtomEngine/Containers/IRandomAccessIterator.hpp"
 
 namespace Atom
 {
     template <typename TElement>
     class BoxedRandomAccessIterator :
         public virtual BoxedBidirectionalIterator<TElement>,
-        public virtual RandomAccessIterator<TElement>
+        public virtual IRandomAccessIterator<TElement>
     {
         using ThisT = BoxedRandomAccessIterator<TElement>;
         using BaseT = BoxedBidirectionalIterator<TElement>;
-        using IteratorT = RandomAccessIterator<TElement>;
+        using IRandomAccessIteratorT = IRandomAccessIterator<TElement>;
 
         /// ----------------------------------------------------------------------------
 
@@ -52,14 +52,14 @@ namespace Atom
 
         /// ----------------------------------------------------------------------------
 
-        mpublic IteratorT ref GetIterator() noexcept
+        mpublic IRandomAccessIteratorT ref GetIterator() noexcept
         {
             return RCAST(IteratorT ref, BaseT::GetIterator());
         }
 
-        mpublic const IteratorT ref GetIterator() const noexcept
+        mpublic const IRandomAccessIteratorT ref GetIterator() const noexcept
         {
-            return RCAST(const IteratorT ref, BaseT::GetIterator());
+            return RCAST(const IRandomAccessIteratorT ref, BaseT::GetIterator());
         }
 
         mpublic virtual void MoveFwdBy(const sizet steps) const noexcept override
