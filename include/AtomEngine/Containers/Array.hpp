@@ -5,8 +5,9 @@
 
 namespace Atom
 {
-    /// @brief represents a collection that holds memory in contiguous order
-    /// @tparam TElement type of element stored in array
+    /// Represents a collection that holds memory in contiguous order.
+    /// 
+    /// @tparam TElement Type of element this array contains.
     template <typename TElement>
     class Array : public virtual ConstArray<TElement>, public virtual List<TElement>
     {
