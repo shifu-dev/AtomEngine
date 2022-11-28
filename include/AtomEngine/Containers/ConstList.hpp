@@ -12,7 +12,6 @@ namespace Atom
     class ConstList : public virtual ConstCollection<TElement>
     {
         using ElementT = TElement;                                             ///< ----
-        using CollectionT = Collection<ElementT>;                              ///< ----
         using ConstCollectionT = ConstCollection<ElementT>;                    ///< ----
         using EqualityComparerT = EqualityComparer<ElementT>;                  ///< ----
         using DefaultEqualityComparerT = DefaultEqualityComparer<ElementT>;    ///< ----

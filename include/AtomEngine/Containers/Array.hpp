@@ -1,16 +1,17 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
+#include "AtomEngine/Containers/ConstArray.hpp"
 #include "AtomEngine/Containers/List.hpp"
-#include "AtomEngine/Containers/ArrayIterator.hpp"
 
 namespace Atom
 {
     /// @brief represents a collection that holds memory in contiguous order
     /// @tparam TElement type of element stored in array
     template <typename TElement>
-    class Array : public virtual List<TElement>
+    class Array : public virtual ConstArray<TElement>, public virtual List<TElement>
     {
         using ElementT = TElement;
+        using ConstArrayT = ConstArray<ElementT>;
         using ConstListT = ConstList<ElementT>;
         using ForwardIteratorT = ForwardIterator<ElementT>;
         using BoxedForwardIteratorT = BoxedForwardIterator<ElementT>;
@@ -18,12 +19,11 @@ namespace Atom
         using PredicateT = Predicate<const ElementT ref, sizet>;
         using IteratorT = ArrayIterator<ElementT>;
 
-        // *******************************************************************
+        mprotected using ConstArrayT::mAssertIndexIsInBounds;
+        mprotected using ConstArrayT::mArray;
+        mprotected using ConstArrayT::mCount;
 
-        mpublic virtual const ElementT ref operator[](sizet index) const noexcept final override
-        {
-            return mArray[index];
-        }
+        // *******************************************************************
 
         mpublic virtual ElementT ref operator[](sizet index) noexcept final override
         {
@@ -31,14 +31,6 @@ namespace Atom
         }
 
         // *******************************************************************
-
-        mpublic virtual void ForEach(const Action<const ElementT ref> ref callback) const final override
-        {
-            for (sizet i = 0; i < mCount; i++)
-            {
-                callback(mArray[i]);
-            }
-        }
 
         mpublic virtual void ForEach(const Action<ElementT ref> ref callback) final override
         {
@@ -53,39 +45,9 @@ namespace Atom
             return IteratorT(mArray + 0);
         }
 
-        mpublic const IteratorT Begin() const noexcept
-        {
-            return IteratorT(mArray + 0);
-        }
-
         mpublic IteratorT End() noexcept
         {
             return IteratorT(mArray + mCount);
-        }
-
-        mpublic const IteratorT End() const noexcept
-        {
-            return IteratorT(mArray + mCount);
-        }
-
-        mprotected BoxedForwardIteratorT mIterableBegin() noexcept final override
-        {
-            return BoxedForwardIteratorT(Begin());
-        }
-
-        mprotected const BoxedForwardIteratorT mIterableBegin() const noexcept final override
-        {
-            return BoxedForwardIteratorT(Begin());
-        }
-
-        mprotected BoxedForwardIteratorT mIterableEnd() noexcept final override
-        {
-            return BoxedForwardIteratorT(End());
-        }
-
-        mprotected const BoxedForwardIteratorT mIterableEnd() const noexcept final override
-        {
-            return BoxedForwardIteratorT(End());
         }
 
         // *******************************************************************
@@ -95,47 +57,6 @@ namespace Atom
         mpublic ElementT ptr Data() noexcept
         {
             return mArray;
-        }
-
-        mpublic const ElementT ptr Data() const noexcept
-        {
-            return mArray;
-        }
-        /// @} ----------------------------------------------------------------------------
-
-        // *******************************************************************
-
-        mpublic virtual sizet FirstIndexOf(const ElementT ref element, const EqualityComparerT ref comparer) const noexcept final override
-        {
-            for (sizet i = 0; i < mCount; i++)
-            {
-                if (comparer.Compare(mArray[i], element) is true)
-                {
-                    return i;
-                }
-            }
-
-            return NPOS;
-        }
-
-        mpublic virtual sizet LastIndexOf(const ElementT ref element, const EqualityComparerT ref comparer) const noexcept final override
-        {
-            for (sizet i = mCount; i >= 0; i--)
-            {
-                if (comparer.Compare(mArray[i], element) is true)
-                {
-                    return i;
-                }
-            }
-
-            return NPOS;
-        }
-
-        // *******************************************************************
-
-        mpublic virtual sizet Count() const noexcept final override
-        {
-            return mCount;
         }
 
         // *******************************************************************
@@ -240,11 +161,6 @@ namespace Atom
 
         // *******************************************************************
 
-        mprotected void mAssertIndexIsInBounds(const sizet index) const override final
-        {
-            ConstListT::mAssertIndexIsInBounds(index);
-        }
-
         /// @brief checks capcity and resizes if required
         /// @param count count of elements to insert
         /// @note this function is called every time any number
@@ -259,8 +175,6 @@ namespace Atom
 
         // *******************************************************************
 
-        mprotected ElementT ptr mArray;
         mprotected sizet mCapacity;
-        mprotected sizet mCount;
     };
 }

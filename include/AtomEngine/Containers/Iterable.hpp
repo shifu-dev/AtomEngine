@@ -110,7 +110,7 @@ namespace Atom
     template <typename TIterable>
     class iterate
     {
-        mpublic Iterate(TIterable ref iterable) :
+        mpublic iterate(TIterable ref iterable) :
             mIterable(iterable) { }
 
         /// @{ ----------------------------------------------------------------------------
