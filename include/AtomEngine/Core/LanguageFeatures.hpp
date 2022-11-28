@@ -1,6 +1,8 @@
 #pragma once
 #include "AtomEngine/Core/Core.hpp"
 
+#define interface class
+
 #define mpublic public:
 #define mprotected protected:
 #define mprivate private:
