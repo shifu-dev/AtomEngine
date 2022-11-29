@@ -1,6 +1,6 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Containers/IArray.hpp"
+#include "AtomEngine/Containers/ArrayBase.hpp"
 
 namespace Atom
 {
@@ -8,18 +8,18 @@ namespace Atom
     /// @tparam TElement type of value stored in array
     /// @tparam TSize size of array, this cannot be changed
     template <typename TElement, sizet TSize>
-    class StackArray : public IArray<TElement>
+    class StackArray : public ArrayBase<TElement>
     {
         using ElementT = TElement;
-        using IArrayT = IArray<TElement>;
+        using ArrayBaseT = ArrayBase<TElement>;
 
         mpublic static constexpr sizet Size = TSize;
 
-        mpublic StackArray() : IArrayT()
+        mpublic StackArray() : ArrayBaseT()
         {
-            IArrayT::mArray = mStackArray;
-            IArrayT::mCapacity = Size;
-            IArrayT::mCount = 0;
+            ArrayBaseT::mArray = mStackArray;
+            ArrayBaseT::mCapacity = Size;
+            ArrayBaseT::mCount = 0;
         }
 
         mprotected ElementT mStackArray[Size];
