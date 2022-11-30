@@ -1,5 +1,6 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
+#include "AtomEngine/Containers/InitializerList.hpp"
 #include "AtomEngine/Containers/ConstArrayBase.hpp"
 
 namespace Atom
@@ -13,6 +14,7 @@ namespace Atom
         using ThisT = ArrayView<TElement>;
         using BaseT = ConstArrayBase<TElement>;
         using ElementT = TElement;
+        using InitializerListT = InitializerList<ElementT>;
         using IConstArrayT = IConstArray<TElement>;
 
         mprotected using BaseT::mArray;
@@ -23,9 +25,8 @@ namespace Atom
 
         mpublic ArrayView() noexcept = default;
 
-        mpublic template <sizet TSize>
-        ArrayView(const ElementT(&arr)[TSize]) noexcept :
-            ThisT(arr, TSize) { }
+        mpublic ArrayView(const InitializerListT list) noexcept :
+            ThisT(list.begin(), list.size()) { }
 
         mpublic ArrayView(const ElementT ptr arr, const sizet count) noexcept
         {
