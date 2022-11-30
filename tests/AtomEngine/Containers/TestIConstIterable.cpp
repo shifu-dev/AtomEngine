@@ -6,10 +6,8 @@ using namespace Atom;
 
 TEST_CASE("IConstIterable Implementation")
 {
-    int rawArr[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-    ArrayView<int> arr(rawArr, 10);
-
-    const IConstIterable<int> ref collection = arr;
+    const IConstIterable<int> ref collection = 
+        ArrayView<int>({ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
 
     SECTION("RangeBased ForLoop")
     {

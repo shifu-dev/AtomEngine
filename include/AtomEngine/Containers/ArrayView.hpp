@@ -21,6 +21,12 @@ namespace Atom
         // *******************************************************************
         // * Constructors and Destructors
 
+        mpublic ArrayView() noexcept = default;
+
+        mpublic template <sizet TSize>
+        ArrayView(const ElementT(&arr)[TSize]) noexcept :
+            ThisT(arr, TSize) { }
+
         mpublic ArrayView(const ElementT ptr arr, const sizet count) noexcept
         {
             mArray = CCAST(ElementT ptr, arr);
