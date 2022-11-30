@@ -73,4 +73,37 @@ namespace Atom
         /// Implementation function for End().
         mprotected virtual const BoxedForwardIteratorT mIterableEnd() const noexcept abstract;
     };
+
+    template <typename TElement>
+    class citerate
+    {
+        using IConstIterableT = IConstIterable<TElement>;
+
+        mpublic citerate(const IConstIterableT ref iterable) :
+            mIterable(iterable) { }
+
+        /// ----------------------------------------------------------------------------
+        /// This is used by range based for loop.
+        /// See Begin() for implementation.
+        /// 
+        /// @note AtomEngine does not use begin() becuase it does not
+        ///       follow our naming standards.
+        mpublic const auto begin() const noexcept
+        {
+            return mIterable.Begin();
+        }
+
+        /// ----------------------------------------------------------------------------
+        /// This is used by range based for loop.
+        /// See End() for implementation.
+        /// 
+        /// @note AtomEngine does not use end() becuase it does not
+        ///       follow our naming standards.
+        mpublic const auto end() const noexcept
+        {
+            return mIterable.End();
+        }
+
+        mprivate const IConstIterableT ref mIterable;
+    };
 }
