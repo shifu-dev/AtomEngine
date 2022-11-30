@@ -13,8 +13,7 @@ namespace Atom
     interface IList : public virtual IConstList<TElement>, public virtual ICollection<TElement>
     {
         using ElementT = TElement;                                               ///< ----
-        using IIterableT = IIterable<ElementT>;                                  ///< ----
-        using ICollectionT = ICollection<ElementT>;                              ///< ----
+        using IConstIterableT = IConstIterable<ElementT>;                        ///< ----
         using IConstCollectionT = IConstCollection<ElementT>;                    ///< ----
         using IConstListT = IConstList<ElementT>;                                ///< ----
         using IEqualityComparerT = IEqualityComparer<ElementT>;                  ///< ----
@@ -24,7 +23,7 @@ namespace Atom
 
         mpublic using IConstListT::FirstIndexOf;
         mpublic using IConstListT::LastIndexOf;
-        mpublic using IConstCollectionT::Count;
+        mpublic using IConstListT::Count;
         mprotected using IConstListT::mAssertIndexIsInBounds;
 
         /// ----------------------------------------------------------------------------
@@ -126,54 +125,54 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------
-        /// Inserts \p{count} elements from IIterable \p{elements} at index \p{index}.
+        /// Inserts \p{count} elements from IConstIterable \p{elements} at index \p{index}.
         /// 
         /// @param index Index to insert elements at.
-        /// @param elements IIterable to insert elements from.
+        /// @param elements IConstIterable to insert elements from.
         /// @param count Count of elements to insert.
         /// 
         /// @note
         /// - Calls InsertAt(const sizet index, const IForwardIteratorT ref begin, const sizet count)
         ///   with begin: elements.Begin(), count: count.
-        mpublic virtual void InsertAt(const sizet index, const IIterableT ref elements, const sizet count)
+        mpublic virtual void InsertAt(const sizet index, const IConstIterableT ref elements, const sizet count)
         {
             InsertAt(index, elements.Begin(), count);
         }
 
         /// ----------------------------------------------------------------------------
-        /// Inserts all elements from IIterable \p{elements} at index \p{index}.
+        /// Inserts all elements from IConstIterable \p{elements} at index \p{index}.
         /// 
         /// @param[in] index Index to insert elements at.
-        /// @param[in] elements IIterable to insert elements from.
+        /// @param[in] elements IConstIterable to insert elements from.
         /// 
         /// @note
         /// - Calls InsertAt(const sizet index, const IForwardIteratorT ref begin, const IForwardIteratorT ref end)
         ///   with begin: elements.Begin(), end: elements.End().
-        mpublic virtual void InsertAt(const sizet index, const IIterableT ref elements)
+        mpublic virtual void InsertAt(const sizet index, const IConstIterableT ref elements)
         {
             InsertAt(index, elements.Begin(), elements.End());
         }
 
         /// ----------------------------------------------------------------------------
-        /// Inserts all elements from ICollection \p{elements}.
+        /// Inserts all elements from IConstCollection \p{elements}.
         /// 
-        /// This function is preferred over InsertAt(const sizet index, const IIterableT ref elements)
-        /// becuase ICollection provides function ICollection::Count() 
+        /// This function is preferred over InsertAt(const sizet index, const IConstIterableT ref elements)
+        /// becuase IConstCollection provides function IConstCollection::Count() 
         /// which specifies the count of elements to insert. This helps to preallocate 
         /// memory instead of checking on each iteration.
         /// 
         /// @param[in] index Index to insert elements at.
-        /// @param[in] elements ICollection reference to insert elements from.
+        /// @param[in] elements IConstCollection reference to insert elements from.
         /// 
         /// @exceptsafe
         /// \p{Strong Exception Safety}
         /// 
         /// @note
-        /// - Calls InsertAt(const sizet index, const IIterableT ref elements, const sizet count)
-        ///   with index: index, elements: SCAST(const IIterableT ref, elements), count: elements.Count().
-        mpublic virtual void InsertAt(const sizet index, const ICollectionT ref elements)
+        /// - Calls InsertAt(const sizet index, const IConstIterableT ref elements, const sizet count)
+        ///   with index: index, elements: SCAST(const IConstIterableT ref, elements), count: elements.Count().
+        mpublic virtual void InsertAt(const sizet index, const IConstCollectionT ref elements)
         {
-            InsertAt(index, SCAST(const IIterableT ref, elements), elements.Count());
+            InsertAt(index, SCAST(const IConstIterableT ref, elements), elements.Count());
         }
 
         /// ----------------------------------------------------------------------------
@@ -209,25 +208,25 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------
-        /// - Calls InsertAt(const sizet index, const IIterableT ref elements, const sizet count).
+        /// - Calls InsertAt(const sizet index, const IConstIterableT ref elements, const sizet count).
         ///   with index: 0, elements: elements, count: count.
-        mpublic virtual void InsertFront(const IIterableT ref elements, const sizet count)
+        mpublic virtual void InsertFront(const IConstIterableT ref elements, const sizet count)
         {
             InsertAt(0, elements, count);
         }
 
         /// ----------------------------------------------------------------------------
-        /// - Calls InsertAt(const sizet index, const IIterableT ref elements, const sizet count).
+        /// - Calls InsertAt(const sizet index, const IConstIterableT ref elements, const sizet count).
         ///   with index: 0, elements: elements, count: count.
-        mpublic virtual void InsertFront(const IIterableT ref elements)
+        mpublic virtual void InsertFront(const IConstIterableT ref elements)
         {
             InsertAt(0, elements);
         }
 
         /// ----------------------------------------------------------------------------
-        /// - Calls InsertAt(const sizet index, const ICollectionT ref elements).
+        /// - Calls InsertAt(const sizet index, const IConstCollectionT ref elements).
         ///   with index: 0, elements: elements.
-        mpublic virtual void InsertFront(const ICollectionT ref elements)
+        mpublic virtual void InsertFront(const IConstCollectionT ref elements)
         {
             InsertAt(0, elements);
         }
@@ -259,25 +258,25 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------
-        /// - Calls InsertAt(const sizet index, const IIterableT ref elements, const sizet count).
+        /// - Calls InsertAt(const sizet index, const IConstIterableT ref elements, const sizet count).
         ///   with index: Count() - 1, elements: elements, count: count.
-        mpublic virtual void InsertBack(const IIterableT ref elements, const sizet count)
+        mpublic virtual void InsertBack(const IConstIterableT ref elements, const sizet count)
         {
             InsertAt(Count() - 1, elements, count);
         }
 
         /// ----------------------------------------------------------------------------
-        /// - Calls InsertAt(const sizet index, const IIterableT ref elements, const sizet count).
+        /// - Calls InsertAt(const sizet index, const IConstIterableT ref elements, const sizet count).
         ///   with index: Count() - 1, elements: elements, count: count.
-        mpublic virtual void InsertBack(const IIterableT ref elements)
+        mpublic virtual void InsertBack(const IConstIterableT ref elements)
         {
             InsertAt(Count() - 1, elements);
         }
 
         /// ----------------------------------------------------------------------------
-        /// - Calls InsertAt(const sizet index, const ICollectionT ref elements).
+        /// - Calls InsertAt(const sizet index, const IConstCollectionT ref elements).
         ///   with index: Count() - 1, elements: elements.
-        mpublic virtual void InsertBack(const ICollectionT ref elements)
+        mpublic virtual void InsertBack(const IConstCollectionT ref elements)
         {
             InsertAt(Count() - 1, elements);
         }

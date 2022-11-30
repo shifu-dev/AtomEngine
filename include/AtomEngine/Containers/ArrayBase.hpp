@@ -12,13 +12,16 @@ namespace Atom
     class ArrayBase : public ConstArrayBase<TElement>,
         public virtual IArray<TElement>
     {
+        using BaseT = ConstArrayBase<TElement>;                         ///< ----
         using ElementT = TElement;                                      ///< ----
         using IPredicateT = IPredicate<const ElementT ref, sizet>;      ///< ----
         using IForwardIteratorT = IForwardIterator<ElementT>;           ///< ----
         using BoxedForwardIteratorT = BoxedForwardIterator<ElementT>;   ///< ----
         using ArrayIteratorT = ArrayIterator<ElementT>;                 ///< ----
 
-        mprotected using ConstArrayBase<TElement>::mAssertIndexIsInBounds;
+        mprotected using BaseT::mArray;
+        mprotected using BaseT::mCount;
+        mprotected using BaseT::mAssertIndexIsInBounds;
 
         // *******************************************************************
 
@@ -79,6 +82,7 @@ namespace Atom
         mpublic virtual void InsertBack(const ElementT ref element) override final
         {
             mAssertCapacityFor(1);
+
             mArray[mCount] = element;
             mCount++;
         }
@@ -105,7 +109,7 @@ namespace Atom
             for (sizet i = index; i < count; i++)
             {
                 mArray[index] = ptr it;
-                it++;
+                it.MoveFwd();
             }
         }
 
@@ -175,8 +179,6 @@ namespace Atom
 
         // *******************************************************************
 
-        mprotected ElementT ptr mArray;
-        mprotected sizet mCount;
         mprotected sizet mCapacity;
     };
 }

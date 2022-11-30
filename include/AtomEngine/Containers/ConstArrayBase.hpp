@@ -8,6 +8,7 @@ namespace Atom
     class ConstArrayBase : public virtual IConstArray<TElement>
     {
         using ElementT = TElement;                                          ///< ----
+        using IConstListT = IConstList<TElement>;                           ///< ----
         using BoxedForwardIteratorT = BoxedForwardIterator<ElementT>;       ///< ----
         using IEqualityComparerT = IEqualityComparer<ElementT>;             ///< ----
         using ArrayIteratorT = ArrayIterator<ElementT>;                     ///< ----
@@ -40,6 +41,8 @@ namespace Atom
             return mArray[index];
         }
 
+        mpublic using IConstListT::FirstIndexOf;
+
         mpublic virtual sizet FirstIndexOf(const ElementT ref element, const IEqualityComparerT ref comparer) const noexcept override final
         {
             for (sizet i = 0; i < mCount; i++)
@@ -52,6 +55,8 @@ namespace Atom
 
             return NPOS;
         }
+
+        mpublic using IConstListT::LastIndexOf;
 
         mpublic virtual sizet LastIndexOf(const ElementT ref element, const IEqualityComparerT ref comparer) const noexcept override final
         {

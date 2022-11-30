@@ -12,9 +12,6 @@ namespace Atom
     interface IArray : public virtual IConstArray<TElement>, public virtual IList<TElement>
     {
         using ElementT = TElement;
-        using IConstArrayT = IConstArray<ElementT>;
-        using IPredicateT = IPredicate<const ElementT ref, sizet>;
-        using IForwardIteratorT = IForwardIterator<ElementT>;
         using ArrayIteratorT = ArrayIterator<ElementT>;
 
         // *******************************************************************

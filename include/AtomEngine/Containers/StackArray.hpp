@@ -10,18 +10,26 @@ namespace Atom
     template <typename TElement, sizet TSize>
     class StackArray : public ArrayBase<TElement>
     {
+        using ThisT = StackArray<TElement, TSize>;
+        using BaseT = ArrayBase<TElement>;
         using ElementT = TElement;
-        using ArrayBaseT = ArrayBase<TElement>;
 
-        mpublic static constexpr sizet Size = TSize;
+        mprotected using BaseT::mArray;
+        mprotected using BaseT::mCount;
+        mprotected using BaseT::mCapacity;
 
-        mpublic StackArray() : ArrayBaseT()
+        // *******************************************************************
+        // * Constructors and Destructors
+
+        mpublic StackArray() noexcept : BaseT()
         {
-            ArrayBaseT::mArray = mStackArray;
-            ArrayBaseT::mCapacity = Size;
-            ArrayBaseT::mCount = 0;
+            mArray = mStackArray;
+            mCapacity = TSize;
+            mCount = 0;
         }
 
-        mprotected ElementT mStackArray[Size];
+        // *******************************************************************
+
+        mprotected ElementT mStackArray[TSize];
     };
 }
