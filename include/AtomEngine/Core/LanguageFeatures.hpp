@@ -29,6 +29,7 @@
 #define SCAST(TType, arg) static_cast<TType>(arg)
 #define DCAST(TType, arg) dynamic_cast<TType>(arg)
 #define RCAST(TType, arg) reinterpret_cast<TType>(arg)
+#define CCAST(TType, arg) const_cast<TType>(arg)
 
 #define SASSERT static_assert
 #define STHROW(msg) SASSERT(false, msg)
