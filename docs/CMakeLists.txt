@@ -49,7 +49,7 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E touch ${DOXYGEN_STAMP}
 )
 
-add_custom_target(BuildDocs ALL
+add_custom_target(BuildDocs
     DEPENDS ${DOXYGEN_STAMP}
 )
 
