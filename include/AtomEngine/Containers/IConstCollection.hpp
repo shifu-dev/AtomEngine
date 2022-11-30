@@ -1,6 +1,6 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Containers/IIterable.hpp"
+#include "AtomEngine/Containers/IConstIterable.hpp"
 #include "AtomEngine/Containers/IComparer.hpp"
 
 namespace Atom
@@ -10,7 +10,7 @@ namespace Atom
     /// 
     /// @tparam TElement type this collection contains.
     template <typename TElement>
-    interface IConstCollection : public virtual IIterable<TElement>
+    interface IConstCollection : public virtual IConstIterable<TElement>
     {
         using ElementT = TElement;                                             ///< ----
         using IEqualityComparerT = IEqualityComparer<ElementT>;                ///< ----

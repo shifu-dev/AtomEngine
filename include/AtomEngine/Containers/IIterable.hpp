@@ -1,7 +1,6 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Callable/ICallable.hpp"
-#include "AtomEngine/Containers/BoxedForwardIterator.hpp"
+#include "AtomEngine/Containers/IConstIterable.hpp"
 
 namespace Atom
 {
@@ -11,100 +10,46 @@ namespace Atom
     /// 
     /// @tparam TElement Type of element this iterable iterates on.
     template <typename TElement>
-    interface IIterable
+    interface IIterable : public virtual IConstIterable<TElement>
     {
-        using ElementT = TElement;                                          ///< ----
-        using BoxedForwardIteratorT = BoxedForwardIterator<ElementT>;       ///< ----
-        using ConstForEachActionT = IAction<const ElementT ref>;             ///< ----
-        using ForEachActionT = IAction<ElementT ref>;                        ///< ----
+        using ElementT = TElement;                                         ///< ----
+        using BoxedForwardIteratorT = BoxedForwardIterator<ElementT>;      ///< ----
+        using ConstForEachActionT = IAction<const ElementT ref>;           ///< ----
+        using ForEachActionT = IAction<ElementT ref>;                      ///< ----
 
-        /// @{ ----------------------------------------------------------------------------
-        /// Helper function for ForEach().
-        /// 
-        /// @tparam TFunctor Functor Type.
-        /// @tparam EnableIf Enable only if \p{Functor} type is not ICallable type.
-        ///         This is to avoid accepting ICallable types as this takes 
-        ///         precedence over ForEach() accepting ICallable object.
-        /// 
-        /// @param functor Functor object, this object is wrapped using @ref ICallable::Create().
-        mpublic template <typename TFunctor>
-            void ForEachT(const TFunctor ref functor) const
-        {
-            ForEach(ConstForEachActionT::Create(functor));
-        }
-
+        /// ----------------------------------------------------------------------------
+        /// @copydoc IIConstItearble::ForEachT().
         mpublic template <typename TFunctor>
             void ForEachT(const TFunctor ref functor)
         {
             ForEach(ForEachActionT::Create(functor));
         }
-        /// @} ----------------------------------------------------------------------------
 
-        /// @{ ----------------------------------------------------------------------------
-        /// \p{foreach} loop implemented using ICallable object.
-        /// 
-        /// Begin() uses BoxedForwardIteratorT which may allocate memory.
-        /// But this method is allocation free.
-        /// 
-        /// @param callback ICallable object to invoke for each element.
-        mpublic virtual void ForEach(const ConstForEachActionT ref callback) const abstract;
-
+        /// ----------------------------------------------------------------------------
+        /// @copydoc IIConstItearble::ForEach().
         mpublic virtual void ForEach(const ForEachActionT ref callback) abstract;
-        /// @} ----------------------------------------------------------------------------
 
-        /// @{ ----------------------------------------------------------------------------
-        /// IIterator to the first element.
-        /// 
-        /// @return BoxedForwardIterator pointing to first element.
-        /// 
-        /// @note
-        /// - Calls mIterableBegin().
-        /// - Begin() is the standard name to provide IIterator to the first element,
-        ///   making Begin() virtual will not allow derived classes to overload this function.
+        /// ----------------------------------------------------------------------------
+        /// @copydoc IIConstItearble::Begin().
         mpublic BoxedForwardIteratorT Begin() noexcept
         {
             return mIterableBegin();
         }
 
-        mpublic const BoxedForwardIteratorT Begin() const noexcept
-        {
-            return mIterableBegin();
-        }
-        /// @} ----------------------------------------------------------------------------
-
-        /// @{ ----------------------------------------------------------------------------
-        /// IIterator to the last element.
-        /// 
-        /// @return BoxedForwardIterator pointing to last element.
-        /// 
-        /// @note
-        /// - Calls mIterableEnd().
-        /// - End() is the standard name to provide IIterator to the first element,
-        ///   making End() virtual will not allow derived classes to overload this function.
+        /// ----------------------------------------------------------------------------
+        /// @copydoc IIConstItearble::End().
         mpublic BoxedForwardIteratorT End() noexcept
         {
             return mIterableEnd();
         }
 
-        mpublic const BoxedForwardIteratorT End() const noexcept
-        {
-            return mIterableEnd();
-        }
-        /// @} ----------------------------------------------------------------------------
-
-        /// @{ ----------------------------------------------------------------------------
-        /// Implementation function for Begin().
+        /// ----------------------------------------------------------------------------
+        /// @copydoc IIConstItearble::mIterableBegin().
         mprotected virtual BoxedForwardIteratorT mIterableBegin() noexcept abstract;
 
-        mprotected virtual const BoxedForwardIteratorT mIterableBegin() const noexcept abstract;
-        /// @} ----------------------------------------------------------------------------
-
-        /// @{ ----------------------------------------------------------------------------
-        /// Implementation function for End().
+        /// ----------------------------------------------------------------------------
+        /// @copydoc IIConstItearble::mIterableEnd().
         mprotected virtual BoxedForwardIteratorT mIterableEnd() noexcept abstract;
-
-        mprotected virtual const BoxedForwardIteratorT mIterableEnd() const noexcept abstract;
-        /// @} ----------------------------------------------------------------------------
     };
 
     template <typename TIterable>
