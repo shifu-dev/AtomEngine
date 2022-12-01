@@ -16,6 +16,12 @@ namespace Atom
         using ElementT = TElement;                                             ///< ----
 
         /// ----------------------------------------------------------------------------
+        /// Current count of elements allocated in memory.
+        /// 
+        /// @return Count of elements allocated in memory.
+        mpublic virtual sizet Capacity() const noexcept abstract;
+
+        /// ----------------------------------------------------------------------------
         /// Inserts an element in the collection.
         /// 
         /// @param element Element to insert.

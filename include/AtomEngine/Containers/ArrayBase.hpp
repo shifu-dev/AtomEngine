@@ -157,6 +157,14 @@ namespace Atom
         }
 
         // *******************************************************************
+        // * ICollection
+
+        mpublic virtual sizet Capacity() const noexcept override final
+        {
+            return mCapacity;
+        }
+
+        // *******************************************************************
         // * IITerable
 
         mpublic virtual void ForEach(const IAction<ElementT ref> ref callback) override final

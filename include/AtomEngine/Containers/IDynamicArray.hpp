@@ -9,7 +9,9 @@ namespace Atom
     /// 
     /// @tparam TElement Type of element this array contains.
     template <typename TElement>
-    interface IDynamicArray : public virtual IArray<TElement>, public virtual IDynamicList<TElement>
+    interface IDynamicArray :
+        public virtual IArray<TElement>,
+        public virtual IDynamicList<TElement>
     {
     };
 }

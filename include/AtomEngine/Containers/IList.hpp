@@ -2,6 +2,7 @@
 #include "AtomEngine/Core.hpp"
 #include "AtomEngine/Containers/ICollection.hpp"
 #include "AtomEngine/Containers/IConstList.hpp"
+#include "AtomEngine/Containers/InitializerList.hpp"
 
 namespace Atom
 {

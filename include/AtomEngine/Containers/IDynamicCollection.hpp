@@ -19,10 +19,6 @@ namespace Atom
         /// @return count of reserved memory for element
         mpublic virtual sizet Reserve(const sizet count) abstract;
 
-        /// @brief current allocated memory
-        /// @return count of memory for element currently allocated
-        mpublic virtual sizet Capacity() abstract;
-
         /// @brief resizes capacity equal to count
         /// @return count of memory for element currently allocated
         mpublic virtual sizet ShrinkToFit() abstract;
