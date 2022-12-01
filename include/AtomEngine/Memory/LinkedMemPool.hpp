@@ -22,15 +22,15 @@ namespace Atom
             /// ----------------------------------------------------------------------------
             /// Ptr to memory block.
             memptr mem = nullptr;
-            
+
             /// ----------------------------------------------------------------------------
             /// Size of this memory block.
             sizet size = 0;
-            
+
             /// ----------------------------------------------------------------------------
             /// Is this memory available to use?
             bool isFree = true;
-            
+
             /// ----------------------------------------------------------------------------
             /// Is this ptr the root of memory block?
             /// It is used to manage the memory block.
@@ -84,9 +84,11 @@ namespace Atom
         mpublic template <typename TType>
             bool HasBlockFor(const sizet count) const noexcept;
 
-        mpublic virtual memptr AllocateRaw(const sizet size, bool clear = true) override;
+        mpublic virtual memptr AllocateRaw(const sizet size, bool clear = true) override final;
 
-        mpublic virtual void DeallocateRaw(memptr src, const sizet size) override;
+        mpublic virtual memptr ReallocateRaw(memptr mem, const sizet size, bool clear = true, bool clearAll = false) override final;
+
+        mpublic virtual void DeallocateRaw(memptr mem, const sizet size) override final;
 
         /// ----------------------------------------------------------------------------
         /// Adds memory block to the pool.
@@ -240,11 +242,63 @@ namespace Atom
         return block->mem;
     }
 
-    inline void LinkedMemPool::DeallocateRaw(memptr src, const sizet size)
+    inline memptr LinkedMemPool::ReallocateRaw(memptr mem, const sizet size, bool clear, bool clearAll)
     {
-        if (src isnot nullptr)
+        if (mem isnot nullptr)
         {
-            blockptr block = mFindBlockFor(src);
+            blockptr block = mFindBlockFor(mem);
+            if (block is nullptr)
+            {
+                // todo: throw exception
+                // this address is not managed by this pool
+                return mem;
+            }
+
+            if (block->isFree is true)
+            {
+                // todo: throw exception
+                // fatal, memory not allocated yet
+                return mem;
+            }
+
+            // Requested to allocate memory of same size.
+            if (block->size == size)
+            {
+                return mem;
+            }
+
+            // If we need to shrink memory, no need to assign another block
+            if (block->size > size)
+            {
+                mDivideBlock(block, block->size - size);
+                return mem;
+            }
+
+            // Check if we can extend already assigned memory.
+            blockptr blockNext = block->next;
+            if (blockNext->isFree and (block->size + blockNext->size >= size))
+            {
+                const sizet extraSpace = block->size + blockNext->size - size;
+                if (extraSpace > 0)
+                {
+                    mDivideBlock(blockNext, extraSpace);
+                }
+
+                mJoinBlock(block);
+                return mem;
+            }
+
+            // Assign another block
+            mDeallocateBlock(block);
+            return AllocateRaw(size, clear);
+        }
+    }
+
+    inline void LinkedMemPool::DeallocateRaw(memptr mem, const sizet size)
+    {
+        if (mem isnot nullptr)
+        {
+            blockptr block = mFindBlockFor(mem);
             if (block is nullptr)
             {
                 // todo: throw exception
@@ -259,7 +313,7 @@ namespace Atom
                 return;
             }
 
-            sizet memOffset = (byte ptr) src - (byte ptr) block->mem;
+            sizet memOffset = (byte ptr) mem - (byte ptr) block->mem;
             sizet blockSize = block->size - memOffset;
             if (blockSize < size)
             {
@@ -268,7 +322,7 @@ namespace Atom
                 return;
             }
 
-            // if src ptr is offset to bloc mem, we need to divide it into two blocks
+            // if mem ptr is offset to bloc mem, we need to divide it into two blocks
             if (memOffset isnot 0)
             {
                 if (mDivideBlock(block, memOffset))
@@ -291,7 +345,6 @@ namespace Atom
         }
     }
 
-    /// @memberof nothing 
     inline sizet LinkedMemPool::Size() const noexcept
     {
         return mMemoryTotal;
@@ -318,7 +371,6 @@ namespace Atom
         return mFindBlock(sizeof(Type) * count) isnot nullptr;
     }
 
-    /// @memberof nothing 
     template <>
     inline bool LinkedMemPool::HasBlockFor<void>(const sizet count) const noexcept
     {
