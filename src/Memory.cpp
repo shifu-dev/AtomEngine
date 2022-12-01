@@ -21,5 +21,6 @@ namespace Atom
         }
     };
 
+    ATOM_API DefaultAllocator DefaultAllocatorInstance = DefaultAllocator();
     ATOM_API IAllocator ptr globalAllocator = new GlobalRootMemPool(0);
 }

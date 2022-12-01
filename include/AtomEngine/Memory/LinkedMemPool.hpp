@@ -244,54 +244,56 @@ namespace Atom
 
     inline memptr LinkedMemPool::ReallocateRaw(memptr mem, const sizet size, bool clear, bool clearAll)
     {
-        if (mem isnot nullptr)
+        if (mem == null)
         {
-            blockptr block = mFindBlockFor(mem);
-            if (block is nullptr)
-            {
-                // todo: throw exception
-                // this address is not managed by this pool
-                return mem;
-            }
-
-            if (block->isFree is true)
-            {
-                // todo: throw exception
-                // fatal, memory not allocated yet
-                return mem;
-            }
-
-            // Requested to allocate memory of same size.
-            if (block->size == size)
-            {
-                return mem;
-            }
-
-            // If we need to shrink memory, no need to assign another block
-            if (block->size > size)
-            {
-                mDivideBlock(block, block->size - size);
-                return mem;
-            }
-
-            // Check if we can extend already assigned memory.
-            blockptr blockNext = block->next;
-            if (blockNext->isFree and (block->size + blockNext->size >= size))
-            {
-                const sizet extraSpace = block->size + blockNext->size - size;
-                if (extraSpace > 0)
-                {
-                    mDivideBlock(blockNext, extraSpace);
-                }
-
-                mJoinBlock(block);
-                return mem;
-            }
-
-            // Assign another block
-            mDeallocateBlock(block);
-            return AllocateRaw(size, clear);
+            return mem;
         }
+
+        blockptr block = mFindBlockFor(mem);
+        if (block is nullptr)
+        {
+            // todo: throw exception
+            // this address is not managed by this pool
+            return mem;
+        }
+
+        if (block->isFree is true)
+        {
+            // todo: throw exception
+            // fatal, memory not allocated yet
+            return mem;
+        }
+
+        // Requested to allocate memory of same size.
+        if (block->size == size)
+        {
+            return mem;
+        }
+
+        // If we need to shrink memory, no need to assign another block
+        if (block->size > size)
+        {
+            mDivideBlock(block, block->size - size);
+            return mem;
+        }
+
+        // Check if we can extend already assigned memory.
+        blockptr blockNext = block->next;
+        if (blockNext->isFree and (block->size + blockNext->size >= size))
+        {
+            const sizet extraSpace = block->size + blockNext->size - size;
+            if (extraSpace > 0)
+            {
+                mDivideBlock(blockNext, extraSpace);
+            }
+
+            mJoinBlock(block);
+            return mem;
+        }
+
+        // Assign another block
+        mDeallocateBlock(block);
+        return AllocateRaw(size, clear);
     }
 
     inline void LinkedMemPool::DeallocateRaw(memptr mem, const sizet size)

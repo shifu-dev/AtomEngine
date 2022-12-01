@@ -21,6 +21,6 @@ namespace Atom
 
         /// @brief resizes capacity equal to count
         /// @return count of memory for element currently allocated
-        mpublic virtual sizet ShrinkToFit() abstract;
+        mpublic virtual void ShrinkToFit() abstract;
     };
 }

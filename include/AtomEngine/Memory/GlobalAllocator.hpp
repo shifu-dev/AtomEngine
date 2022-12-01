@@ -5,7 +5,7 @@
 
 namespace Atom
 {
-    class GlobalAllocator : IAllocator
+    class GlobalAllocator : public virtual IAllocator
     {
         mpublic memptr AllocateRaw(const sizet count, bool clear = true) override final
         {
