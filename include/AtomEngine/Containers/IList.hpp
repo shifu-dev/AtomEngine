@@ -27,6 +27,8 @@ namespace Atom
         mpublic using IConstListT::Count;
         mprotected using IConstListT::mAssertIndexIsInBounds;
 
+        // *******************************************************************
+
         /// ----------------------------------------------------------------------------
         /// @copydoc IConstList::operator[](const sizet index)
         mpublic virtual ElementT ref operator[](const sizet index) noexcept abstract;
@@ -53,6 +55,8 @@ namespace Atom
             return ElementAt(Count() - 1);
         }
 
+        // *******************************************************************
+
         /// ----------------------------------------------------------------------------
         /// Inserts element at index \p{index}.
         /// 
@@ -61,42 +65,6 @@ namespace Atom
         /// 
         /// @throws OutOfBoundsException if index is out of bounds.
         mpublic virtual void InsertAt(const sizet index, const ElementT ref element) abstract;
-
-        /// Inserts element at begining.
-        /// 
-        /// @param[in] element Element to insert.
-        /// 
-        /// @note
-        /// - Calls InsertAt(sizet index, const ElementT ref element)
-        ///   \n with \p{index}: 0, \p{element}: element.
-        mpublic virtual void InsertFront(const ElementT ref element)
-        {
-            InsertAt(0, element);
-        }
-
-        /// Inserts element at last.
-        /// 
-        /// @param[in] element Element to insert.
-        /// 
-        /// @note
-        /// - Calls InsertAt(sizet index, const ElementT ref element)
-        ///   \n with \p{index}: Count() - 1, \p{element}: element.
-        mpublic virtual void InsertBack(const ElementT ref element)
-        {
-            InsertAt(Count() - 1, element);
-        }
-
-        /// Inserts element at last.
-        /// 
-        /// @param[in] element Element to insert.
-        /// 
-        /// @note
-        /// - Calls InsertBack(const ElementT ref element)
-        ///   \n with \p{element}: element.
-        mpublic virtual void Insert(const ElementT ref element) override
-        {
-            InsertBack(element);
-        }
 
         /// ----------------------------------------------------------------------------
         /// Insert multiple elements at index \p{index}.
@@ -192,6 +160,18 @@ namespace Atom
             InsertAt(index, ArrayIterator(elements), sizeof...(TElements));
         }
 
+        /// Inserts element at begining.
+        /// 
+        /// @param[in] element Element to insert.
+        /// 
+        /// @note
+        /// - Calls InsertAt(sizet index, const ElementT ref element)
+        ///   \n with \p{index}: 0, \p{element}: element.
+        mpublic virtual void InsertFront(const ElementT ref element)
+        {
+            InsertAt(0, element);
+        }
+
         /// ----------------------------------------------------------------------------
         /// - Calls InsertAt(const sizet index, const IForwardIteratorT ref it, const sizet count).
         ///   with index: 0, it: it, count: count.
@@ -240,6 +220,18 @@ namespace Atom
             void InsertFront(const sizet index)
         {
             InsertAt<TElements...>(0);
+        }
+
+        /// Inserts element at last.
+        /// 
+        /// @param[in] element Element to insert.
+        /// 
+        /// @note
+        /// - Calls InsertAt(sizet index, const ElementT ref element)
+        ///   \n with \p{index}: Count() - 1, \p{element}: element.
+        mpublic virtual void InsertBack(const ElementT ref element)
+        {
+            InsertAt(Count() - 1, element);
         }
 
         /// ----------------------------------------------------------------------------
@@ -377,15 +369,6 @@ namespace Atom
         }
 
         /// ----------------------------------------------------------------------------
-        /// @note 
-        /// - Calls RemoveBack(const ElementT ref element)
-        ///   with element: element.
-        mpublic virtual void Remove(const ElementT ref element) override
-        {
-            RemoveFront(element);
-        }
-
-        /// ----------------------------------------------------------------------------
         /// Removes elements from index \p{from} to index \p{to}.
         /// 
         /// @param from Starting index of the section to remove.
@@ -425,6 +408,37 @@ namespace Atom
             void RemoveIf(const TFunctor ref func) noexcept
         {
             RemoveIfCallable(IPredicateT::Create(func));
+        }
+
+        // *******************************************************************
+        // * ICollection
+
+        mpublic virtual void Clear() override
+        {
+            RemoveFrom(0);
+        }
+
+        /// Inserts element at last.
+        /// 
+        /// @param[in] element Element to insert.
+        /// 
+        /// @note
+        /// - Calls InsertBack(const ElementT ref element)
+        ///   \n with \p{element}: element.
+        mpublic virtual void Insert(const ElementT ref element) override
+        {
+            InsertBack(element);
+        }
+
+        /// ----------------------------------------------------------------------------
+        /// Removes element from last.
+        /// 
+        /// @note 
+        /// - Calls RemoveBack(const ElementT ref element)
+        ///   with element: element.
+        mpublic virtual void Remove(const ElementT ref element) override
+        {
+            RemoveBack(element);
         }
     };
 }

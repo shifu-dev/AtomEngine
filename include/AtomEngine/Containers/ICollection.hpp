@@ -22,6 +22,10 @@ namespace Atom
         mpublic virtual sizet Capacity() const noexcept abstract;
 
         /// ----------------------------------------------------------------------------
+        /// Remove all elments from collection.
+        mpublic virtual void Clear() abstract;
+
+        /// ----------------------------------------------------------------------------
         /// Inserts an element in the collection.
         /// 
         /// @param element Element to insert.

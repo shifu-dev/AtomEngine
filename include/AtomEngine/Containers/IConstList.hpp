@@ -18,6 +18,8 @@ namespace Atom
         mpublic using IConstCollectionT::Contains;
         mpublic using IConstCollectionT::Count;
 
+        // *******************************************************************
+
         /// ----------------------------------------------------------------------------
         /// Access element at index \p{index} without bounds checking.
         /// 
@@ -38,7 +40,7 @@ namespace Atom
         /// 
         /// @exceptsafe
         /// \p{Strong Exception Safety}
-        mpublic virtual const ElementT ref IConstElementAt(const sizet index) const
+        mpublic virtual const ElementT ref ConstElementAt(const sizet index) const
         {
             mAssertIndexIsInBounds(index);
             return operator [] (index);
@@ -63,9 +65,9 @@ namespace Atom
         /// 
         /// @note
         /// - Calls ElementAt() with index:0.
-        mpublic const ElementT ref IConstElementFront() const
+        mpublic const ElementT ref ConstElementFront() const
         {
-            return IConstElementAt(0);
+            return ConstElementAt(0);
         }
 
         mpublic const ElementT ref ElementFront() const
@@ -86,9 +88,9 @@ namespace Atom
         /// 
         /// @note
         /// - Calls ElementAt() with index:Count() - 1.
-        mpublic const ElementT ref IConstElementBack() const
+        mpublic const ElementT ref ConstElementBack() const
         {
-            return IConstElementAt(Count() - 1);
+            return ConstElementAt(Count() - 1);
         }
 
         mpublic const ElementT ref ElementBack() const
@@ -96,6 +98,8 @@ namespace Atom
             return ElementAt(Count() - 1);
         }
         /// @} ----------------------------------------------------------------------------
+
+        // *******************************************************************
 
         /// ----------------------------------------------------------------------------
         /// Index of the first element matching element \p{element}.
@@ -137,10 +141,15 @@ namespace Atom
             return FirstIndexOf(element, DefaultEqualityComparerT());
         }
 
+        // *******************************************************************
+        // * ICollection
+
         mpublic virtual bool Contains(const ElementT ref element, const IEqualityComparerT ref comparer) const noexcept override
         {
             return FirstIndexOf(element, comparer) isnot NPOS;
         }
+
+        // *******************************************************************
 
         /// Asserts if index is out of bounds.
         /// 
