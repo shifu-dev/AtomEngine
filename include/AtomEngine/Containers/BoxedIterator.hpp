@@ -87,17 +87,17 @@ namespace Atom
             return BaseT::GetObject<IIteratorT>();
         }
 
-        mpublic virtual ElementT ref Value() noexcept final override
+        mpublic virtual ElementT ref Value() noexcept final
         {
             return GetIterator().Value();
         }
 
-        mpublic virtual const ElementT ref Value() const noexcept final override
+        mpublic virtual const ElementT ref Value() const noexcept final
         {
             return GetIterator().Value();
         }
 
-        mpublic virtual int Compare(const IIteratorT ref rhs) const noexcept final override
+        mpublic virtual int Compare(const IIteratorT ref rhs) const noexcept final
         {
             return GetIterator().Compare(rhs);
         }

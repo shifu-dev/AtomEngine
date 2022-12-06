@@ -18,7 +18,7 @@ namespace Atom
             mReserveMoreBlocks(BLOCK_STACK_COUNT);
         }
 
-        mpublic virtual blockptr mAllocateBlocks(const sizet count) final override
+        mpublic virtual blockptr mAllocateBlocks(const sizet count) final
         {
             if (mStackReservedFreeBlock isnot nsize)
             {
@@ -42,7 +42,7 @@ namespace Atom
             return BaseT::mAllocateBlocks(count);
         }
 
-        mpublic virtual void mDeallocateBlock(blockptr block) final override
+        mpublic virtual void mDeallocateBlock(blockptr block) final
         {
             if (block > mStackReservedBlocks and block < mStackReservedBlocks + BLOCK_STACK_COUNT)
             {

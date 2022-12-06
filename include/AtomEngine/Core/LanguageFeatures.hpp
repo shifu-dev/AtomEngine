@@ -1,6 +1,7 @@
 #pragma once
 #include "AtomEngine/Core/Core.hpp"
 
+#define final override final
 #define interface struct
 
 #define mpublic public:

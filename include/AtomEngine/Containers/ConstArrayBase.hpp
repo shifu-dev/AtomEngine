@@ -18,17 +18,17 @@ namespace Atom
 
         /// ----------------------------------------------------------------------------
         /// @return Pointer to the underlying array.
-        mpublic virtual const ElementT ptr Data() const noexcept override final
+        mpublic virtual const ElementT ptr Data() const noexcept final
         {
             return mArray;
         }
 
-        mpublic virtual const ArrayIteratorT Begin() const noexcept override final
+        mpublic virtual const ArrayIteratorT Begin() const noexcept final
         {
             return ArrayIteratorT(mArray + 0);
         }
 
-        mpublic virtual const ArrayIteratorT End() const noexcept override final
+        mpublic virtual const ArrayIteratorT End() const noexcept final
         {
             return ArrayIteratorT(mArray + mCount);
         }
@@ -36,14 +36,14 @@ namespace Atom
         // *******************************************************************
         // * IConstList
 
-        mpublic virtual const ElementT ref operator[](const sizet index) const noexcept override final
+        mpublic virtual const ElementT ref operator[](const sizet index) const noexcept final
         {
             return mArray[index];
         }
 
         mpublic using IConstListT::FirstIndexOf;
 
-        mpublic virtual sizet FirstIndexOf(const ElementT ref element, const IEqualityComparerT ref comparer) const noexcept override final
+        mpublic virtual sizet FirstIndexOf(const ElementT ref element, const IEqualityComparerT ref comparer) const noexcept final
         {
             for (sizet i = 0; i < mCount; i++)
             {
@@ -58,7 +58,7 @@ namespace Atom
 
         mpublic using IConstListT::LastIndexOf;
 
-        mpublic virtual sizet LastIndexOf(const ElementT ref element, const IEqualityComparerT ref comparer) const noexcept override final
+        mpublic virtual sizet LastIndexOf(const ElementT ref element, const IEqualityComparerT ref comparer) const noexcept final
         {
             for (sizet i = mCount; i >= 0; i--)
             {
@@ -71,7 +71,7 @@ namespace Atom
             return NPOS;
         }
 
-        mprotected virtual void mAssertIndexIsInBounds(const sizet index) const override final
+        mprotected virtual void mAssertIndexIsInBounds(const sizet index) const final
         {
             mAssertIndexIsInBounds(index, "Index was out of range");
         }
@@ -87,7 +87,7 @@ namespace Atom
         // *******************************************************************
         // * IConstCollection
 
-        mpublic virtual sizet Count() const noexcept override final
+        mpublic virtual sizet Count() const noexcept final
         {
             return mCount;
         }
@@ -95,7 +95,7 @@ namespace Atom
         // *******************************************************************
         // * IIterable
 
-        mpublic virtual void ForEach(const IAction<const ElementT ref> ref callback) const override final
+        mpublic virtual void ForEach(const IAction<const ElementT ref> ref callback) const final
         {
             for (sizet i = 0; i < mCount; i++)
             {
@@ -103,12 +103,12 @@ namespace Atom
             }
         }
 
-        mprotected const BoxedForwardIteratorT mIterableBegin() const noexcept override final
+        mprotected const BoxedForwardIteratorT mIterableBegin() const noexcept final
         {
             return BoxedForwardIteratorT(Begin());
         }
 
-        mprotected const BoxedForwardIteratorT mIterableEnd() const noexcept override final
+        mprotected const BoxedForwardIteratorT mIterableEnd() const noexcept final
         {
             return BoxedForwardIteratorT(End());
         }

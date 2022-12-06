@@ -42,17 +42,17 @@ namespace Atom
 
         /// ----------------------------------------------------------------------------
         /// @return Pointer to the underlying array.
-        mpublic virtual ElementT ptr Data() noexcept override final
+        mpublic virtual ElementT ptr Data() noexcept final
         {
             return mArray;
         }
 
-        mpublic virtual ArrayIteratorT Begin() noexcept override final
+        mpublic virtual ArrayIteratorT Begin() noexcept final
         {
             return ArrayIteratorT(mArray + 0);
         }
 
-        mpublic virtual ArrayIteratorT End() noexcept override final
+        mpublic virtual ArrayIteratorT End() noexcept final
         {
             return ArrayIteratorT(mArray + mCount);
         }
@@ -60,12 +60,12 @@ namespace Atom
         // *******************************************************************
         // * IList
 
-        mpublic virtual ElementT ref operator[](const sizet index) noexcept override final
+        mpublic virtual ElementT ref operator[](const sizet index) noexcept final
         {
             return mArray[index];
         }
 
-        mpublic virtual void InsertAt(const sizet index, const ElementT ref element) override final
+        mpublic virtual void InsertAt(const sizet index, const ElementT ref element) final
         {
             mAssertIndexIsInBounds(index);
             mAssertCapacityFor(1);
@@ -79,7 +79,7 @@ namespace Atom
             mArray[index] = element;
         }
 
-        mpublic virtual void InsertBack(const ElementT ref element) override final
+        mpublic virtual void InsertBack(const ElementT ref element) final
         {
             mAssertCapacityFor(1);
 
@@ -87,7 +87,7 @@ namespace Atom
             mCount++;
         }
 
-        mpublic virtual void RemoveBack() override final
+        mpublic virtual void RemoveBack() final
         {
             mAssertIndexIsInBounds(0);
 
@@ -95,7 +95,7 @@ namespace Atom
             mCount--;
         }
 
-        mpublic virtual void InsertAt(const sizet index, const IForwardIteratorT ref it, const sizet count) override final
+        mpublic virtual void InsertAt(const sizet index, const IForwardIteratorT ref it, const sizet count) final
         {
             mAssertIndexIsInBounds(index);
             mAssertCapacityFor(count);
@@ -113,7 +113,7 @@ namespace Atom
             }
         }
 
-        mpublic virtual void RemoveAt(const sizet index) override final
+        mpublic virtual void RemoveAt(const sizet index) final
         {
             mAssertIndexIsInBounds(index);
 
@@ -126,7 +126,7 @@ namespace Atom
             mCount--;
         }
 
-        mpublic virtual void RemoveFrom(const sizet from, const sizet to) override final
+        mpublic virtual void RemoveFrom(const sizet from, const sizet to) final
         {
             const sizet count = to - from;
             for (sizet i = from; i < (mCount - count); i++)
@@ -141,7 +141,7 @@ namespace Atom
             mCount -= count;
         }
 
-        mpublic virtual void RemoveIfCallable(const IPredicateT ref pred) noexcept override final
+        mpublic virtual void RemoveIfCallable(const IPredicateT ref pred) noexcept final
         {
             sizet count = mCount;
             for (sizet i = 0; i < count; i++)
@@ -159,7 +159,7 @@ namespace Atom
         // *******************************************************************
         // * ICollection
 
-        mpublic virtual sizet Capacity() const noexcept override final
+        mpublic virtual sizet Capacity() const noexcept final
         {
             return mCapacity;
         }
@@ -167,7 +167,7 @@ namespace Atom
         // *******************************************************************
         // * IITerable
 
-        mpublic virtual void ForEach(const IAction<ElementT ref> ref callback) override final
+        mpublic virtual void ForEach(const IAction<ElementT ref> ref callback) final
         {
             for (sizet i = 0; i < mCount; i++)
             {
@@ -175,12 +175,12 @@ namespace Atom
             }
         }
 
-        mprotected BoxedForwardIteratorT mIterableBegin() noexcept override final
+        mprotected BoxedForwardIteratorT mIterableBegin() noexcept final
         {
             return BoxedForwardIteratorT(Begin());
         }
 
-        mprotected BoxedForwardIteratorT mIterableEnd() noexcept override final
+        mprotected BoxedForwardIteratorT mIterableEnd() noexcept final
         {
             return BoxedForwardIteratorT(End());
         }

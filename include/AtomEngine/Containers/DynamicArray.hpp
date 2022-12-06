@@ -84,7 +84,7 @@ namespace Atom
         // *******************************************************************
         // * IDynamicCollection
 
-        mpublic virtual void Resize(const sizet count) override final
+        mpublic virtual void Resize(const sizet count) final
         {
             sizet checkedCount = max(count, mCount);
 
@@ -94,7 +94,7 @@ namespace Atom
             }
         }
 
-        mpublic virtual sizet Reserve(const sizet count) override final
+        mpublic virtual sizet Reserve(const sizet count) final
         {
             if (mCapacity - mCount < count)
             {
@@ -104,7 +104,7 @@ namespace Atom
             return mCapacity - mCount;
         }
 
-        mpublic virtual void ShrinkToFit() override final
+        mpublic virtual void ShrinkToFit() final
         {
             return Resize(mCount);
         }

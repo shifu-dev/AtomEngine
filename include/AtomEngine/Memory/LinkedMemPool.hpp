@@ -84,11 +84,11 @@ namespace Atom
         mpublic template <typename TType>
             bool HasBlockFor(const sizet count) const noexcept;
 
-        mpublic virtual memptr AllocateRaw(const sizet size, bool clear = true) override final;
+        mpublic virtual memptr AllocateRaw(const sizet size, bool clear = true) final;
 
-        mpublic virtual memptr ReallocateRaw(memptr mem, const sizet size, bool clear = true, bool clearAll = false) override final;
+        mpublic virtual memptr ReallocateRaw(memptr mem, const sizet size, bool clear = true, bool clearAll = false) final;
 
-        mpublic virtual void DeallocateRaw(memptr mem, const sizet size) override final;
+        mpublic virtual void DeallocateRaw(memptr mem, const sizet size) final;
 
         /// ----------------------------------------------------------------------------
         /// Adds memory block to the pool.

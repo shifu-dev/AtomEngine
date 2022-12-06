@@ -26,15 +26,15 @@ namespace Atom
         /// @param steps Count of steps to move iterator by.
         mpublic virtual void MoveFwdBy(const sizet steps) const noexcept abstract;
 
-        mpublic virtual void MoveFwd() const noexcept override { MoveFwdBy(1); }
-        mpublic virtual void MoveBwd() const noexcept override { MoveBwdBy(1); }
+        mpublic virtual void MoveFwd() const noexcept final { MoveFwdBy(1); }
+        mpublic virtual void MoveBwd() const noexcept final { MoveBwdBy(1); }
 
         /// ----------------------------------------------------------------------------
         /// Moves iterator forward by count \p{steps}.
         /// 
         /// @param steps Count of steps to move iterator by.
         /// @return ref to this object.
-        mpublic ThisT ref operator + (const sizet steps) noexcept
+        mpublic ThisT ref operator += (const sizet steps) noexcept
         {
             MoveFwdBy(steps);
             return ptr this;
@@ -45,7 +45,7 @@ namespace Atom
         /// 
         /// @param steps Count of steps to move iterator by.
         /// @return const ref to this object.
-        mpublic const ThisT ref operator + (const sizet steps) const noexcept
+        mpublic const ThisT ref operator += (const sizet steps) const noexcept
         {
             MoveFwdBy(steps);
             return ptr this;
@@ -56,7 +56,7 @@ namespace Atom
         /// 
         /// @param steps Count of steps to move iterator by.
         /// @return ref to this object.
-        mpublic ThisT ref operator - (const sizet steps) noexcept
+        mpublic ThisT ref operator -= (const sizet steps) noexcept
         {
             MoveBwdBy(steps);
             return ptr this;
@@ -67,7 +67,7 @@ namespace Atom
         /// 
         /// @param steps Count of steps to move iterator by.
         /// @return const ref to this object.
-        mpublic const ThisT ref operator - (const sizet steps) const noexcept
+        mpublic const ThisT ref operator -= (const sizet steps) const noexcept
         {
             MoveBwdBy(steps);
             return ptr this;
