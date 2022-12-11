@@ -23,29 +23,38 @@ namespace Atom
 
 namespace Atom
 {
-    template <typename TType>
-    const TType ref max(const TType ref left, const TType ref right)
+    template <typename TypeT>
+    using RemoveReferenceT = std::remove_reference_t<TypeT>;
+
+    template <typename TypeT>
+    constexpr TypeT& min(TypeT& left, TypeT& right)
+    {
+        return left <= right ? left : right;
+    }
+
+    template <typename TypeT>
+    constexpr TypeT& max(TypeT& left, TypeT& right)
     {
         return left >= right ? left : right;
     }
 
-    template <typename TType>
-    constexpr TType rref forward(typename std::remove_reference<TType>::type ref arg) noexcept
+    template <typename TypeT>
+    constexpr TypeT&& forward(RemoveReferenceT<TypeT>& arg) noexcept
     {
-        return SCAST(TType rref, arg);
+        return SCAST(TypeT&&, arg);
     }
 
-    template <class TType>
-    [[nodiscard]] constexpr std::remove_reference_t<TType> rref move(TType rref args) noexcept
+    template <class TypeT>
+    constexpr RemoveReferenceT<TypeT>&& move(TypeT&& args) noexcept
     {
         // forward args as movable
-        return SCAST(std::remove_reference_t<TType> rref, args);
+        return SCAST(RemoveReferenceT<TypeT>&&, args);
     }
 
-    template <typename TType>
-    void swap(TType ref lhs, TType ref rhs) noexcept
+    template <typename TypeT>
+    void swap(TypeT& lhs, TypeT& rhs) noexcept
     {
-        TType ref tmp = lhs;
+        TypeT& tmp = lhs;
         lhs = rhs;
         rhs = tmp;
     }
