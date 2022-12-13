@@ -1,17 +1,16 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
 #include "AtomEngine/Callable/ICallable.hpp"
+#include "AtomEngine/Callable/Loops.hpp"
 #include "AtomEngine/Containers/BoxedForwardIterator.hpp"
-
 namespace Atom
 {
     template <typename TElement>
     interface IConstIterable
     {
-        using ElementT = TElement;                                          ///< ----
-        using BoxedForwardIteratorT = BoxedForwardIterator<ElementT>;       ///< ----
-        using ConstForEachActionT = IAction<const ElementT ref>;             ///< ----
-        using ForEachActionT = IAction<ElementT ref>;                        ///< ----
+        using ElementT = TElement;
+        using BoxedForwardIteratorT = BoxedForwardIterator<ElementT>;
+        using ConstForEachActionT = ILoopAction<const ElementT ref>;
 
         /// ----------------------------------------------------------------------------
         /// Helper function for ForEach().
@@ -22,8 +21,9 @@ namespace Atom
         ///         precedence over ForEach() accepting ICallable object.
         /// 
         /// @param functor Functor object, this object is wrapped using @ref ICallable::Create().
-        mpublic template <typename TFunctor>
-            void ForEachT(const TFunctor ref functor) const
+        mpublic template <typename TFunctor,
+            EnableIf<!IsSubClass<ConstForEachActionT, TFunctor>> = 0>
+            void ForEach(const TFunctor ref functor) const
         {
             ForEach(ConstForEachActionT::Create(functor));
         }
@@ -79,7 +79,7 @@ namespace Atom
     {
         using IConstIterableT = IConstIterable<TElement>;
 
-        mpublic citerate(const IConstIterableT ref iterable) :
+        mpublic citerate(const IConstIterableT ref iterable):
             mIterable(iterable) { }
 
         /// ----------------------------------------------------------------------------

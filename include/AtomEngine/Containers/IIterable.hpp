@@ -12,15 +12,15 @@ namespace Atom
     template <typename TElement>
     interface IIterable : public virtual IConstIterable<TElement>
     {
-        using ElementT = TElement;                                         ///< ----
-        using BoxedForwardIteratorT = BoxedForwardIterator<ElementT>;      ///< ----
-        using ConstForEachActionT = IAction<const ElementT ref>;           ///< ----
-        using ForEachActionT = IAction<ElementT ref>;                      ///< ----
+        using ElementT = TElement;
+        using BoxedForwardIteratorT = BoxedForwardIterator<ElementT>;
+        using ForEachActionT = ILoopAction<ElementT ref>;
 
         /// ----------------------------------------------------------------------------
         /// @copydoc IIConstItearble::ForEachT().
-        mpublic template <typename TFunctor>
-            void ForEachT(const TFunctor ref functor)
+        mpublic template <typename TFunctor,
+            EnableIf<!IsSubClass<ForEachActionT, TFunctor>> = 0>
+            void ForEach(const TFunctor ref functor)
         {
             ForEach(ForEachActionT::Create(functor));
         }

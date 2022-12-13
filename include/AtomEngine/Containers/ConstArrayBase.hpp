@@ -11,6 +11,7 @@ namespace Atom
         using IConstListT = IConstList<TElement>;                           ///< ----
         using BoxedForwardIteratorT = BoxedForwardIterator<ElementT>;       ///< ----
         using IEqualityComparerT = IEqualityComparer<ElementT>;             ///< ----
+        using ConstForEachActionT = const ILoopAction<const ElementT ref>;  ///< ----
         using ArrayIteratorT = ArrayIterator<ElementT>;                     ///< ----
 
         // *******************************************************************
@@ -95,7 +96,7 @@ namespace Atom
         // *******************************************************************
         // * IIterable
 
-        mpublic virtual void ForEach(const IAction<const ElementT ref> ref callback) const final
+        mpublic virtual void ForEach(ConstForEachActionT& callback) const final
         {
             for (sizet i = 0; i < mCount; i++)
             {

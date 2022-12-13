@@ -17,6 +17,7 @@ namespace Atom
         using IPredicateT = IPredicate<const ElementT ref, sizet>;      ///< ----
         using IForwardIteratorT = IForwardIterator<ElementT>;           ///< ----
         using BoxedForwardIteratorT = BoxedForwardIterator<ElementT>;   ///< ----
+        using ForEachActionT = const ILoopAction<ElementT ref>;         ///< ----
         using ArrayIteratorT = ArrayIterator<ElementT>;                 ///< ----
 
         mprotected using BaseT::mArray;
@@ -167,7 +168,7 @@ namespace Atom
         // *******************************************************************
         // * IITerable
 
-        mpublic virtual void ForEach(const IAction<ElementT ref> ref callback) final
+        mpublic virtual void ForEach(ForEachActionT& callback) final
         {
             for (sizet i = 0; i < mCount; i++)
             {

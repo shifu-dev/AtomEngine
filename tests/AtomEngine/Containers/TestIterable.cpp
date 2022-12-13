@@ -1,12 +1,12 @@
 #include "catch2/catch_all.hpp"
-#include "AtomEngine/Containers/ArrayView.hpp"
+#include "AtomEngine/Containers/StackArray.hpp"
 
 using namespace Atom;
 
 TEST_CASE("IConstIterable Implementation")
 {
-    const ArrayView<int> arrView = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-    const IConstIterable<int> ref collection = arrView;
+    StackArray<int, 10> arr;
+    IIterable<int> ref collection = arr;
 
     SECTION("RangeBased ForLoop")
     {
@@ -23,7 +23,7 @@ TEST_CASE("IConstIterable Implementation")
         int i = 0;
         collection.ForEach
         (
-            [&i](int value)
+            [&i] (int& value)
             {
                 CHECK(value == i);
                 i++;

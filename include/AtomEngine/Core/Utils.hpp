@@ -33,7 +33,7 @@ namespace Atom
     }
 
     template <typename TypeT>
-    constexpr TypeT& max(TypeT& left, TypeT& right)
+    constexpr const TypeT& max(const TypeT& left, const TypeT& right)
     {
         return left >= right ? left : right;
     }
