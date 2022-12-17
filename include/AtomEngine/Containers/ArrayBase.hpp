@@ -16,7 +16,7 @@ namespace Atom
         using ElementT = TElement;                                      ///< ----
         using IPredicateT = IPredicate<const ElementT ref, sizet>;      ///< ----
         using IForwardIteratorT = IForwardIterator<ElementT>;           ///< ----
-        using BoxedForwardIteratorT = BoxedForwardIterator<ElementT>;   ///< ----
+        using ForwardIteratorBoxT = ForwardIteratorBox<ElementT>;   ///< ----
         using ForEachActionT = const ILoopAction<ElementT ref>;         ///< ----
         using ArrayIteratorT = ArrayIterator<ElementT>;                 ///< ----
 
@@ -176,14 +176,14 @@ namespace Atom
             }
         }
 
-        mprotected BoxedForwardIteratorT mIterableBegin() noexcept final
+        mprotected ForwardIteratorBoxT mIterableBegin() noexcept final
         {
-            return BoxedForwardIteratorT(Begin());
+            return ForwardIteratorBoxT(Begin());
         }
 
-        mprotected BoxedForwardIteratorT mIterableEnd() noexcept final
+        mprotected ForwardIteratorBoxT mIterableEnd() noexcept final
         {
-            return BoxedForwardIteratorT(End());
+            return ForwardIteratorBoxT(End());
         }
 
         // *******************************************************************

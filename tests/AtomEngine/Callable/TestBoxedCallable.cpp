@@ -1,5 +1,5 @@
 #include "catch2/catch_all.hpp"
-#include "AtomEngine/Callable/BoxedCallable.hpp"
+#include "AtomEngine/Callable/CallableBox.hpp"
 
 using namespace Atom;
 
@@ -16,28 +16,28 @@ static int testFunc(int a, char b, uint c)
     return 0;
 }
 
-TEST_CASE("BoxedCallable", "[Implementation]")
+TEST_CASE("CallableBox", "[Implementation]")
 {
     using ICallableT = ICallable<int(int, char, uint)>;
-    using BoxedCallableT = BoxedCallable<int(int, char, uint)>;
+    using CallableBoxT = CallableBox<int(int, char, uint)>;
 
-    BoxedCallableT function = ICallableT::Create(ref testFunc);
-    BoxedCallableT functor = ICallableT::Create(Functor());
-    BoxedCallableT lambda = ICallableT::Create(
+    CallableBoxT function = ICallableT::Create(ref testFunc);
+    CallableBoxT functor = ICallableT::Create(Functor());
+    CallableBoxT lambda = ICallableT::Create(
         [](int a, char b, uint c)
         {
             return 2;
         });
 
-    BoxedCallableT capturedLambda = ICallableT::Create(
+    CallableBoxT capturedLambda = ICallableT::Create(
         [&](int a, char b, uint c)
         {
             return 3;
         });
 
-    BoxedCallableT functionCopy = function;
+    CallableBoxT functionCopy = function;
 
-    BoxedCallableT functionCopyByOperator;
+    CallableBoxT functionCopyByOperator;
     functionCopyByOperator = function;
 
     CHECK(function(0, 'a', 0) == 0);

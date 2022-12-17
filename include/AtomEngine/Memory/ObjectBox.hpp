@@ -5,110 +5,108 @@
 
 namespace Atom
 {
-    namespace Core
+    namespace Internal
     {
-        class BoxedObjectIdentifier { };
+        class ObjectBoxIdentifier { };
     }
 
-    template <typename TAllocator, sizet TStackSize>
-    class BoxedObject : public Core::BoxedObjectIdentifier
+    template <typename AllocatorT, sizet StackSize>
+    class ObjectBox: public Internal::ObjectBoxIdentifier
     {
-        mprivate using ThisT = BoxedObject<TAllocator, TStackSize>;
-        mprivate using IdentifierT = Core::BoxedObjectIdentifier;
-        mprivate using AllocatorT = TAllocator;
-        mprivate constexpr static sizet StackSize = TStackSize;
+        using ThisT = ObjectBox<AllocatorT, StackSize>;
 
-        mprivate template <typename T>
-            constexpr static bool IsBoxedObject = IsSubClass<IdentifierT, T>;
+        template <typename Type>
+        constexpr static bool IsObjectBox =
+            IsSubClass<Internal::ObjectBoxIdentifier, Type>;
 
-        /// ----------------------------------------------------------------------------
+    /// ----------------------------------------------------------------------------
+    public:
+        ObjectBox(): ThisT(null) { }
 
-        mpublic BoxedObject() : ThisT(null) { }
-
-        mpublic BoxedObject(nullt value) :
+        ObjectBox(nullt value):
             mObject(null), mObjectSize(0), mObjectDestructor(null) { }
 
-        mpublic BoxedObject(const ThisT ref other) noexcept
+        ObjectBox(const ThisT& other) noexcept
         {
             mCopy(other);
         }
 
-        mpublic template <sizet TOtherStackSize>
-            BoxedObject(const BoxedObject<TAllocator, TOtherStackSize> ref other) noexcept
+        template <sizet OtherStackSizeT>
+        ObjectBox(const ObjectBox<AllocatorT, OtherStackSizeT>& other) noexcept
         {
             mCopy(other);
         }
 
-        mpublic BoxedObject(ThisT rref other) noexcept
+        ObjectBox(ThisT&& other) noexcept
         {
             mSwap(other);
         }
 
-        mpublic template <sizet TOtherStackSize>
-            BoxedObject(BoxedObject<TAllocator, TOtherStackSize> rref other) noexcept
+        template <sizet OtherStackSizeT>
+        ObjectBox(ObjectBox<AllocatorT, OtherStackSizeT>&& other) noexcept
         {
             mSwap(other);
         }
 
-        mpublic ThisT ref operator = (const ThisT ref other) noexcept
+        ThisT& operator = (const ThisT& other) noexcept
         {
             ThisT tmp(other);
             mSwap(tmp);
 
-            return ptr this;
+            return *this;
         }
 
-        mpublic template <sizet TOtherStackSize>
-            ThisT ref operator = (const BoxedObject<TAllocator, TOtherStackSize> ref other) noexcept
+        template <sizet OtherStackSizeT>
+        ThisT& operator = (const ObjectBox<AllocatorT, OtherStackSizeT>& other) noexcept
         {
             ThisT tmp(other);
             mSwap(tmp);
 
-            return ptr this;
+            return *this;
         }
 
-        mpublic ThisT ref operator = (ThisT rref other) noexcept
+        ThisT& operator = (ThisT&& other) noexcept
         {
             ThisT tmp(move(other));
             mSwap(tmp);
 
-            return ptr this;
+            return *this;
         }
 
-        mpublic template <sizet TOtherStackSize>
-            ThisT ref operator = (BoxedObject<TAllocator, TOtherStackSize> rref other) noexcept
+        template <sizet OtherStackSizeT>
+        ThisT& operator = (ObjectBox<AllocatorT, OtherStackSizeT>&& other) noexcept
         {
             ThisT tmp(move(other));
             mSwap(tmp);
 
-            return ptr this;
+            return *this;
         }
 
-        mpublic template <typename TObject, EnableIf<not IsBoxedObject<TObject>> = false>
-            BoxedObject(const TObject ref object) noexcept
+        template <typename TObject, EnableIf<not IsObjectBox<TObject>> = false>
+        ObjectBox(const TObject& object) noexcept
         {
             SetObject(object);
         }
 
-        mpublic template <typename TObject, EnableIf<not IsBoxedObject<TObject>> = false>
-            BoxedObject(TObject rref object) noexcept
+        template <typename TObject, EnableIf<not IsObjectBox<TObject>> = false>
+        ObjectBox(TObject&& object) noexcept
         {
             SetObject(move(object));
         }
 
-        mpublic template <typename TObject, EnableIf<not IsBoxedObject<TObject>> = false>
-            ThisT ref operator = (const TObject ref object) noexcept
+        template <typename TObject, EnableIf<not IsObjectBox<TObject>> = false>
+        ThisT& operator = (const TObject& object) noexcept
         {
             SetObject(object);
         }
 
-        mpublic template <typename TObject, EnableIf<not IsBoxedObject<TObject>> = false>
-            ThisT ref operator = (TObject rref object) noexcept
+        template <typename TObject, EnableIf<not IsObjectBox<TObject>> = false>
+        ThisT& operator = (TObject&& object) noexcept
         {
             SetObject(move(object));
         }
 
-        mpublic dtor BoxedObject()
+        dtor ObjectBox()
         {
             if (mObject isnot null)
             {
@@ -121,49 +119,48 @@ namespace Atom
             }
         }
 
-        /// ----------------------------------------------------------------------------
-
-        mpublic template <typename TObject>
-            void SetObject(const TObject ref object) noexcept
+    public:
+        template <typename TObject>
+        void SetObject(const TObject& object) noexcept
         {
             mSetObject(object);
 
             new (mObject) TObject(object);
         }
 
-        mpublic template <typename TObject>
-            void SetObject(TObject rref object) noexcept
+        template <typename TObject>
+        void SetObject(TObject&& object) noexcept
         {
             mSetObject(object);
 
             new (mObject) TObject(move(object));
         }
 
-        mpublic template <typename TObject>
-            TObject ref GetObject() noexcept
+        template <typename TObject>
+        TObject& GetObject() noexcept
         {
-            return ptr RCAST(TObject ptr, mObject);
+            return *RCAST(TObject*, mObject);
         }
 
-        mpublic template <typename TObject>
-            const TObject ref GetObject() const noexcept
+        template <typename TObject>
+        const TObject& GetObject() const noexcept
         {
-            return ptr RCAST(const TObject ptr, mObject);
+            return *RCAST(const TObject*, mObject);
         }
 
-        mpublic const memptr GetRawObject() const noexcept
-        {
-            return mObject;
-        }
-
-        mpublic memptr GetRawObject() noexcept
+        const memptr GetRawObject() const noexcept
         {
             return mObject;
         }
 
-        /// ----------------------------------------------------------------------------
+        memptr GetRawObject() noexcept
+        {
+            return mObject;
+        }
 
-        mprotected memptr mAllocMem(const sizet size) noexcept
+    /// ----------------------------------------------------------------------------
+    protected:
+        memptr mAllocMem(const sizet size) noexcept
         {
             memptr mem = null;
 
@@ -182,7 +179,7 @@ namespace Atom
             return mem;
         }
 
-        mprotected void mDestroyObject() noexcept
+        void mDestroyObject() noexcept
         {
             if (mObject isnot null)
             {
@@ -199,8 +196,8 @@ namespace Atom
             mObjectDestructor = null;
         }
 
-        mprotected template <typename TObject>
-            void mSetObject(const TObject ref object) noexcept
+        template <typename TObject>
+        void mSetObject(const TObject& object) noexcept
         {
             if (mObject isnot null)
             {
@@ -219,8 +216,8 @@ namespace Atom
 
         // does not destroys previous state,
         // assumes to be called from constructor
-        mprotected template <sizet TOtherStackSize>
-            void mCopy(const BoxedObject<TAllocator, TOtherStackSize> ref other) noexcept
+        template <sizet OtherStackSizeT>
+        void mCopy(const ObjectBox<AllocatorT, OtherStackSizeT>& other) noexcept
         {
             mObject = mAllocMem(other.mObjectSize);
             mObjectSize = other.mObjectSize;
@@ -229,8 +226,8 @@ namespace Atom
             memcpy(mObject, other.mObject, mObjectSize);
         }
 
-        mprotected template <sizet TOtherStackSize>
-            void mSwap(BoxedObject<TAllocator, TOtherStackSize> ref other) noexcept
+        template <sizet OtherStackSizeT>
+        void mSwap(ObjectBox<AllocatorT, OtherStackSizeT>& other) noexcept
         {
             byte mStackMemTmp[StackSize];
 
@@ -258,13 +255,13 @@ namespace Atom
             }
         }
 
-        /// ----------------------------------------------------------------------------
+    /// ----------------------------------------------------------------------------
+    protected:
+        byte mStackMem[StackSize];
+        AllocatorT mAllocator;
 
-        mprotected byte mStackMem[StackSize];
-        mprotected AllocatorT mAllocator;
-
-        mprotected memptr mObject = null;
-        mprotected void (ptr mObjectDestructor) (const memptr object);
-        mprotected sizet mObjectSize;
+        memptr mObject = null;
+        void (*mObjectDestructor) (const memptr object);
+        sizet mObjectSize;
     };
 }

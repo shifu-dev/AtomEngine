@@ -1,26 +1,26 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Containers/BoxedForwardIterator.hpp"
+#include "AtomEngine/Containers/ForwardIteratorBox.hpp"
 #include "AtomEngine/Containers/IBidirectionalIterator.hpp"
 
 namespace Atom
 {
     template <typename TElement>
-    class BoxedBidirectionalIterator : public BoxedForwardIterator<TElement>,
+    class BidirectionalIteratorBox : public ForwardIteratorBox<TElement>,
         public virtual IBidirectionalIterator<TElement>
     {
-        using ThisT = BoxedBidirectionalIterator<TElement>;
-        using BaseT = BoxedForwardIterator<TElement>;
+        using ThisT = BidirectionalIteratorBox<TElement>;
+        using BaseT = ForwardIteratorBox<TElement>;
         using IBidirectionalIteratorT = IBidirectionalIterator<TElement>;
 
         /// ----------------------------------------------------------------------------
 
-        mpublic BoxedBidirectionalIterator() : BaseT(null) { }
+        mpublic BidirectionalIteratorBox() : BaseT(null) { }
 
-        mpublic BoxedBidirectionalIterator(const ThisT ref other) noexcept :
+        mpublic BidirectionalIteratorBox(const ThisT ref other) noexcept :
             BaseT(other) { }
 
-        mpublic BoxedBidirectionalIterator(ThisT rref other) noexcept :
+        mpublic BidirectionalIteratorBox(ThisT rref other) noexcept :
             BaseT(move(other)) { }
 
         mpublic ThisT ref operator = (const ThisT ref other) noexcept
@@ -36,14 +36,14 @@ namespace Atom
         }
 
         mpublic template <typename TIterator>
-            BoxedBidirectionalIterator(const TIterator ref iterator) noexcept :
+            BidirectionalIteratorBox(const TIterator ref iterator) noexcept :
             BaseT(iterator)
         {
             StaticAssertSubClass<IteratorT, TIterator>();
         }
 
         mpublic template <typename TIterator>
-            BoxedBidirectionalIterator(TIterator rref iterator) noexcept :
+            BidirectionalIteratorBox(TIterator rref iterator) noexcept :
             BaseT(move(iterator))
         {
             StaticAssertSubClass<IteratorT, TIterator>();

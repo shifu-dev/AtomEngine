@@ -13,7 +13,7 @@ namespace Atom
     interface IIterable : public virtual IConstIterable<TElement>
     {
         using ElementT = TElement;
-        using BoxedForwardIteratorT = BoxedForwardIterator<ElementT>;
+        using ForwardIteratorBoxT = ForwardIteratorBox<ElementT>;
         using ForEachActionT = ILoopAction<ElementT ref>;
 
         /// ----------------------------------------------------------------------------
@@ -31,25 +31,25 @@ namespace Atom
 
         /// ----------------------------------------------------------------------------
         /// @copydoc IIConstItearble::Begin().
-        mpublic BoxedForwardIteratorT Begin() noexcept
+        mpublic ForwardIteratorBoxT Begin() noexcept
         {
             return mIterableBegin();
         }
 
         /// ----------------------------------------------------------------------------
         /// @copydoc IIConstItearble::End().
-        mpublic BoxedForwardIteratorT End() noexcept
+        mpublic ForwardIteratorBoxT End() noexcept
         {
             return mIterableEnd();
         }
 
         /// ----------------------------------------------------------------------------
         /// @copydoc IIConstItearble::mIterableBegin().
-        mprotected virtual BoxedForwardIteratorT mIterableBegin() noexcept abstract;
+        mprotected virtual ForwardIteratorBoxT mIterableBegin() noexcept abstract;
 
         /// ----------------------------------------------------------------------------
         /// @copydoc IIConstItearble::mIterableEnd().
-        mprotected virtual BoxedForwardIteratorT mIterableEnd() noexcept abstract;
+        mprotected virtual ForwardIteratorBoxT mIterableEnd() noexcept abstract;
     };
 
     template <typename TIterable>

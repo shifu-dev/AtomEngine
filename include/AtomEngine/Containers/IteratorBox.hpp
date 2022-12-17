@@ -1,7 +1,7 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
 #include "AtomEngine/Containers/IIterator.hpp"
-#include "AtomEngine/Memory/BoxedObject.hpp"
+#include "AtomEngine/Memory/ObjectBox.hpp"
 #include "AtomEngine/Memory/DefaultAllocator.hpp"
 
 namespace Atom
@@ -13,22 +13,22 @@ namespace Atom
     /// @note
     /// - This class acts like a unique ptr with functionality of iterators.
     template <typename TElement>
-    class BoxedIterator : public BoxedObject<DefaultAllocator, 500>,
+    class IteratorBox : public ObjectBox<DefaultAllocator, 500>,
         public virtual IIterator<TElement>
     {
-        using ThisT = BoxedIterator<TElement>;
-        using BaseT = BoxedObject<DefaultAllocator, 500>;
+        using ThisT = IteratorBox<TElement>;
+        using BaseT = ObjectBox<DefaultAllocator, 500>;
         using ElementT = TElement;
         using IIteratorT = IIterator<ElementT>;
 
         /// ----------------------------------------------------------------------------
 
-        mpublic BoxedIterator() : BaseT(null) { }
+        mpublic IteratorBox() : BaseT(null) { }
 
-        mpublic BoxedIterator(const ThisT ref other) noexcept :
+        mpublic IteratorBox(const ThisT ref other) noexcept :
             BaseT(other) { }
 
-        mpublic BoxedIterator(ThisT rref other) noexcept :
+        mpublic IteratorBox(ThisT rref other) noexcept :
             BaseT(move(other)) { }
 
         mpublic ThisT ref operator = (const ThisT ref other) noexcept
@@ -44,14 +44,14 @@ namespace Atom
         }
 
         mpublic template <typename TIterator>
-            BoxedIterator(const TIterator ref iterator) noexcept :
+            IteratorBox(const TIterator ref iterator) noexcept :
             BaseT(iterator)
         {
             StaticAssertSubClass<IIteratorT, TIterator>();
         }
 
         mpublic template <typename TIterator>
-            BoxedIterator(TIterator rref iterator) noexcept :
+            IteratorBox(TIterator rref iterator) noexcept :
             BaseT(move(iterator))
         {
             StaticAssertSubClass<IIteratorT, TIterator>();

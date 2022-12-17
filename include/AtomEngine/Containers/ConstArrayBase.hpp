@@ -9,7 +9,7 @@ namespace Atom
     {
         using ElementT = TElement;                                          ///< ----
         using IConstListT = IConstList<TElement>;                           ///< ----
-        using BoxedForwardIteratorT = BoxedForwardIterator<ElementT>;       ///< ----
+        using ForwardIteratorBoxT = ForwardIteratorBox<ElementT>;       ///< ----
         using IEqualityComparerT = IEqualityComparer<ElementT>;             ///< ----
         using ConstForEachActionT = const ILoopAction<const ElementT ref>;  ///< ----
         using ArrayIteratorT = ArrayIterator<ElementT>;                     ///< ----
@@ -104,14 +104,14 @@ namespace Atom
             }
         }
 
-        mprotected const BoxedForwardIteratorT mIterableBegin() const noexcept final
+        mprotected const ForwardIteratorBoxT mIterableBegin() const noexcept final
         {
-            return BoxedForwardIteratorT(Begin());
+            return ForwardIteratorBoxT(Begin());
         }
 
-        mprotected const BoxedForwardIteratorT mIterableEnd() const noexcept final
+        mprotected const ForwardIteratorBoxT mIterableEnd() const noexcept final
         {
-            return BoxedForwardIteratorT(End());
+            return ForwardIteratorBoxT(End());
         }
 
         // *******************************************************************

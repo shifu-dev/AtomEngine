@@ -1,26 +1,26 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Containers/BoxedIterator.hpp"
+#include "AtomEngine/Containers/IteratorBox.hpp"
 #include "AtomEngine/Containers/IForwardIterator.hpp"
 
 namespace Atom
 {
     template <typename TElement>
-    class BoxedForwardIterator : public BoxedIterator<TElement>,
+    class ForwardIteratorBox : public IteratorBox<TElement>,
         public virtual IForwardIterator<TElement>
     {
-        using ThisT = BoxedForwardIterator<TElement>;
-        using BaseT = BoxedIterator<TElement>;
+        using ThisT = ForwardIteratorBox<TElement>;
+        using BaseT = IteratorBox<TElement>;
         using IForwardIteratorT = IForwardIterator<TElement>;
 
         /// ----------------------------------------------------------------------------
 
-        mpublic BoxedForwardIterator() : BaseT(null) { }
+        mpublic ForwardIteratorBox() : BaseT(null) { }
 
-        mpublic BoxedForwardIterator(const ThisT ref other) noexcept :
+        mpublic ForwardIteratorBox(const ThisT ref other) noexcept :
             BaseT(other) { }
 
-        mpublic BoxedForwardIterator(ThisT rref other) noexcept :
+        mpublic ForwardIteratorBox(ThisT rref other) noexcept :
             BaseT(move(other)) { }
 
         mpublic ThisT ref operator = (const ThisT ref other) noexcept
@@ -36,14 +36,14 @@ namespace Atom
         }
 
         mpublic template <typename TIterator>
-            BoxedForwardIterator(const TIterator ref iterator) noexcept :
+            ForwardIteratorBox(const TIterator ref iterator) noexcept :
             BaseT(iterator)
         {
             StaticAssertSubClass<IForwardIteratorT, TIterator>();
         }
 
         mpublic template <typename TIterator>
-            BoxedForwardIterator(TIterator rref iterator) noexcept :
+            ForwardIteratorBox(TIterator rref iterator) noexcept :
             BaseT(move(iterator))
         {
             StaticAssertSubClass<IForwardIteratorT, TIterator>();

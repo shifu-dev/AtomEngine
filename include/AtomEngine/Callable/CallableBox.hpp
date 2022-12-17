@@ -1,39 +1,39 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
 #include "AtomEngine/Callable/ICallable.hpp"
-#include "AtomEngine/Memory/BoxedObject.hpp"
+#include "AtomEngine/Memory/ObjectBox.hpp"
 #include "AtomEngine/Memory/DefaultAllocator.hpp"
 
 namespace Atom
 {
-    template <typename TResult, typename... TArgs> class BoxedCallable;
+    template <typename TResult, typename... TArgs> class CallableBox;
     template <typename TResult, typename... TArgs>
-    class BoxedCallable<TResult(TArgs...)> :
+    class CallableBox<TResult(TArgs...)> :
         public ICallable<TResult(TArgs...)>,
-        public BoxedObject<DefaultAllocator, 50>
+        public ObjectBox<DefaultAllocator, 50>
     {
-        mprivate using ThisT = BoxedCallable<TResult(TArgs...)>;
+        mprivate using ThisT = CallableBox<TResult(TArgs...)>;
         mprotected using CallableT = ICallable<TResult(TArgs...)>;
-        mprotected using BoxedObjectT = BoxedObject<DefaultAllocator, 50>;
+        mprotected using ObjectBoxT = ObjectBox<DefaultAllocator, 50>;
 
         /// ----------------------------------------------------------------------------
 
-        mpublic BoxedCallable() = default;
-        mpublic BoxedCallable(const ThisT ref other) = default;
-        mpublic BoxedCallable(ThisT rref other) = default;
+        mpublic CallableBox() = default;
+        mpublic CallableBox(const ThisT ref other) = default;
+        mpublic CallableBox(ThisT rref other) = default;
         mpublic ThisT ref operator = (const ThisT ref other) = default;
         mpublic ThisT ref operator = (ThisT rref other) = default;
 
         mpublic template <typename TCallable>
-            BoxedCallable(const TCallable ref callable) :
-            BoxedObjectT(callable)
+            CallableBox(const TCallable ref callable) :
+            ObjectBoxT(callable)
         {
             StaticAssertSubClass<CallableT, TCallable>();
         }
 
         mpublic template <typename TCallable>
-            BoxedCallable(TCallable rref callable) :
-            BoxedObjectT(move(callable))
+            CallableBox(TCallable rref callable) :
+            ObjectBoxT(move(callable))
         {
             StaticAssertSubClass<CallableT, TCallable>();
         }
@@ -42,7 +42,7 @@ namespace Atom
             ThisT ref operator = (const TCallable ref callable)
         {
             StaticAssertSubClass<CallableT, TCallable>();
-            BoxedObjectT::operator = (callable);
+            ObjectBoxT::operator = (callable);
 
             return ptr this;
         }
@@ -51,7 +51,7 @@ namespace Atom
             ThisT ref operator = (TCallable rref callable)
         {
             StaticAssertSubClass<CallableT, TCallable>();
-            BoxedObjectT::operator = (move(callable));
+            ObjectBoxT::operator = (move(callable));
 
             return ptr this;
         }
@@ -60,12 +60,12 @@ namespace Atom
 
         mpublic CallableT ref GetCallable() noexcept
         {
-            return BoxedObjectT::GetObject<CallableT>();
+            return ObjectBoxT::GetObject<CallableT>();
         }
 
         mpublic const CallableT ref GetCallable() const noexcept
         {
-            return BoxedObjectT::GetObject<CallableT>();
+            return ObjectBoxT::GetObject<CallableT>();
         }
 
         mpublic virtual TResult Invoke(TArgs rref ... args) const override

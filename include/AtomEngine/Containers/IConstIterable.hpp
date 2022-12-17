@@ -2,14 +2,14 @@
 #include "AtomEngine/Core.hpp"
 #include "AtomEngine/Callable/ICallable.hpp"
 #include "AtomEngine/Callable/Loops.hpp"
-#include "AtomEngine/Containers/BoxedForwardIterator.hpp"
+#include "AtomEngine/Containers/ForwardIteratorBox.hpp"
 namespace Atom
 {
     template <typename TElement>
     interface IConstIterable
     {
         using ElementT = TElement;
-        using BoxedForwardIteratorT = BoxedForwardIterator<ElementT>;
+        using ForwardIteratorBoxT = ForwardIteratorBox<ElementT>;
         using ConstForEachActionT = ILoopAction<const ElementT ref>;
 
         /// ----------------------------------------------------------------------------
@@ -31,7 +31,7 @@ namespace Atom
         /// ----------------------------------------------------------------------------
         /// \p{foreach} loop implemented using ICallable object.
         /// 
-        /// Begin() uses BoxedForwardIteratorT which may allocate memory.
+        /// Begin() uses ForwardIteratorBoxT which may allocate memory.
         /// But this method is allocation free.
         /// 
         /// @param callback ICallable object to invoke for each element.
@@ -40,13 +40,13 @@ namespace Atom
         /// ----------------------------------------------------------------------------
         /// IIterator to the first element.
         /// 
-        /// @return BoxedForwardIterator pointing to first element.
+        /// @return ForwardIteratorBox pointing to first element.
         /// 
         /// @note
         /// - Calls mIterableBegin().
         /// - Begin() is the standard name to provide IIterator to the first element,
         ///   making Begin() virtual will not allow derived classes to overload this function.
-        mpublic const BoxedForwardIteratorT Begin() const noexcept
+        mpublic const ForwardIteratorBoxT Begin() const noexcept
         {
             return mIterableBegin();
         }
@@ -54,24 +54,24 @@ namespace Atom
         /// ----------------------------------------------------------------------------
         /// IIterator to the last element.
         /// 
-        /// @return BoxedForwardIterator pointing to last element.
+        /// @return ForwardIteratorBox pointing to last element.
         /// 
         /// @note
         /// - Calls mIterableEnd().
         /// - End() is the standard name to provide IIterator to the first element,
         ///   making End() virtual will not allow derived classes to overload this function.
-        mpublic const BoxedForwardIteratorT End() const noexcept
+        mpublic const ForwardIteratorBoxT End() const noexcept
         {
             return mIterableEnd();
         }
 
         /// ----------------------------------------------------------------------------
         /// Implementation function for Begin().
-        mprotected virtual const BoxedForwardIteratorT mIterableBegin() const noexcept abstract;
+        mprotected virtual const ForwardIteratorBoxT mIterableBegin() const noexcept abstract;
 
         /// ----------------------------------------------------------------------------
         /// Implementation function for End().
-        mprotected virtual const BoxedForwardIteratorT mIterableEnd() const noexcept abstract;
+        mprotected virtual const ForwardIteratorBoxT mIterableEnd() const noexcept abstract;
     };
 
     template <typename TElement>
