@@ -13,6 +13,7 @@ namespace Atom
     using usint = unsigned short int;
     using ulint = unsigned long int;
     using sizet = size_t;
+    using SizeT = size_t;
     constexpr sizet NPOS = -1;
 }
 
@@ -59,3 +60,6 @@ namespace Atom
         rhs = tmp;
     }
 }
+
+/// @todo implement this
+#define DEBUG_ASSERT(assertion, msg)

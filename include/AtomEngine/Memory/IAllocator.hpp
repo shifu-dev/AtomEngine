@@ -24,7 +24,7 @@ namespace Atom
         /// @note
         /// - Calls \p{ConstructMultiple(count: 1, args);}
         mpublic template <typename TType, typename... TArgs>
-            TType ptr Construct(TArgs ref... args);
+            TType ptr Construct(TArgs rref... args);
 
         /// ----------------------------------------------------------------------------
         /// Allocates memory and Constructs an array of object,
@@ -36,7 +36,7 @@ namespace Atom
         /// @param count Count of objects to create.
         /// @return Ptr to the array of objects.
         mpublic template <typename TType, typename... TArgs>
-            TType ptr ConstructMultiple(const sizet count, TArgs ref... args);
+            TType ptr ConstructMultiple(const sizet count, TArgs rref... args);
 
         /// ----------------------------------------------------------------------------
         /// Destructs object and deallocates memory.
@@ -117,13 +117,13 @@ namespace Atom
     };
 
     template <typename TType, typename... TArgs>
-    inline TType ptr IAllocator::Construct(TArgs ref... args)
+    inline TType ptr IAllocator::Construct(TArgs rref... args)
     {
         return ConstructMultiple<TType>(1, forward<TArgs>(args)...);
     }
 
     template <typename TType, typename... TArgs>
-    inline TType ptr IAllocator::ConstructMultiple(const sizet count, TArgs ref... args)
+    inline TType ptr IAllocator::ConstructMultiple(const sizet count, TArgs rref... args)
     {
         TType ptr mem = Allocate<TType>(count);
 

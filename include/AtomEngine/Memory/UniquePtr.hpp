@@ -37,13 +37,15 @@ namespace Atom
 
     public:
         template <typename... ArgsT>
-        static ThisT Create(ArgsT... args)
+        static ThisT Create(ArgsT&&... args)
         {
-            TypeT* obj = DefaultAllocatorInstance.Construct(forward<ArgsT>(args)...);
+            TypeT* obj = DefaultAllocatorInstance.Construct<TypeT>(forward<ArgsT>(args)...);
             return ThisT(obj, DefaultAllocatorInstance);
         }
 
     protected:
+        using BaseT::_ptr;
+
         IAllocator& _allocator;
     };
 }
