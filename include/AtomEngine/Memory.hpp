@@ -8,4 +8,4 @@
 #include "AtomEngine/Memory/HeapMemPool.hpp"
 #include "AtomEngine/Memory/BufHeapMemPool.hpp"
 #include "AtomEngine/Memory/GlobalAllocation.hpp"
-#include "AtomEngine/Memory/Pointers.hpp"
+#include "AtomEngine/Memory/Ptr.hpp"
