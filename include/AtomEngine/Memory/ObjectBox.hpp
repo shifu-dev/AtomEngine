@@ -1,7 +1,7 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Memory/Core.hpp"
 #include "AtomEngine/Reflection/Core.hpp"
+#include "AtomEngine/Memory/Core.hpp"
 
 namespace Atom
 {
@@ -11,9 +11,9 @@ namespace Atom
     }
 
     template <typename AllocatorT, sizet StackSize>
-    class ObjectBox: public Internal::ObjectBoxIdentifier
+    class TObjectBox: public Internal::ObjectBoxIdentifier
     {
-        using ThisT = ObjectBox<AllocatorT, StackSize>;
+        using ThisT = TObjectBox<AllocatorT, StackSize>;
 
         template <typename Type>
         constexpr static bool IsObjectBox =
@@ -21,46 +21,47 @@ namespace Atom
 
     /// ----------------------------------------------------------------------------
     public:
-        ObjectBox(): ThisT(null) { }
+        TObjectBox() noexcept:
+            ThisT(null) { }
 
-        ObjectBox(nullt value):
-            mObject(null), mObjectSize(0), mObjectDestructor(null) { }
+        TObjectBox(nullt value) noexcept:
+            _object(null), _objectSize(0), _objectDestructor(null) { }
 
-        ObjectBox(const ThisT& other) noexcept
+        TObjectBox(const ThisT& other) noexcept
         {
-            mCopy(other);
+            _Copy(other);
         }
 
         template <sizet OtherStackSizeT>
-        ObjectBox(const ObjectBox<AllocatorT, OtherStackSizeT>& other) noexcept
+        TObjectBox(const TObjectBox<AllocatorT, OtherStackSizeT>& other) noexcept
         {
-            mCopy(other);
+            _Copy(other);
         }
 
-        ObjectBox(ThisT&& other) noexcept
+        TObjectBox(ThisT&& other) noexcept
         {
-            mSwap(other);
+            _Swap(other);
         }
 
         template <sizet OtherStackSizeT>
-        ObjectBox(ObjectBox<AllocatorT, OtherStackSizeT>&& other) noexcept
+        TObjectBox(TObjectBox<AllocatorT, OtherStackSizeT>&& other) noexcept
         {
-            mSwap(other);
+            _Swap(other);
         }
 
         ThisT& operator = (const ThisT& other) noexcept
         {
             ThisT tmp(other);
-            mSwap(tmp);
+            _Swap(tmp);
 
             return *this;
         }
 
         template <sizet OtherStackSizeT>
-        ThisT& operator = (const ObjectBox<AllocatorT, OtherStackSizeT>& other) noexcept
+        ThisT& operator = (const TObjectBox<AllocatorT, OtherStackSizeT>& other) noexcept
         {
             ThisT tmp(other);
-            mSwap(tmp);
+            _Swap(tmp);
 
             return *this;
         }
@@ -68,200 +69,200 @@ namespace Atom
         ThisT& operator = (ThisT&& other) noexcept
         {
             ThisT tmp(move(other));
-            mSwap(tmp);
+            _Swap(tmp);
 
             return *this;
         }
 
         template <sizet OtherStackSizeT>
-        ThisT& operator = (ObjectBox<AllocatorT, OtherStackSizeT>&& other) noexcept
+        ThisT& operator = (TObjectBox<AllocatorT, OtherStackSizeT>&& other) noexcept
         {
             ThisT tmp(move(other));
-            mSwap(tmp);
+            _Swap(tmp);
 
             return *this;
         }
 
-        template <typename TObject, EnableIf<not IsObjectBox<TObject>> = false>
-        ObjectBox(const TObject& object) noexcept
+        template <typename ObjectT, EnableIf<!IsObjectBox<ObjectT>> = false>
+        TObjectBox(const ObjectT& object) noexcept
         {
             SetObject(object);
         }
 
-        template <typename TObject, EnableIf<not IsObjectBox<TObject>> = false>
-        ObjectBox(TObject&& object) noexcept
+        template <typename ObjectT, EnableIf<!IsObjectBox<ObjectT>> = false>
+        TObjectBox(ObjectT&& object) noexcept
         {
             SetObject(move(object));
         }
 
-        template <typename TObject, EnableIf<not IsObjectBox<TObject>> = false>
-        ThisT& operator = (const TObject& object) noexcept
+        template <typename ObjectT, EnableIf<!IsObjectBox<ObjectT>> = false>
+        ThisT& operator = (const ObjectT& object) noexcept
         {
             SetObject(object);
         }
 
-        template <typename TObject, EnableIf<not IsObjectBox<TObject>> = false>
-        ThisT& operator = (TObject&& object) noexcept
+        template <typename ObjectT, EnableIf<!IsObjectBox<ObjectT>> = false>
+        ThisT& operator = (ObjectT&& object) noexcept
         {
             SetObject(move(object));
         }
 
-        dtor ObjectBox()
+        ~TObjectBox()
         {
-            if (mObject isnot null)
+            if (_object != null)
             {
-                mObjectDestructor(mObject);
+                _objectDestructor(_object);
 
-                if (mObject isnot mStackMem)
+                if (_object != _stackMem)
                 {
-                    mAllocator.DeallocateRaw(mObject, mObjectSize);
+                    _allocator.DeallocateRaw(_object, _objectSize);
                 }
             }
         }
 
     public:
-        template <typename TObject>
-        void SetObject(const TObject& object) noexcept
+        template <typename ObjectT>
+        void SetObject(const ObjectT& object) noexcept
         {
-            mSetObject(object);
+            _SetObject(object);
 
-            new (mObject) TObject(object);
+            new (_object) ObjectT(object);
         }
 
-        template <typename TObject>
-        void SetObject(TObject&& object) noexcept
+        template <typename ObjectT>
+        void SetObject(ObjectT&& object) noexcept
         {
-            mSetObject(object);
+            _SetObject(object);
 
-            new (mObject) TObject(move(object));
+            new (_object) ObjectT(move(object));
         }
 
-        template <typename TObject>
-        TObject& GetObject() noexcept
+        template <typename ObjectT>
+        ObjectT& GetObject() noexcept
         {
-            return *RCAST(TObject*, mObject);
+            return *RCAST(ObjectT*, _object);
         }
 
-        template <typename TObject>
-        const TObject& GetObject() const noexcept
+        template <typename ObjectT>
+        const ObjectT& GetObject() const noexcept
         {
-            return *RCAST(const TObject*, mObject);
+            return *RCAST(const ObjectT*, _object);
         }
 
         const memptr GetRawObject() const noexcept
         {
-            return mObject;
+            return _object;
         }
 
         memptr GetRawObject() noexcept
         {
-            return mObject;
+            return _object;
         }
 
     /// ----------------------------------------------------------------------------
     protected:
-        memptr mAllocMem(const sizet size) noexcept
+        memptr _AllocMem(const sizet size) noexcept
         {
             memptr mem = null;
 
-            if (size isnot 0)
+            if (size != 0)
             {
                 if (size <= StackSize)
                 {
-                    mem = mStackMem;
+                    mem = _stackMem;
                 }
                 else
                 {
-                    mem = mAllocator.AllocateRaw(size);
+                    mem = _allocator.AllocateRaw(size);
                 }
             }
 
             return mem;
         }
 
-        void mDestroyObject() noexcept
+        void _DestroyObject() noexcept
         {
-            if (mObject isnot null)
+            if (_object != null)
             {
-                mObjectDestructor(mObject);
+                _objectDestructor(_object);
 
-                if (mObject isnot mStackMem)
+                if (_object != _stackMem)
                 {
-                    mAllocator.DeallocateRaw(mObject, mObjectSize);
+                    _allocator.DeallocateRaw(_object, _objectSize);
                 }
             }
 
-            mObjectSize = 0;
-            mObject = null;
-            mObjectDestructor = null;
+            _objectSize = 0;
+            _object = null;
+            _objectDestructor = null;
         }
 
-        template <typename TObject>
-        void mSetObject(const TObject& object) noexcept
+        template <typename ObjectT>
+        void _SetObject(const ObjectT& object) noexcept
         {
-            if (mObject isnot null)
+            if (_object != null)
             {
-                mObjectDestructor(mObject);
+                _objectDestructor(_object);
 
-                if (mObject isnot mStackMem)
+                if (_object != _stackMem)
                 {
-                    mAllocator.DeallocateRaw(mObject, mObjectSize);
+                    _allocator.DeallocateRaw(_object, _objectSize);
                 }
             }
 
-            mObjectSize = sizeof(TObject);
-            mObject = mAllocMem(mObjectSize);
-            mObjectDestructor = null;
+            _objectSize = sizeof(ObjectT);
+            _object = _AllocMem(_objectSize);
+            _objectDestructor = null;
         }
 
-        // does not destroys previous state,
+        // does ! destroys previous state,
         // assumes to be called from constructor
         template <sizet OtherStackSizeT>
-        void mCopy(const ObjectBox<AllocatorT, OtherStackSizeT>& other) noexcept
+        void _Copy(const TObjectBox<AllocatorT, OtherStackSizeT>& other) noexcept
         {
-            mObject = mAllocMem(other.mObjectSize);
-            mObjectSize = other.mObjectSize;
-            mObjectDestructor = other.mObjectDestructor;
+            _object = _AllocMem(other._objectSize);
+            _objectSize = other._objectSize;
+            _objectDestructor = other._objectDestructor;
 
-            memcpy(mObject, other.mObject, mObjectSize);
+            memcpy(_object, other._object, _objectSize);
         }
 
         template <sizet OtherStackSizeT>
-        void mSwap(ObjectBox<AllocatorT, OtherStackSizeT>& other) noexcept
+        void _Swap(TObjectBox<AllocatorT, OtherStackSizeT>& other) noexcept
         {
-            byte mStackMemTmp[StackSize];
+            byte tmpStackMem[StackSize];
 
             // if our object is stored in stack memory, save if before swapping
-            if (mObject is mStackMem)
+            if (_object == _stackMem)
             {
-                memcpy(mStackMemTmp, mStackMem, mObjectSize);
+                memcpy(tmpStackMem, _stackMem, _objectSize);
             }
 
-            swap(mAllocator, other.mAllocator);
-            swap(mObject, other.mObject);
-            swap(mObjectSize, other.mObjectSize);
-            swap(mObjectDestructor, other.mObjectDestructor);
+            swap(_allocator, other._allocator);
+            swap(_object, other._object);
+            swap(_objectSize, other._objectSize);
+            swap(_objectDestructor, other._objectDestructor);
 
-            if (mObject is other.mStackMem)
+            if (_object == other._stackMem)
             {
-                mObject = mAllocMem(mObjectSize);
-                memcpy(mObject, other.mStackMem, mObjectSize);
+                _object = _AllocMem(_objectSize);
+                memcpy(_object, other._stackMem, _objectSize);
             }
 
-            if (other.mObject is mStackMem)
+            if (other._object == _stackMem)
             {
-                other.mObject = other.mAllocMem(other.mObjectSize);
-                memcpy(other.mObject, mStackMemTmp, other.mObjectSize);
+                other._object = other._AllocMem(other._objectSize);
+                memcpy(other._object, tmpStackMem, other._objectSize);
             }
         }
 
     /// ----------------------------------------------------------------------------
     protected:
-        byte mStackMem[StackSize];
-        AllocatorT mAllocator;
+        byte _stackMem[StackSize];
+        AllocatorT _allocator;
 
-        memptr mObject = null;
-        void (*mObjectDestructor) (const memptr object);
-        sizet mObjectSize;
+        memptr _object = null;
+        void (*_objectDestructor) (const memptr object);
+        sizet _objectSize;
     };
 }

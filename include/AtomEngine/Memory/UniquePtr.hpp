@@ -15,11 +15,11 @@ namespace Atom
         TUniquePtr() noexcept:
             BaseT(nullptr) { }
 
-        TUniquePtr(const TUniquePtr& other) = delete;
-        TUniquePtr(TUniquePtr&& other) = delete;
+        TUniquePtr(TUniquePtr&& other) = default;
+        ThisT& operator = (ThisT&& other) = default;
 
+        TUniquePtr(const TUniquePtr& other) = delete;
         ThisT& operator = (const ThisT& other) = delete;
-        ThisT& operator = (ThisT&& other) = delete;
 
         TUniquePtr(TypeT* inPtr) noexcept:
             BaseT(inPtr), _allocator(DefaultAllocatorInstance) { }

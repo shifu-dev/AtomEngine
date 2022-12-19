@@ -10,11 +10,11 @@ namespace Atom
     template <typename TResult, typename... TArgs>
     class CallableBox<TResult(TArgs...)> :
         public ICallable<TResult(TArgs...)>,
-        public ObjectBox<DefaultAllocator, 50>
+        public TObjectBox<DefaultAllocator, 50>
     {
         mprivate using ThisT = CallableBox<TResult(TArgs...)>;
+        mprotected using BaseT = TObjectBox<DefaultAllocator, 50>;
         mprotected using CallableT = ICallable<TResult(TArgs...)>;
-        mprotected using ObjectBoxT = ObjectBox<DefaultAllocator, 50>;
 
         /// ----------------------------------------------------------------------------
 
@@ -26,14 +26,14 @@ namespace Atom
 
         mpublic template <typename TCallable>
             CallableBox(const TCallable ref callable) :
-            ObjectBoxT(callable)
+            BaseT(callable)
         {
             StaticAssertSubClass<CallableT, TCallable>();
         }
 
         mpublic template <typename TCallable>
             CallableBox(TCallable rref callable) :
-            ObjectBoxT(move(callable))
+            BaseT(move(callable))
         {
             StaticAssertSubClass<CallableT, TCallable>();
         }
@@ -42,7 +42,7 @@ namespace Atom
             ThisT ref operator = (const TCallable ref callable)
         {
             StaticAssertSubClass<CallableT, TCallable>();
-            ObjectBoxT::operator = (callable);
+            BaseT::operator = (callable);
 
             return ptr this;
         }
@@ -51,7 +51,7 @@ namespace Atom
             ThisT ref operator = (TCallable rref callable)
         {
             StaticAssertSubClass<CallableT, TCallable>();
-            ObjectBoxT::operator = (move(callable));
+            BaseT::operator = (move(callable));
 
             return ptr this;
         }
@@ -60,12 +60,12 @@ namespace Atom
 
         mpublic CallableT ref GetCallable() noexcept
         {
-            return ObjectBoxT::GetObject<CallableT>();
+            return BaseT::GetObject<CallableT>();
         }
 
         mpublic const CallableT ref GetCallable() const noexcept
         {
-            return ObjectBoxT::GetObject<CallableT>();
+            return BaseT::GetObject<CallableT>();
         }
 
         mpublic virtual TResult Invoke(TArgs rref ... args) const override

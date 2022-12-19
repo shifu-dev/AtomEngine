@@ -1,103 +1,103 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Containers/IIterator.hpp"
 #include "AtomEngine/Memory/ObjectBox.hpp"
 #include "AtomEngine/Memory/DefaultAllocator.hpp"
+#include "AtomEngine/Containers/IIterator.hpp"
 
 namespace Atom
 {
     /// Pointer to iterator to provide iterface ability to IIterable.
     ///
-    /// @tparam TElement Type of value iterator points to.
+    /// @tparam ElementT Type of value iterator points to.
     ///
     /// @note
-    /// - This class acts like a unique ptr with functionality of iterators.
-    template <typename TElement>
-    class IteratorBox : public ObjectBox<DefaultAllocator, 500>,
-        public virtual IIterator<TElement>
+    /// - This class acts like a unique * with functionality of iterators.
+    template <typename ElementT>
+    class IteratorBox: public TObjectBox<DefaultAllocator, 50>,
+        public virtual IIterator<ElementT>
     {
-        using ThisT = IteratorBox<TElement>;
-        using BaseT = ObjectBox<DefaultAllocator, 500>;
-        using ElementT = TElement;
-        using IIteratorT = IIterator<ElementT>;
+        using ThisT = IteratorBox<ElementT>;
+        using BaseT = TObjectBox<DefaultAllocator, 50>;
+        using IteratorT = IIterator<ElementT>;
 
-        /// ----------------------------------------------------------------------------
+    /// ----------------------------------------------------------------------------
+    public:
+        IteratorBox() noexcept:
+            BaseT(null) { }
 
-        mpublic IteratorBox() : BaseT(null) { }
-
-        mpublic IteratorBox(const ThisT ref other) noexcept :
+        IteratorBox(const ThisT& other) noexcept:
             BaseT(other) { }
 
-        mpublic IteratorBox(ThisT rref other) noexcept :
+        IteratorBox(ThisT&& other) noexcept:
             BaseT(move(other)) { }
 
-        mpublic ThisT ref operator = (const ThisT ref other) noexcept
+        ThisT& operator = (const ThisT& other) noexcept
         {
             BaseT::operator = (other);
-            return ptr this;
+            return *this;
         }
 
-        mpublic ThisT ref operator = (ThisT rref other) noexcept
+        ThisT& operator = (ThisT&& other) noexcept
         {
             BaseT::operator = (move(other));
-            return ptr this;
+            return *this;
         }
 
-        mpublic template <typename TIterator>
-            IteratorBox(const TIterator ref iterator) noexcept :
+        template <typename ParamIteratorT>
+        IteratorBox(const ParamIteratorT& iterator) noexcept:
             BaseT(iterator)
         {
-            StaticAssertSubClass<IIteratorT, TIterator>();
+            StaticAssertSubClass<IteratorT, ParamIteratorT>();
         }
 
-        mpublic template <typename TIterator>
-            IteratorBox(TIterator rref iterator) noexcept :
+        template <typename ParamIteratorT>
+        IteratorBox(ParamIteratorT&& iterator) noexcept:
             BaseT(move(iterator))
         {
-            StaticAssertSubClass<IIteratorT, TIterator>();
+            StaticAssertSubClass<IteratorT, ParamIteratorT>();
         }
 
-        mpublic template <typename TIterator>
-            ThisT ref operator = (const TIterator ref iterator) noexcept
+        template <typename ParamIteratorT>
+        ThisT& operator = (const ParamIteratorT& iterator) noexcept
         {
-            StaticAssertSubClass<IIteratorT, TIterator>();
+            StaticAssertSubClass<IteratorT, ParamIteratorT>();
             BaseT::operator = (iterator);
 
-            return ptr this;
+            return *this;
         }
 
-        mpublic template <typename TIterator>
-            ThisT ref operator = (TIterator rref iterator) noexcept
+        template <typename ParamIteratorT>
+        ThisT& operator = (ParamIteratorT&& iterator) noexcept
         {
-            StaticAssertSubClass<IIteratorT, TIterator>();
+            StaticAssertSubClass<IteratorT, ParamIteratorT>();
             BaseT::operator = (move(iterator));
 
-            return ptr this;
+            return *this;
         }
 
-        /// ----------------------------------------------------------------------------
-
-        mpublic IIteratorT ref GetIterator() noexcept
+    /// ----------------------------------------------------------------------------
+    public:
+        IteratorT& GetIterator() noexcept
         {
-            return BaseT::GetObject<IIteratorT>();
+            return BaseT::GetObject<IteratorT>();
         }
 
-        mpublic const IIteratorT ref GetIterator() const noexcept
+        const IteratorT& GetIterator() const noexcept
         {
-            return BaseT::GetObject<IIteratorT>();
+            return BaseT::GetObject<IteratorT>();
         }
 
-        mpublic virtual ElementT ref Value() noexcept final
-        {
-            return GetIterator().Value();
-        }
-
-        mpublic virtual const ElementT ref Value() const noexcept final
+        virtual ElementT& Value() noexcept final
         {
             return GetIterator().Value();
         }
 
-        mpublic virtual int Compare(const IIteratorT ref rhs) const noexcept final
+        virtual const ElementT& Value() const noexcept final
+        {
+            return GetIterator().Value();
+        }
+
+        virtual int Compare(const IteratorT& rhs) const noexcept final
         {
             return GetIterator().Compare(rhs);
         }
@@ -107,7 +107,7 @@ namespace Atom
         /// @brief compares with other iterator pointer
         /// @param rhs other iterator pointer to compare with
         /// @return true if both impl iterators represent same value
-        mpublic virtual bool operator ==(const ThisT ref rhs) const noexcept
+        virtual bool operator ==(const ThisT& rhs) const noexcept
         {
             return Compare(rhs) is 0;
         }
@@ -115,13 +115,13 @@ namespace Atom
         /// @brief compares with other iterator pointer
         /// @param rhs other iterator pointer to compare with
         /// @return false if both iterators represent same value
-        mpublic virtual bool operator !=(const ThisT ref rhs) const noexcept
+        virtual bool operator !=(const ThisT& rhs) const noexcept
         {
             return Compare(rhs) isnot 0;
         }
 
-        // this overload is necessary to avoid comparing iterator with iterator pointer 
-        mpublic virtual int Compare(const ThisT ref rhs) const noexcept
+        /// @note This overload is necessary to avoid comparing iterator with iterator pointer.
+        virtual int Compare(const ThisT& rhs) const noexcept
         {
             return GetIterator().Compare(rhs.GetIterator());
         }
