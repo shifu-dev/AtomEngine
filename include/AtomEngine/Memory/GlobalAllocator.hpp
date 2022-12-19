@@ -5,19 +5,21 @@
 
 namespace Atom
 {
-    class GlobalAllocator : public virtual IAllocator
+    class GlobalAllocator:
+        public virtual IAllocator
     {
-        mpublic memptr AllocateRaw(const sizet count, bool clear = true) final
+    public:
+        memptr AllocateRaw(sizet count, bool clear = true) final
         {
             return globalAllocator->AllocateRaw(count, clear);
         }
 
-        mpublic memptr ReallocateRaw(const memptr mem, const sizet count, bool clear = true, bool clearAll = false) final
+        memptr ReallocateRaw(const memptr mem, sizet count, bool clear = true, bool clearAll = false) final
         {
             return globalAllocator->ReallocateRaw(mem, count, clear, clearAll);
         }
 
-        mpublic void DeallocateRaw(const memptr mem, const sizet count) final
+        void DeallocateRaw(const memptr mem, sizet count) final
         {
             return globalAllocator->DeallocateRaw(mem, count);
         }

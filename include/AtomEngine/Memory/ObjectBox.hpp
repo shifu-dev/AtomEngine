@@ -15,17 +15,17 @@ namespace Atom
     {
         using ThisT = TObjectBox<AllocatorT, StackSize>;
 
-        template <typename Type>
+        template <typename TypeT>
         constexpr static bool IsObjectBox =
-            IsSubClass<Internal::ObjectBoxIdentifier, Type>;
+            IsSubClass<Internal::ObjectBoxIdentifier, TypeT>;
 
     /// ----------------------------------------------------------------------------
     public:
         TObjectBox() noexcept:
-            ThisT(null) { }
+            ThisT(nullptr) { }
 
-        TObjectBox(nullt value) noexcept:
-            _object(null), _objectSize(0), _objectDestructor(null) { }
+        TObjectBox(NullT value) noexcept:
+            _object(nullptr), _objectSize(0), _objectDestructor(nullptr) { }
 
         TObjectBox(const ThisT& other) noexcept
         {
@@ -83,25 +83,25 @@ namespace Atom
             return *this;
         }
 
-        template <typename ObjectT, EnableIf<!IsObjectBox<ObjectT>> = false>
+        template <typename ObjectT, EnableIf<!IsObjectBox<ObjectT>> = 0>
         TObjectBox(const ObjectT& object) noexcept
         {
             SetObject(object);
         }
 
-        template <typename ObjectT, EnableIf<!IsObjectBox<ObjectT>> = false>
+        template <typename ObjectT, EnableIf<!IsObjectBox<ObjectT>> = 0>
         TObjectBox(ObjectT&& object) noexcept
         {
             SetObject(move(object));
         }
 
-        template <typename ObjectT, EnableIf<!IsObjectBox<ObjectT>> = false>
+        template <typename ObjectT, EnableIf<!IsObjectBox<ObjectT>> = 0>
         ThisT& operator = (const ObjectT& object) noexcept
         {
             SetObject(object);
         }
 
-        template <typename ObjectT, EnableIf<!IsObjectBox<ObjectT>> = false>
+        template <typename ObjectT, EnableIf<!IsObjectBox<ObjectT>> = 0>
         ThisT& operator = (ObjectT&& object) noexcept
         {
             SetObject(move(object));
@@ -109,7 +109,7 @@ namespace Atom
 
         ~TObjectBox()
         {
-            if (_object != null)
+            if (_object != nullptr)
             {
                 _objectDestructor(_object);
 
@@ -161,9 +161,9 @@ namespace Atom
 
     /// ----------------------------------------------------------------------------
     protected:
-        memptr _AllocMem(const sizet size) noexcept
+        memptr _AllocMem(sizet size) noexcept
         {
-            memptr mem = null;
+            memptr mem = nullptr;
 
             if (size != 0)
             {
@@ -182,7 +182,7 @@ namespace Atom
 
         void _DestroyObject() noexcept
         {
-            if (_object != null)
+            if (_object != nullptr)
             {
                 _objectDestructor(_object);
 
@@ -193,14 +193,14 @@ namespace Atom
             }
 
             _objectSize = 0;
-            _object = null;
-            _objectDestructor = null;
+            _object = nullptr;
+            _objectDestructor = nullptr;
         }
 
         template <typename ObjectT>
         void _SetObject(const ObjectT& object) noexcept
         {
-            if (_object != null)
+            if (_object != nullptr)
             {
                 _objectDestructor(_object);
 
@@ -212,7 +212,7 @@ namespace Atom
 
             _objectSize = sizeof(ObjectT);
             _object = _AllocMem(_objectSize);
-            _objectDestructor = null;
+            _objectDestructor = nullptr;
         }
 
         // does ! destroys previous state,
@@ -232,7 +232,7 @@ namespace Atom
         {
             byte tmpStackMem[StackSize];
 
-            // if our object is stored in stack memory, save if before swapping
+            // if our object == stored in stack memory, save if before swapping
             if (_object == _stackMem)
             {
                 memcpy(tmpStackMem, _stackMem, _objectSize);
@@ -261,7 +261,7 @@ namespace Atom
         byte _stackMem[StackSize];
         AllocatorT _allocator;
 
-        memptr _object = null;
+        memptr _object = nullptr;
         void (*_objectDestructor) (const memptr object);
         sizet _objectSize;
     };

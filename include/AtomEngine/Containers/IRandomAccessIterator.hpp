@@ -4,73 +4,67 @@
 
 namespace Atom
 {
-    /// ----------------------------------------------------------------------------
     /// Object to iterate over container elements.
     /// \n IRandomAccessIterator provides functionality to move randomly to any element.
     ///
-    /// @tparam TElement Type of element IIterator iterates over.
-    template <typename TElement>
-    interface IRandomAccessIterator : public virtual IBidirectionalIterator<TElement>
+    /// @tparam ElementT Type of element IIterator iterates over.
+    template <typename ElementT>
+    interface IRandomAccessIterator:
+        public virtual IBidirectionalIterator<ElementT>
     {
-        using ThisT = IBidirectionalIterator<TElement>;      ///< ----
+        using ThisT = IBidirectionalIterator<ElementT>;
 
-        /// ----------------------------------------------------------------------------
         /// Moves iterator forward by count \p{steps}.
         ///
         /// @param steps Count of steps to move iterator by.
-        mpublic virtual void MoveBwdBy(const sizet steps) const noexcept abstract;
+        virtual void MoveBwdBy(sizet steps) const noexcept abstract;
 
-        /// ----------------------------------------------------------------------------
         /// Moves iterator backward by count \p{steps}.
         ///
         /// @param steps Count of steps to move iterator by.
-        mpublic virtual void MoveFwdBy(const sizet steps) const noexcept abstract;
+        virtual void MoveFwdBy(sizet steps) const noexcept abstract;
 
-        mpublic virtual void MoveFwd() const noexcept final { MoveFwdBy(1); }
-        mpublic virtual void MoveBwd() const noexcept final { MoveBwdBy(1); }
+        void MoveFwd() const noexcept final { MoveFwdBy(1); }
+        void MoveBwd() const noexcept final { MoveBwdBy(1); }
 
-        /// ----------------------------------------------------------------------------
         /// Moves iterator forward by count \p{steps}.
         /// 
         /// @param steps Count of steps to move iterator by.
-        /// @return ref to this object.
-        mpublic ThisT ref operator += (const sizet steps) noexcept
+        /// @return & to this object.
+        ThisT& operator += (sizet steps) noexcept
         {
             MoveFwdBy(steps);
-            return ptr this;
+            return *this;
         }
 
-        /// ----------------------------------------------------------------------------
         /// Moves iterator forward by count \p{steps}.
         /// 
         /// @param steps Count of steps to move iterator by.
-        /// @return const ref to this object.
-        mpublic const ThisT ref operator += (const sizet steps) const noexcept
+        /// @return const & to this object.
+        const ThisT& operator += (sizet steps) const noexcept
         {
             MoveFwdBy(steps);
-            return ptr this;
+            return *this;
         }
 
-        /// ----------------------------------------------------------------------------
         /// Moves iterator backward by count \p{steps}.
         /// 
         /// @param steps Count of steps to move iterator by.
-        /// @return ref to this object.
-        mpublic ThisT ref operator -= (const sizet steps) noexcept
+        /// @return & to this object.
+        ThisT& operator -= (sizet steps) noexcept
         {
             MoveBwdBy(steps);
-            return ptr this;
+            return *this;
         }
 
-        /// ----------------------------------------------------------------------------
         /// Moves iterator backward by count \p{steps}.
         /// 
         /// @param steps Count of steps to move iterator by.
-        /// @return const ref to this object.
-        mpublic const ThisT ref operator -= (const sizet steps) const noexcept
+        /// @return const & to this object.
+        const ThisT& operator -= (sizet steps) const noexcept
         {
             MoveBwdBy(steps);
-            return ptr this;
+            return *this;
         }
     };
 }

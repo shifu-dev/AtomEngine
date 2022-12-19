@@ -18,12 +18,13 @@ namespace Atom
     {
         using ThisT = IteratorBox<ElementT>;
         using BaseT = TObjectBox<DefaultAllocator, 50>;
+        using ConstElementT = const ElementT;
         using IteratorT = IIterator<ElementT>;
 
     /// ----------------------------------------------------------------------------
     public:
         IteratorBox() noexcept:
-            BaseT(null) { }
+            BaseT(nullptr) { }
 
         IteratorBox(const ThisT& other) noexcept:
             BaseT(other) { }
@@ -92,7 +93,7 @@ namespace Atom
             return GetIterator().Value();
         }
 
-        virtual const ElementT& Value() const noexcept final
+        virtual ConstElementT& Value() const noexcept final
         {
             return GetIterator().Value();
         }
@@ -109,7 +110,7 @@ namespace Atom
         /// @return true if both impl iterators represent same value
         virtual bool operator ==(const ThisT& rhs) const noexcept
         {
-            return Compare(rhs) is 0;
+            return Compare(rhs) == 0;
         }
 
         /// @brief compares with other iterator pointer
@@ -117,10 +118,10 @@ namespace Atom
         /// @return false if both iterators represent same value
         virtual bool operator !=(const ThisT& rhs) const noexcept
         {
-            return Compare(rhs) isnot 0;
+            return Compare(rhs) != 0;
         }
 
-        /// @note This overload is necessary to avoid comparing iterator with iterator pointer.
+        /// @note This overload == necessary to avoid comparing iterator with iterator pointer.
         virtual int Compare(const ThisT& rhs) const noexcept
         {
             return GetIterator().Compare(rhs.GetIterator());

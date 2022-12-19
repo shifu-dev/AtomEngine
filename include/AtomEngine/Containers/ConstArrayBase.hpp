@@ -4,51 +4,51 @@
 
 namespace Atom
 {
-    template <typename TElement>
-    class ConstArrayBase : public virtual IConstArray<TElement>
+    template <typename ElementT>
+    class ConstArrayBase:
+        public virtual IConstArray<ElementT>
     {
-        using ElementT = TElement;                                          ///< ----
-        using IConstListT = IConstList<TElement>;                           ///< ----
-        using ForwardIteratorBoxT = ForwardIteratorBox<ElementT>;       ///< ----
-        using IEqualityComparerT = IEqualityComparer<ElementT>;             ///< ----
-        using ConstForEachActionT = const ILoopAction<const ElementT ref>;  ///< ----
-        using ArrayIteratorT = ArrayIterator<ElementT>;                     ///< ----
+        using ConstElementT = const ElementT;
+        using ConstListT = IConstList<ElementT>;
+        using EqualityComparerT = IEqualityComparer<ElementT>;
+        using ConstFwdIteratorBoxT = const ForwardIteratorBox<ElementT>;
+        using ConstForEachActionT = const ILoopAction<ConstElementT&>;
+        using ConstArrayIteratorT = const ArrayIterator<ElementT>;
 
-        // *******************************************************************
-        // * IConstArray
-
-        /// ----------------------------------------------------------------------------
+    /// ----------------------------------------------------------------------------
+    /// IConstArray
+    public:
         /// @return Pointer to the underlying array.
-        mpublic virtual const ElementT ptr Data() const noexcept final
+        ConstElementT* Data() const noexcept final
         {
-            return mArray;
+            return _array;
         }
 
-        mpublic virtual const ArrayIteratorT Begin() const noexcept final
+        ConstArrayIteratorT Begin() const noexcept final
         {
-            return ArrayIteratorT(mArray + 0);
+            return ConstArrayIteratorT(_array + 0);
         }
 
-        mpublic virtual const ArrayIteratorT End() const noexcept final
+        ConstArrayIteratorT End() const noexcept final
         {
-            return ArrayIteratorT(mArray + mCount);
+            return ConstArrayIteratorT(_array + _count);
         }
 
-        // *******************************************************************
-        // * IConstList
-
-        mpublic virtual const ElementT ref operator[](const sizet index) const noexcept final
+    /// ----------------------------------------------------------------------------
+    /// IConstList
+    public:
+        ConstElementT& operator[](sizet index) const noexcept final
         {
-            return mArray[index];
+            return _array[index];
         }
 
-        mpublic using IConstListT::FirstIndexOf;
+        using ConstListT::FirstIndexOf;
 
-        mpublic virtual sizet FirstIndexOf(const ElementT ref element, const IEqualityComparerT ref comparer) const noexcept final
+        sizet FirstIndexOf(ConstElementT& element, const EqualityComparerT& comparer) const noexcept final
         {
-            for (sizet i = 0; i < mCount; i++)
+            for (sizet i = 0; i < _count; i++)
             {
-                if (comparer.Compare(mArray[i], element) is true)
+                if (comparer.Compare(_array[i], element) == true)
                 {
                     return i;
                 }
@@ -57,13 +57,13 @@ namespace Atom
             return NPOS;
         }
 
-        mpublic using IConstListT::LastIndexOf;
+        using ConstListT::LastIndexOf;
 
-        mpublic virtual sizet LastIndexOf(const ElementT ref element, const IEqualityComparerT ref comparer) const noexcept final
+        sizet LastIndexOf(ConstElementT& element, const EqualityComparerT& comparer) const noexcept final
         {
-            for (sizet i = mCount; i >= 0; i--)
+            for (sizet i = _count; i >= 0; i--)
             {
-                if (comparer.Compare(mArray[i], element) is true)
+                if (comparer.Compare(_array[i], element) == true)
                 {
                     return i;
                 }
@@ -72,51 +72,54 @@ namespace Atom
             return NPOS;
         }
 
-        mprotected virtual void mAssertIndexIsInBounds(const sizet index) const final
+    /// ----------------------------------------------------------------------------
+    protected:
+        void _AssertIndexIsInBounds(sizet index) const final
         {
-            mAssertIndexIsInBounds(index, "Index was out of range");
+            _AssertIndexIsInBounds(index, "Index was out of range");
         }
 
-        mprotected virtual void mAssertIndexIsInBounds(const sizet index, const char ptr msg) const
+        void _AssertIndexIsInBounds(sizet index, const char* msg) const
         {
-            if (index >= mCount)
+            if (index >= _count)
             {
                 throw std::out_of_range("Index was out of range");
             }
         }
 
-        // *******************************************************************
-        // * IConstCollection
-
-        mpublic virtual sizet Count() const noexcept final
+    /// ----------------------------------------------------------------------------
+    /// IConstCollection
+    public:
+        sizet Count() const noexcept final
         {
-            return mCount;
+            return _count;
         }
 
-        // *******************************************************************
-        // * IIterable
-
-        mpublic virtual void ForEach(ConstForEachActionT& callback) const final
+    /// ----------------------------------------------------------------------------
+    /// IIterable
+    public:
+        void ForEach(ConstForEachActionT& callback) const final
         {
-            for (sizet i = 0; i < mCount; i++)
+            for (sizet i = 0; i < _count; i++)
             {
-                callback(mArray[i]);
+                callback(_array[i]);
             }
         }
 
-        mprotected const ForwardIteratorBoxT mIterableBegin() const noexcept final
+    protected:
+        ConstFwdIteratorBoxT _IterableBegin() const noexcept final
         {
-            return ForwardIteratorBoxT(Begin());
+            return ConstFwdIteratorBoxT(Begin());
         }
 
-        mprotected const ForwardIteratorBoxT mIterableEnd() const noexcept final
+        ConstFwdIteratorBoxT _IterableEnd() const noexcept final
         {
-            return ForwardIteratorBoxT(End());
+            return ConstFwdIteratorBoxT(End());
         }
 
-        // *******************************************************************
-
-        mprotected ElementT ptr mArray;
-        mprotected sizet mCount;       
+    /// ----------------------------------------------------------------------------
+    protected:
+        ElementT* _array;
+        sizet _count;
     };
 }

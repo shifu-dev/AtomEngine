@@ -5,25 +5,32 @@
 
 namespace Atom
 {
-    template<sizet TBlockStackSize = 10>
-    class HeapMemPool : public virtual FastDynamicLinkedMemPool<TBlockStackSize>
+    template<sizet BlockStackSize = 10>
+    class HeapMemPool: public virtual FastDynamicLinkedMemPool<BlockStackSize>
     {
-        mprotected using BaseT = FastDynamicLinkedMemPool<TBlockStackSize>;
-        mprotected using BaseT::mAddMemory;
+        using BaseT = FastDynamicLinkedMemPool<BlockStackSize>;
 
-        mpublic HeapMemPool(const sizet size) noexcept
+    /// ----------------------------------------------------------------------------
+    public:
+        HeapMemPool(sizet size) noexcept
         {
-            mAddMemory(size);
+            _AddMemory(size);
         }
 
-        mpublic virtual memptr mAllocateMemory(const sizet size) override
+    /// ----------------------------------------------------------------------------
+    protected:
+        memptr _AllocateMemory(sizet size) override
         {
             return alloc(size);
         }
 
-        mpublic virtual void mDeallocateMemory(memptr mem, const sizet size) override
+        void _DeallocateMemory(memptr mem, sizet size) override
         {
             return dealloc(mem, size);
         }
+
+    /// ----------------------------------------------------------------------------
+    protected:
+        using BaseT::_AddMemory;
     };
 }

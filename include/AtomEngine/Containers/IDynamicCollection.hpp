@@ -4,23 +4,28 @@
 
 namespace Atom
 {
-    /// @brief base class for collections which can manage memory dynamically
-    /// @tparam TElement type of element to store
-    template <typename TElement>
-    interface IDynamicCollection : public virtual ICollection<TElement>
+    /// Base class for collections which can manage memory dynamically.
+    /// 
+    /// @tparam ElementT type of element to store
+    template <typename ElementT>
+    interface IDynamicCollection:
+        public virtual ICollection<ElementT>
     {
-        /// @brief resizes the underlying memory
+        /// Resizes the underlying memory.
+        /// 
         /// @param count count of objects to allocate memor for
         /// @note this does not change element count
-        mpublic virtual void Resize(const sizet count) abstract;
+        virtual void Resize(sizet count) abstract;
 
-        /// @brief asks the collection to reserve memory for count elements
+        /// Asks the collection to reserve memory for count elements.
+        /// 
         /// @param count minimum count of elements to reserve memory for
         /// @return count of reserved memory for element
-        mpublic virtual sizet Reserve(const sizet count) abstract;
+        virtual sizet Reserve(sizet count) abstract;
 
-        /// @brief resizes capacity equal to count
+        /// Resizes capacity equal to count.
+        /// 
         /// @return count of memory for element currently allocated
-        mpublic virtual void ShrinkToFit() abstract;
+        virtual void ShrinkToFit() abstract;
     };
 }

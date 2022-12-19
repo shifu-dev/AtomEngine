@@ -4,34 +4,35 @@
 
 namespace Atom
 {
-    constexpr sizet nsize = -1;
-
-    template <sizet TBlockStackSize>
-    class FastLinkedMemPool : public virtual LinkedMemPool
+    template <sizet BlockStackSize>
+    class FastLinkedMemPool: public virtual LinkedMemPool
     {
         using BaseT = LinkedMemPool;
-        static constexpr sizet BLOCK_STACK_COUNT = TBlockStackSize;
 
-        mpublic FastLinkedMemPool() noexcept
+    /// ----------------------------------------------------------------------------
+    public:
+        FastLinkedMemPool() noexcept
         {
-            mMaxReservedBlockCount = BLOCK_STACK_COUNT;
-            mReserveMoreBlocks(BLOCK_STACK_COUNT);
+            _maxReservedBlockCount = BlockStackSize;
+            _ReserveMoreBlocks(BlockStackSize);
         }
 
-        mpublic virtual blockptr mAllocateBlocks(const sizet count) final
+    /// ----------------------------------------------------------------------------
+    protected:
+        blockptr _AllocateBlocks(sizet count) final
         {
-            if (mStackReservedFreeBlock isnot nsize)
+            if (_stackResFreeBlock != NPOS)
             {
-                blockptr block = ref mStackReservedBlocks[mStackReservedFreeBlock];
+                blockptr block = &_stackResBlocks[_stackResFreeBlock];
 
                 // find next free block before hand
-                mStackReservedBlocksUsage[mStackReservedFreeBlock] = true;
-                mStackReservedFreeBlock = nsize;
-                for (sizet i = mStackReservedFreeBlock; i < BLOCK_STACK_COUNT; i++)
+                _stackResBlocksUsage[_stackResFreeBlock] = true;
+                _stackResFreeBlock = NPOS;
+                for (sizet i = _stackResFreeBlock; i < BlockStackSize; i++)
                 {
-                    if (mStackReservedBlocksUsage[mStackReservedFreeBlock] isnot true)
+                    if (_stackResBlocksUsage[_stackResFreeBlock] != true)
                     {
-                        mStackReservedFreeBlock = i;
+                        _stackResFreeBlock = i;
                         break;
                     }
                 }
@@ -39,29 +40,30 @@ namespace Atom
                 return block;
             }
 
-            return BaseT::mAllocateBlocks(count);
+            return BaseT::_AllocateBlocks(count);
         }
 
-        mpublic virtual void mDeallocateBlock(blockptr block) final
+        void _DeallocateBlock(blockptr block) final
         {
-            if (block > mStackReservedBlocks and block < mStackReservedBlocks + BLOCK_STACK_COUNT)
+            if (block > _stackResBlocks and block < _stackResBlocks + BlockStackSize)
             {
-                const sizet index = block - mStackReservedBlocks;
-                mStackReservedBlocksUsage[index] = false;
+                sizet index = block - _stackResBlocks;
+                _stackResBlocksUsage[index] = false;
 
-                if (mStackReservedFreeBlock > index)
+                if (_stackResFreeBlock > index)
                 {
-                    mStackReservedFreeBlock = index;
+                    _stackResFreeBlock = index;
                 }
 
                 return;
             }
 
-            return BaseT::mDeallocateBlock(block);
+            return BaseT::_DeallocateBlock(block);
         }
 
-        mprotected Block mStackReservedBlocks[BLOCK_STACK_COUNT];
-        mprotected bool mStackReservedBlocksUsage[BLOCK_STACK_COUNT];
-        mprotected sizet mStackReservedFreeBlock = 0;
+    protected:
+        Block _stackResBlocks[BlockStackSize];
+        bool _stackResBlocksUsage[BlockStackSize];
+        sizet _stackResFreeBlock = 0;
     };
 }

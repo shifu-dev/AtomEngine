@@ -7,147 +7,129 @@ namespace Atom
 {
     /// Represents a collection that holds memory in contiguous order.
     /// 
-    /// @tparam TElement Type of element this array contains.
-    template <typename TElement>
-    class ArrayBase : public ConstArrayBase<TElement>,
-        public virtual IArray<TElement>
+    /// @tparam ElementT Type of element this array contains.
+    template <typename ElementT>
+    class ArrayBase: public ConstArrayBase<ElementT>,
+        public virtual IArray<ElementT>
     {
-        using BaseT = ConstArrayBase<TElement>;                         ///< ----
-        using ElementT = TElement;                                      ///< ----
-        using IPredicateT = IPredicate<const ElementT ref, sizet>;      ///< ----
-        using IForwardIteratorT = IForwardIterator<ElementT>;           ///< ----
-        using ForwardIteratorBoxT = ForwardIteratorBox<ElementT>;   ///< ----
-        using ForEachActionT = const ILoopAction<ElementT ref>;         ///< ----
-        using ArrayIteratorT = ArrayIterator<ElementT>;                 ///< ----
+        using ThisT = ArrayBase<ElementT>;
+        using BaseT = ConstArrayBase<ElementT>;
+        using ConstElementT = const ElementT;
+        using PredicateT = IPredicate<ConstElementT&, sizet>;
+        using FwdIteratorT = IForwardIterator<ElementT>;
+        using FwdIteratorBoxT = ForwardIteratorBox<ElementT>;
+        using ArrayIteratorT = ArrayIterator<ElementT>;
+        using ForEachActionT = ILoopAction<ElementT&>;
 
-        mprotected using BaseT::mArray;
-        mprotected using BaseT::mCount;
-        mprotected using BaseT::mAssertIndexIsInBounds;
-
-        // *******************************************************************
-
-        /// @brief checks capcity and resizes if required
-        /// @param count count of elements to insert
-        /// @note this function is called every time any number
-        /// of elements are to be inserted irrelevance of their position
-        mprotected void mAssertCapacityFor(const sizet count) const
-        {
-            if (mCount >= mCapacity)
-            {
-                throw std::runtime_error("could not allocate memory for " + (mCount + 1));
-            }
-        }
-
-        // *******************************************************************
-        // * IArray
-
-        /// ----------------------------------------------------------------------------
+    /// ----------------------------------------------------------------------------
+    /// IArray
+    public:
         /// @return Pointer to the underlying array.
-        mpublic virtual ElementT ptr Data() noexcept final
+        ElementT* Data() noexcept final
         {
-            return mArray;
+            return _array;
         }
 
-        mpublic virtual ArrayIteratorT Begin() noexcept final
+        ArrayIteratorT Begin() noexcept final
         {
-            return ArrayIteratorT(mArray + 0);
+            return ArrayIteratorT(_array + 0);
         }
 
-        mpublic virtual ArrayIteratorT End() noexcept final
+        ArrayIteratorT End() noexcept final
         {
-            return ArrayIteratorT(mArray + mCount);
+            return ArrayIteratorT(_array + _count);
         }
 
-        // *******************************************************************
-        // * IList
-
-        mpublic virtual ElementT ref operator[](const sizet index) noexcept final
+    /// ----------------------------------------------------------------------------
+    /// IList
+    public:
+        ElementT& operator[](sizet index) noexcept final
         {
-            return mArray[index];
+            return _array[index];
         }
 
-        mpublic virtual void InsertAt(const sizet index, const ElementT ref element) final
+        void InsertAt(sizet index, ConstElementT& element) final
         {
-            mAssertIndexIsInBounds(index);
-            mAssertCapacityFor(1);
+            _AssertIndexIsInBounds(index);
+            _AssertCapacityFor(1);
 
-            for (sizet i = mCount; i >= index; i--)
+            for (sizet i = _count; i >= index; i--)
             {
-                swap(mArray[i], mArray[i - 1]);
+                swap(_array[i], _array[i - 1]);
             }
 
-            mCount++;
-            mArray[index] = element;
+            _count++;
+            _array[index] = element;
         }
 
-        mpublic virtual void InsertBack(const ElementT ref element) final
+        void InsertBack(ConstElementT& element) final
         {
-            mAssertCapacityFor(1);
+            _AssertCapacityFor(1);
 
-            mArray[mCount] = element;
-            mCount++;
+            _array[_count] = element;
+            _count++;
         }
 
-        mpublic virtual void RemoveBack() final
+        void RemoveBack() final
         {
-            mAssertIndexIsInBounds(0);
+            _AssertIndexIsInBounds(0);
 
-            mArray[mCount] = ElementT();
-            mCount--;
+            _array[_count] = ElementT();
+            _count--;
         }
 
-        mpublic virtual void InsertAt(const sizet index, const IForwardIteratorT ref it, const sizet count) final
+        void InsertAt(sizet index, const FwdIteratorT& it, sizet count) final
         {
-            mAssertIndexIsInBounds(index);
-            mAssertCapacityFor(count);
+            _AssertIndexIsInBounds(index);
+            _AssertCapacityFor(count);
 
-            for (sizet i = mCount; i >= index; i--)
+            for (sizet i = _count; i >= index; i--)
             {
-                swap(mArray[i], mArray[i + count]);
+                swap(_array[i], _array[i + count]);
             }
 
-            mCount += count;
+            _count += count;
             for (sizet i = index; i < count; i++)
             {
-                mArray[index] = ptr it;
+                _array[index] = *it;
                 it.MoveFwd();
             }
         }
 
-        mpublic virtual void RemoveAt(const sizet index) final
+        void RemoveAt(sizet index) final
         {
-            mAssertIndexIsInBounds(index);
+            _AssertIndexIsInBounds(index);
 
-            for (sizet i = index; i < mCount; i++)
+            for (sizet i = index; i < _count; i++)
             {
-                swap(mArray[i], mArray[i + 1]);
+                swap(_array[i], _array[i + 1]);
             }
 
-            mArray[mCount] = ElementT();
-            mCount--;
+            _array[_count] = ElementT();
+            _count--;
         }
 
-        mpublic virtual void RemoveFrom(const sizet from, const sizet to) final
+        void RemoveFrom(sizet from, sizet to) final
         {
-            const sizet count = to - from;
-            for (sizet i = from; i < (mCount - count); i++)
+            sizet count = to - from;
+            for (sizet i = from; i < (_count - count); i++)
             {
-                mArray[i] = mArray[i + count];
+                _array[i] = _array[i + count];
             }
 
-            for (sizet i = (mCount - count); i < mCount; i++)
+            for (sizet i = (_count - count); i < _count; i++)
             {
-                mArray[i] = ElementT();
+                _array[i] = ElementT();
             }
-            mCount -= count;
+            _count -= count;
         }
 
-        mpublic virtual void RemoveIfCallable(const IPredicateT ref pred) noexcept final
+        void RemoveIfCallable(const PredicateT& pred) noexcept final
         {
-            sizet count = mCount;
+            sizet count = _count;
             for (sizet i = 0; i < count; i++)
             {
-                if (pred(mArray[i], sizet(i)) is true)
+                if (pred(_array[i], sizet(i)) == true)
                 {
                     RemoveAt(i);
 
@@ -157,37 +139,57 @@ namespace Atom
             }
         }
 
-        // *******************************************************************
-        // * ICollection
-
-        mpublic virtual sizet Capacity() const noexcept final
+    /// ----------------------------------------------------------------------------
+    /// ICollection
+    public:
+        sizet Capacity() const noexcept final
         {
-            return mCapacity;
+            return _capacity;
         }
 
-        // *******************************************************************
-        // * IITerable
-
-        mpublic virtual void ForEach(ForEachActionT& callback) final
+    /// ----------------------------------------------------------------------------
+    /// IIterable
+    public:
+        void ForEach(ForEachActionT& callback) final
         {
-            for (sizet i = 0; i < mCount; i++)
+            for (sizet i = 0; i < _count; i++)
             {
-                callback(mArray[i]);
+                callback(_array[i]);
             }
         }
 
-        mprotected ForwardIteratorBoxT mIterableBegin() noexcept final
+    protected:
+        FwdIteratorBoxT _IterableBegin() noexcept final
         {
-            return ForwardIteratorBoxT(Begin());
+            return FwdIteratorBoxT(Begin());
         }
 
-        mprotected ForwardIteratorBoxT mIterableEnd() noexcept final
+        FwdIteratorBoxT _IterableEnd() noexcept final
         {
-            return ForwardIteratorBoxT(End());
+            return FwdIteratorBoxT(End());
         }
 
-        // *******************************************************************
+    /// ----------------------------------------------------------------------------
+    protected:
+        using BaseT::_AssertIndexIsInBounds;
 
-        mprotected sizet mCapacity;
+        /// @brief checks capcity and resizes if required
+        /// @param count count of elements to insert
+        /// @note this function == called every time any number
+        /// of elements are to be inserted irrelevance of their position
+        void _AssertCapacityFor(sizet count) const
+        {
+            if (_count >= _capacity)
+            {
+                throw std::runtime_error("could not allocate memory for " + (_count + 1));
+            }
+        }
+
+    /// ----------------------------------------------------------------------------
+    protected:
+        using BaseT::_array;
+        using BaseT::_count;
+
+        sizet _capacity;
     };
 }

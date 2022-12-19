@@ -5,72 +5,73 @@
 
 namespace Atom
 {
-    template <typename TElement>
-    class ForwardIteratorBox : public IteratorBox<TElement>,
-        public virtual IForwardIterator<TElement>
+    template <typename ElementT>
+    class ForwardIteratorBox: public IteratorBox<ElementT>,
+        public virtual IForwardIterator<ElementT>
     {
-        using ThisT = ForwardIteratorBox<TElement>;
-        using BaseT = IteratorBox<TElement>;
-        using IForwardIteratorT = IForwardIterator<TElement>;
+        using ThisT = ForwardIteratorBox<ElementT>;
+        using BaseT = IteratorBox<ElementT>;
+        using ForwardIteratorT = IForwardIterator<ElementT>;
 
-        /// ----------------------------------------------------------------------------
+    /// ----------------------------------------------------------------------------
+    public:
+        ForwardIteratorBox():
+            BaseT(nullptr) { }
 
-        mpublic ForwardIteratorBox() : BaseT(null) { }
-
-        mpublic ForwardIteratorBox(const ThisT ref other) noexcept :
+        ForwardIteratorBox(const ThisT& other) noexcept:
             BaseT(other) { }
 
-        mpublic ForwardIteratorBox(ThisT rref other) noexcept :
+        ForwardIteratorBox(ThisT&& other) noexcept:
             BaseT(move(other)) { }
 
-        mpublic ThisT ref operator = (const ThisT ref other) noexcept
+        ThisT& operator = (const ThisT& other) noexcept
         {
             BaseT::operator = (other);
-            return ptr this;
+            return *this;
         }
 
-        mpublic ThisT ref operator = (ThisT rref other) noexcept
+        ThisT& operator = (ThisT&& other) noexcept
         {
             BaseT::operator = (move(other));
-            return ptr this;
+            return *this;
         }
 
-        mpublic template <typename TIterator>
-            ForwardIteratorBox(const TIterator ref iterator) noexcept :
+        template <typename ParamFwdIteratorT>
+        ForwardIteratorBox(const ParamFwdIteratorT& iterator) noexcept:
             BaseT(iterator)
         {
-            StaticAssertSubClass<IForwardIteratorT, TIterator>();
+            StaticAssertSubClass<ForwardIteratorT, ParamFwdIteratorT>();
         }
 
-        mpublic template <typename TIterator>
-            ForwardIteratorBox(TIterator rref iterator) noexcept :
+        template <typename ParamFwdIteratorT>
+        ForwardIteratorBox(ParamFwdIteratorT&& iterator) noexcept:
             BaseT(move(iterator))
         {
-            StaticAssertSubClass<IForwardIteratorT, TIterator>();
+            StaticAssertSubClass<ForwardIteratorT, ParamFwdIteratorT>();
         }
 
-        /// ----------------------------------------------------------------------------
-
-        mpublic IForwardIteratorT ref GetIterator() noexcept
+    /// ----------------------------------------------------------------------------
+    public:
+        ForwardIteratorT& GetIterator() noexcept
         {
-            return RCAST(IForwardIteratorT ref, BaseT::GetIterator());
+            return RCAST(ForwardIteratorT&, BaseT::GetIterator());
         }
 
-        mpublic const IForwardIteratorT ref GetIterator() const noexcept
+        const ForwardIteratorT& GetIterator() const noexcept
         {
-            return RCAST(const IForwardIteratorT ref, BaseT::GetIterator());
+            return RCAST(const ForwardIteratorT&, BaseT::GetIterator());
         }
 
-        mpublic virtual void MoveFwd() const noexcept override
+        virtual void MoveFwd() const noexcept override
         {
             GetIterator().MoveFwd();
         }
 
-        /// ----------------------------------------------------------------------------
+    /// ----------------------------------------------------------------------------
 
-        mpublic operator BaseT () const noexcept
+        operator BaseT () const noexcept
         {
-            return BaseT(ptr this);
+            return BaseT(*this);
         }
     };
 }

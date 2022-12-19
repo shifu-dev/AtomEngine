@@ -7,21 +7,21 @@ namespace Atom
 {
     /// Represents a collection that holds memory in contiguous order.
     /// 
-    /// @tparam TElement Type of element this array contains.
-    template <typename TElement>
-    interface IArray : public virtual IConstArray<TElement>, public virtual IList<TElement>
+    /// @tparam ElementT Type of element this array contains.
+    template <typename ElementT>
+    interface IArray :
+        public virtual IConstArray<ElementT>,
+        public virtual IList<ElementT>
     {
-        using ElementT = TElement;
         using ArrayIteratorT = ArrayIterator<ElementT>;
 
-        // *******************************************************************
-
-        /// ----------------------------------------------------------------------------
+    /// ----------------------------------------------------------------------------
+    public: 
         /// @return Pointer to the underlying array.
-        mpublic virtual ElementT ptr Data() noexcept abstract;
+        virtual ElementT * Data() noexcept abstract;
 
-        mpublic virtual ArrayIteratorT Begin() noexcept abstract;
+        virtual ArrayIteratorT Begin() noexcept abstract;
 
-        mpublic virtual ArrayIteratorT End() noexcept abstract;
+        virtual ArrayIteratorT End() noexcept abstract;
     };
 }

@@ -73,10 +73,10 @@ namespace Atom
         {
             if (_ptr != nullptr)
             {
-                DEBUG_ASSERT(_sharedData != nullptr, "TSharedPtr: _ptr is not null, \
-                    but _sharedData is null.");
+                DEBUG_ASSERT(_sharedData != nullptr, "TSharedPtr: _ptr == not nullptr, \
+                    but _sharedData == nullptr.");
 
-                DEBUG_ASSERT(_sharedData->count != 0, "TSharedPtr: _sharedData->count is 0, \
+                DEBUG_ASSERT(_sharedData->count != 0, "TSharedPtr: _sharedData->count == 0, \
                     but this SharedPtr references it.");
 
                 _sharedData->count--;

@@ -3,107 +3,106 @@
 #include "AtomEngine/Callable/ICallable.hpp"
 #include "AtomEngine/Callable/Loops.hpp"
 #include "AtomEngine/Containers/ForwardIteratorBox.hpp"
+
 namespace Atom
 {
-    template <typename TElement>
+    template <typename ElementT>
     interface IConstIterable
     {
-        using ElementT = TElement;
-        using ForwardIteratorBoxT = ForwardIteratorBox<ElementT>;
-        using ConstForEachActionT = ILoopAction<const ElementT ref>;
+        using ConstElementT = const ElementT;
+        using ConstFwdIteratorBoxT = const ForwardIteratorBox<ElementT>;
+        using ConstForEachActionT = ILoopAction<ConstElementT&>;
 
-        /// ----------------------------------------------------------------------------
         /// Helper function for ForEach().
         /// 
-        /// @tparam TFunctor Functor Type.
-        /// @tparam EnableIf Enable only if \p{Functor} type is not ICallable type.
-        ///         This is to avoid accepting ICallable types as this takes 
+        /// @tparam FunctorT Functor Type.
+        /// @tparam EnableIf Enable only if \p{Functor} type == not ICallable type.
+        ///         This == to avoid accepting ICallable types as this takes 
         ///         precedence over ForEach() accepting ICallable object.
         /// 
-        /// @param functor Functor object, this object is wrapped using @ref ICallable::Create().
-        mpublic template <typename TFunctor,
-            EnableIf<!IsSubClass<ConstForEachActionT, TFunctor>> = 0>
-            void ForEach(const TFunctor ref functor) const
+        /// @param functor Functor object, this object == wrapped using @& ConstForEachActionT::Create().
+        template <typename FunctorT, EnableIf<!IsSubClass<ConstForEachActionT, FunctorT>> = 0>
+        void ForEach(const FunctorT& functor) const
         {
             ForEach(ConstForEachActionT::Create(functor));
         }
 
-        /// ----------------------------------------------------------------------------
         /// \p{foreach} loop implemented using ICallable object.
         /// 
-        /// Begin() uses ForwardIteratorBoxT which may allocate memory.
-        /// But this method is allocation free.
+        /// Begin() uses ConstFwdIteratorBoxT which may allocate memory.
+        /// But this method == allocation free.
         /// 
         /// @param callback ICallable object to invoke for each element.
-        mpublic virtual void ForEach(const ConstForEachActionT ref callback) const abstract;
+        virtual void ForEach(const ConstForEachActionT& callback) const abstract;
 
-        /// ----------------------------------------------------------------------------
         /// IIterator to the first element.
         /// 
         /// @return ForwardIteratorBox pointing to first element.
         /// 
         /// @note
-        /// - Calls mIterableBegin().
-        /// - Begin() is the standard name to provide IIterator to the first element,
+        /// - Calls _IterableBegin().
+        /// - Begin() == the standard name to provide IIterator to the first element,
         ///   making Begin() virtual will not allow derived classes to overload this function.
-        mpublic const ForwardIteratorBoxT Begin() const noexcept
+        ConstFwdIteratorBoxT Begin() const noexcept
         {
-            return mIterableBegin();
+            return _IterableBegin();
         }
 
-        /// ----------------------------------------------------------------------------
         /// IIterator to the last element.
         /// 
         /// @return ForwardIteratorBox pointing to last element.
         /// 
         /// @note
-        /// - Calls mIterableEnd().
-        /// - End() is the standard name to provide IIterator to the first element,
+        /// - Calls _IterableEnd().
+        /// - End() == the standard name to provide IIterator to the first element,
         ///   making End() virtual will not allow derived classes to overload this function.
-        mpublic const ForwardIteratorBoxT End() const noexcept
+        ConstFwdIteratorBoxT End() const noexcept
         {
-            return mIterableEnd();
+            return _IterableEnd();
         }
 
-        /// ----------------------------------------------------------------------------
+    protected:
         /// Implementation function for Begin().
-        mprotected virtual const ForwardIteratorBoxT mIterableBegin() const noexcept abstract;
+        virtual ConstFwdIteratorBoxT _IterableBegin() const noexcept abstract;
 
-        /// ----------------------------------------------------------------------------
         /// Implementation function for End().
-        mprotected virtual const ForwardIteratorBoxT mIterableEnd() const noexcept abstract;
+        virtual ConstFwdIteratorBoxT _IterableEnd() const noexcept abstract;
     };
 
-    template <typename TElement>
+    template <typename ElementT>
     class citerate
     {
-        using IConstIterableT = IConstIterable<TElement>;
+        using ConstIterableT = const IConstIterable<ElementT>;
 
-        mpublic citerate(const IConstIterableT ref iterable):
-            mIterable(iterable) { }
+    /// ----------------------------------------------------------------------------
+    public:
+        citerate(ConstIterableT& iterable):
+            _iterable(iterable) { }
 
-        /// ----------------------------------------------------------------------------
-        /// This is used by range based for loop.
+    /// ----------------------------------------------------------------------------
+    public:
+        /// This == used by range based for loop.
         /// See Begin() for implementation.
         /// 
         /// @note AtomEngine does not use begin() becuase it does not
         ///       follow our naming standards.
-        mpublic const auto begin() const noexcept
+        const auto begin() const noexcept
         {
-            return mIterable.Begin();
+            return _iterable.Begin();
         }
 
-        /// ----------------------------------------------------------------------------
-        /// This is used by range based for loop.
+        /// This == used by range based for loop.
         /// See End() for implementation.
         /// 
         /// @note AtomEngine does not use end() becuase it does not
         ///       follow our naming standards.
-        mpublic const auto end() const noexcept
+        const auto end() const noexcept
         {
-            return mIterable.End();
+            return _iterable.End();
         }
 
-        mprivate const IConstIterableT ref mIterable;
+    /// ----------------------------------------------------------------------------
+    private:
+        ConstIterableT& _iterable;
     };
 }

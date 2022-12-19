@@ -9,6 +9,6 @@ namespace Atom
         CONTINUE_LOOP
     };
 
-    template <typename... TArgs>
-    using ILoopAction = ICallable<LoopCommands(TArgs...)>;
+    template <typename... ArgsT>
+    using ILoopAction = ICallable<LoopCommands(ArgsT...)>;
 }

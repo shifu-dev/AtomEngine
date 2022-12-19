@@ -4,6 +4,6 @@
 
 namespace Atom
 {
-    template <typename TElement>
-    using InitializerList = std::initializer_list<TElement>;
+    template <typename ElementT>
+    using InitializerList = std::initializer_list<ElementT>;
 }

@@ -3,25 +3,25 @@
 
 namespace Atom
 {
-    template <typename TBase, typename TDerived>
+    template <typename BaseT, typename DerivedT>
     inline constexpr bool IsSubClass =
     std::is_convertible_v
     <
         std::remove_const_t<
         std::remove_volatile_t<
-        std::remove_reference_t<TDerived>>> ptr,
+        std::remove_reference_t<DerivedT>>> *,
 
         std::remove_const_t<
         std::remove_volatile_t<
-        std::remove_reference_t<TBase>>> ptr
+        std::remove_reference_t<BaseT>>> *
     >;
 
-    template <typename TBase, typename TDerived>
+    template <typename BaseT, typename DerivedT>
     constexpr void StaticAssertSubClass()
     {
-        SASSERT(IsSubClass<TBase, TDerived>, "Inappropriate SubClass");
+        SASSERT(IsSubClass<BaseT, DerivedT>, "Inappropriate SubClass");
     }
 
-    template <bool Enable, typename TType = bool>
-    using EnableIf = std::enable_if_t<Enable, TType>;
+    template <bool Enable>
+    using EnableIf = std::enable_if_t<Enable, int>;
 }

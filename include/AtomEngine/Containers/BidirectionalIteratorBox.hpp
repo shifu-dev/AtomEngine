@@ -5,72 +5,73 @@
 
 namespace Atom
 {
-    template <typename TElement>
-    class BidirectionalIteratorBox : public ForwardIteratorBox<TElement>,
-        public virtual IBidirectionalIterator<TElement>
+    template <typename ElementT>
+    class BidirectionalIteratorBox: public ForwardIteratorBox<ElementT>,
+        public virtual IBidirectionalIterator<ElementT>
     {
-        using ThisT = BidirectionalIteratorBox<TElement>;
-        using BaseT = ForwardIteratorBox<TElement>;
-        using IBidirectionalIteratorT = IBidirectionalIterator<TElement>;
+        using ThisT = BidirectionalIteratorBox<ElementT>;
+        using BaseT = ForwardIteratorBox<ElementT>;
+        using BidirectionalIteratorT = IBidirectionalIterator<ElementT>;
 
-        /// ----------------------------------------------------------------------------
+    /// ----------------------------------------------------------------------------
+    public:
+        BidirectionalIteratorBox():
+            BaseT(nullptr) { }
 
-        mpublic BidirectionalIteratorBox() : BaseT(null) { }
-
-        mpublic BidirectionalIteratorBox(const ThisT ref other) noexcept :
+        BidirectionalIteratorBox(const ThisT& other) noexcept:
             BaseT(other) { }
 
-        mpublic BidirectionalIteratorBox(ThisT rref other) noexcept :
+        BidirectionalIteratorBox(ThisT&& other) noexcept:
             BaseT(move(other)) { }
 
-        mpublic ThisT ref operator = (const ThisT ref other) noexcept
+        ThisT& operator = (const ThisT& other) noexcept
         {
             BaseT::operator = (other);
-            return ptr this;
+            return *this;
         }
 
-        mpublic ThisT ref operator = (ThisT rref other) noexcept
+        ThisT& operator = (ThisT&& other) noexcept
         {
             BaseT::operator = (move(other));
-            return ptr this;
+            return *this;
         }
 
-        mpublic template <typename TIterator>
-            BidirectionalIteratorBox(const TIterator ref iterator) noexcept :
+        template <typename IteratorT>
+        BidirectionalIteratorBox(const IteratorT& iterator) noexcept:
             BaseT(iterator)
         {
-            StaticAssertSubClass<IteratorT, TIterator>();
+            StaticAssertSubClass<IteratorT, IteratorT>();
         }
 
-        mpublic template <typename TIterator>
-            BidirectionalIteratorBox(TIterator rref iterator) noexcept :
+        template <typename IteratorT>
+        BidirectionalIteratorBox(IteratorT&& iterator) noexcept:
             BaseT(move(iterator))
         {
-            StaticAssertSubClass<IteratorT, TIterator>();
+            StaticAssertSubClass<IteratorT, IteratorT>();
         }
 
-        /// ----------------------------------------------------------------------------
-
-        mpublic IBidirectionalIteratorT ref GetIterator() noexcept
+    /// ----------------------------------------------------------------------------
+    public:
+        BidirectionalIteratorT& GetIterator() noexcept
         {
-            return RCAST(IteratorT ref, BaseT::GetIterator());
+            return RCAST(IteratorT&, BaseT::GetIterator());
         }
 
-        mpublic const IBidirectionalIteratorT ref GetIterator() const noexcept
+        const BidirectionalIteratorT& GetIterator() const noexcept
         {
-            return RCAST(const IBidirectionalIteratorT ref, BaseT::GetIterator());
+            return RCAST(const BidirectionalIteratorT&, BaseT::GetIterator());
         }
 
-        mpublic virtual void MoveBwd() const noexcept override
+        void MoveBwd() const noexcept final
         {
             GetIterator().MoveBwd();
         }
 
-        /// ----------------------------------------------------------------------------
+    /// ----------------------------------------------------------------------------
 
-        mpublic operator BaseT () const noexcept
+        operator BaseT () const noexcept
         {
-            return BaseT(ptr this);
+            return BaseT(*this);
         }
     };
 }

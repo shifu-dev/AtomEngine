@@ -4,19 +4,21 @@
 
 namespace Atom
 {
-    template<sizet TSize, sizet TBlockStackSize = (TSize / 2)>
-    class StackMemPool : public virtual FastLinkedMemPool<TBlockStackSize>
+    template<sizet StackSize, sizet TBlockStackSize = (StackSize / 2)>
+    class StackMemPool: public virtual FastLinkedMemPool<TBlockStackSize>
     {
         using BaseT = FastLinkedMemPool<TBlockStackSize>;
-        using BaseT::mAddMemory;
 
-        mpublic static constexpr sizet SIZE = TSize;
-
-        mpublic StackMemPool() noexcept
+    public:
+        StackMemPool() noexcept
         {
-            mAddMemory(mStackMemory, SIZE);
+            _AddMemory(_stackMemory, StackSize);
         }
 
-        mprotected byte mStackMemory[SIZE];
+    protected:
+        using BaseT::_AddMemory;
+
+    protected:
+        byte _stackMemory[StackSize];
     };
 }

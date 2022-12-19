@@ -5,31 +5,30 @@
 namespace Atom
 {
     /// @brief stack allocated non-resiable array
-    /// @tparam TElement type of value stored in array
+    /// @tparam ElementT type of value stored in array
     /// @tparam TSize size of array, this cannot be changed
-    template <typename TElement, sizet TSize>
-    class StackArray : public ArrayBase<TElement>
+    template <typename ElementT, sizet TSize>
+    class StackArray: public ArrayBase<ElementT>
     {
-        using ThisT = StackArray<TElement, TSize>;
-        using BaseT = ArrayBase<TElement>;
-        using ElementT = TElement;
+        using ThisT = StackArray<ElementT, TSize>;
+        using BaseT = ArrayBase<ElementT>;
 
-        mprotected using BaseT::mArray;
-        mprotected using BaseT::mCount;
-        mprotected using BaseT::mCapacity;
-
-        // *******************************************************************
-        // * Constructors and Destructors
-
-        mpublic StackArray() noexcept : BaseT()
+    /// ----------------------------------------------------------------------------
+    public:
+        StackArray() noexcept:
+            BaseT()
         {
-            mArray = mStackArray;
-            mCapacity = TSize;
-            mCount = 0;
+            _array = _stackArray;
+            _capacity = TSize;
+            _count = 0;
         }
 
-        // *******************************************************************
+    /// ----------------------------------------------------------------------------
+    protected:
+        using BaseT::_array;
+        using BaseT::_count;
+        using BaseT::_capacity;
 
-        mprotected ElementT mStackArray[TSize];
+        ElementT _stackArray[TSize];
     };
 }

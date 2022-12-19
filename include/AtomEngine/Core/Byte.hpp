@@ -4,52 +4,53 @@ namespace Atom
 {
     namespace
     {
-        template <typename TType>
-        using EnableIfIntegral = std::enable_if_t<std::is_integral_v<TType>, int>;
+        template <typename T>
+        using EnableIfIntegral = std::enable_if_t<std::is_integral_v<T>, int>;
     }
 
     struct byte
     {
-        mprivate uchar value;
+    /// ----------------------------------------------------------------------------
+    public:
+        constexpr byte() noexcept:
+            value(0) { }
 
-        /// ----------------------------------------------------------------------------
-
-        mpublic constexpr byte() noexcept : value(0) { }
-
-        mpublic constexpr byte(const byte ref other) noexcept : byte()
+        constexpr byte(const byte& other) noexcept:
+            byte()
         {
             value = other.value;
         }
 
-        mpublic constexpr byte ref operator = (const byte ref other) noexcept
+        constexpr byte& operator = (const byte& other) noexcept
         {
             value = other.value;
-            return ptr this;
+            return *this;
         }
 
-        mpublic template <typename TInt, EnableIfIntegral<TInt> = 0>
-            constexpr byte(const TInt num) noexcept : value(0)
+        template <typename IntT, EnableIfIntegral<IntT> = 0>
+        constexpr byte(const IntT num) noexcept: value(0)
         {
             value = SCAST(uchar, num);
         }
 
-        mpublic template <typename TInt, EnableIfIntegral<TInt> = 0>
-            constexpr operator TInt() const noexcept
+        template <typename IntT, EnableIfIntegral<IntT> = 0>
+        constexpr operator IntT() const noexcept
         {
-            return SCAST(TInt, value);
+            return SCAST(IntT, value);
         }
 
-        /// ----------------------------------------------------------------------------
-        /// Arithmetic Operations
+    /// ----------------------------------------------------------------------------
+    /// Arithmetic Operations
+    public:
 
-        template <typename TInt, EnableIfIntegral<TInt> = 0>
-        [[nodiscard]] constexpr byte operator << (const TInt shift) const noexcept
+        template <typename IntT, EnableIfIntegral<IntT> = 0>
+        [[nodiscard]] constexpr byte operator << (const IntT shift) const noexcept
         {
             return byte(SCAST(uint, value) << shift);
         }
 
-        template <typename TInt, EnableIfIntegral<TInt> = 0>
-        [[nodiscard]] constexpr byte operator >> (const TInt shift) const noexcept
+        template <typename IntT, EnableIfIntegral<IntT> = 0>
+        [[nodiscard]] constexpr byte operator >> (const IntT shift) const noexcept
         {
             return byte(SCAST(uint, value) >> shift);
         }
@@ -78,31 +79,35 @@ namespace Atom
             return byte(~SCAST(uint, value));
         }
 
-        template <typename TInt, EnableIfIntegral<TInt> = 0>
-        constexpr byte ref operator <<= (const TInt shift) noexcept
+        template <typename IntT, EnableIfIntegral<IntT> = 0>
+        constexpr byte& operator <<= (const IntT shift) noexcept
         {
-            return ptr this = ptr this << shift;
+            return *this = *this << shift;
         }
 
-        template <typename TInt, EnableIfIntegral<TInt> = 0>
-        constexpr byte ref operator >>= (const TInt shift) noexcept
+        template <typename IntT, EnableIfIntegral<IntT> = 0>
+        constexpr byte& operator >>= (const IntT shift) noexcept
         {
-            return ptr this = ptr this >> shift;
+            return *this = *this >> shift;
         }
 
-        constexpr byte ref operator |= (const byte right) noexcept
+        constexpr byte& operator |= (const byte right) noexcept
         {
-            return ptr this = ptr this | right;
+            return *this = *this | right;
         }
 
-        constexpr byte ref operator &= (const byte right) noexcept
+        constexpr byte& operator &= (const byte right) noexcept
         {
-            return ptr this = ptr this & right;
+            return *this = *this & right;
         }
 
-        constexpr byte ref operator ^= (const byte right) noexcept
+        constexpr byte& operator ^= (const byte right) noexcept
         {
-            return ptr this = ptr this ^ right;
+            return *this = *this ^ right;
         }
+
+    /// ----------------------------------------------------------------------------
+    private:
+        uchar value;
     };
 }

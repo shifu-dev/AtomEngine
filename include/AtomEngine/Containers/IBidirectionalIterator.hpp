@@ -4,64 +4,58 @@
 
 namespace Atom
 {
-    /// ----------------------------------------------------------------------------
     /// Object to iterate over container elements.
     /// \n IBidirectionalIterator provides functionality to move iterator backward and forward.
     ///
-    /// @tparam TElement Type of element IIterator iterates over.
-    template <typename TElement>
-    interface IBidirectionalIterator : public virtual IForwardIterator<TElement>
+    /// @tparam ElementT Type of element IIterator iterates over.
+    template <typename ElementT>
+    interface IBidirectionalIterator: public virtual IForwardIterator<ElementT>
     {
-        using ThisT = IBidirectionalIterator<TElement>;          ///< ----
+        using ThisT = IBidirectionalIterator<ElementT>;
 
-        /// ----------------------------------------------------------------------------
         /// Moves IIterator backward to point to previous element.
-        mpublic virtual void MoveBwd() const noexcept abstract;
+        virtual void MoveBwd() const noexcept abstract;
 
-        /// ----------------------------------------------------------------------------
         /// Moves IIterator backward to point to previous element.
         ///
         /// @note
         /// - Calls MoveBwd()
-        mpublic const ThisT ref operator --() const noexcept
+        const ThisT& operator -- () const noexcept
         {
             MoveBwd();
-            return ptr this;
+            return *this;
         }
 
-        /// ----------------------------------------------------------------------------
         /// Moves IIterator backward to point to previous element.
         ///
         /// @note
         /// - Calls MoveBwd()
-        mpublic ThisT ref operator --() noexcept
+        ThisT& operator -- () noexcept
         {
             MoveBwd();
-            return ptr this;
+            return *this;
         }
 
-        /// ----------------------------------------------------------------------------
         /// Moves IIterator backward to point to previous element.
         ///
         /// @note
         /// - Does not follow postfix definations, works same as prefix.
         /// - Calls MoveBwd()
-        mpublic const ThisT ref operator --(int) const noexcept
+        const ThisT& operator -- (int) const noexcept
         {
             MoveBwd();
-            return ptr this;
+            return *this;
         }
 
-        /// ----------------------------------------------------------------------------
         /// Moves IIterator backward to point to previous element.
         ///
         /// @note
         /// - Does not follow postfix definations, works same as prefix.
         /// - Calls MoveBwd()
-        mpublic ThisT ref operator --(int) noexcept
+        ThisT& operator -- (int) noexcept
         {
             MoveBwd();
-            return ptr this;
+            return *this;
         }
     };
 }

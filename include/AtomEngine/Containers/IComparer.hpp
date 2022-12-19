@@ -3,22 +3,22 @@
 
 namespace Atom
 {
-    template <typename Type>
+    template <typename T>
     interface IComparer
     {
-        virtual int Compare(const Type ref lhs, const Type ref rhs) const noexcept abstract;
+        virtual int Compare(const T& lhs, const T& rhs) const noexcept abstract;
     };
 
-    template <typename Type>
+    template <typename T>
     interface IEqualityComparer
     {
-        virtual bool Compare(const Type ref lhs, const Type ref rhs) const noexcept abstract;
+        virtual bool Compare(const T& lhs, const T& rhs) const noexcept abstract;
     };
 
-    template <typename Type>
-    struct DefaultEqualityComparer : public virtual IEqualityComparer<Type>
+    template <typename T>
+    struct DefaultEqualityComparer: public virtual IEqualityComparer<T>
     {
-        virtual bool Compare(const Type ref lhs, const Type ref rhs) const noexcept override
+        bool Compare(const T& lhs, const T& rhs) const noexcept final
         {
             return lhs == rhs;
         }

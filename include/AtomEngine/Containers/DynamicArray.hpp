@@ -5,112 +5,109 @@
 
 namespace Atom
 {
-    template <typename TElement>
-    class DynamicArray : public ArrayBase<TElement>,
-        public virtual IDynamicArray<TElement>
+    template <typename ElementT>
+    class DynamicArray: public ArrayBase<ElementT>,
+        public IDynamicArray<ElementT>
     {
-        using ElementT = TElement;                                               ///< ----
-        using ThisT = DynamicArray<TElement>;                                    ///< ----
-        using BaseT = ArrayBase<TElement>;                                       ///< ----
-        using IDynamicArrayT = IDynamicArray<TElement>;                          ///< ----
-        using InitializerListT = InitializerList<TElement>;                      ///< ----
-        using IForwardIteratorT = IForwardIterator<ElementT>;                    ///< ----
-        using IConstIterableT = IConstIterable<ElementT>;                        ///< ----
-        using IConstCollectionT = IConstCollection<ElementT>;                    ///< ----
+        using ThisT = DynamicArray<ElementT>;
+        using BaseT = ArrayBase<ElementT>;
+        using IDynamicArrayT = IDynamicArray<ElementT>;
+        using InitializerListT = InitializerList<ElementT>;
+        using IForwardIteratorT = IForwardIterator<ElementT>;
+        using IConstIterableT = IConstIterable<ElementT>;
+        using IConstCollectionT = IConstCollection<ElementT>;
 
-        mpublic using BaseT::Clear;
-        mprotected using BaseT::mArray;
-        mprotected using BaseT::mCount;
-        mprotected using BaseT::mCapacity;
-
-        // *******************************************************************
-        // * Constructors and Destructors
-
-        mpublic DynamicArray() noexcept :
-            mAllocator(DefaultAllocatorInstance)
+    /// ----------------------------------------------------------------------------
+    public:
+        DynamicArray() noexcept:
+            _allocator(DefaultAllocatorInstance)
         {
-            mArray = null;
-            mCount = 0;
-            mCapacity = 0;
+            _array = nullptr;
+            _count = 0;
+            _capacity = 0;
         }
 
-        mpublic DynamicArray(const sizet count) : ThisT()
+        DynamicArray(sizet count): ThisT()
         {
             Resize(count);
         }
 
-        mpublic DynamicArray(const InitializerListT list) : ThisT()
+        DynamicArray(const InitializerListT list): ThisT()
         {
             InsertFront(list);
         }
 
-        mpublic DynamicArray(const IForwardIteratorT ref it, const sizet count) : ThisT()
+        DynamicArray(const IForwardIteratorT& it, sizet count): ThisT()
         {
             InsertFront(it, count);
         }
 
-        mpublic DynamicArray(const IForwardIteratorT ref begin, const IForwardIteratorT ref end) : ThisT()
+        DynamicArray(const IForwardIteratorT& begin, const IForwardIteratorT& end): ThisT()
         {
             InsertFront(begin, end);
         }
 
-        mpublic DynamicArray(const IConstIterableT ref elements, const sizet count) : ThisT()
+        DynamicArray(const IConstIterableT& elements, sizet count): ThisT()
         {
             InsertFront(elements, count);
         }
 
-        mpublic DynamicArray(const IConstIterableT ref elements) : ThisT()
+        DynamicArray(const IConstIterableT& elements): ThisT()
         {
             InsertFront(elements);
         }
 
-        mpublic DynamicArray(const IConstCollectionT ref elements) : ThisT()
+        DynamicArray(const IConstCollectionT& elements): ThisT()
         {
             InsertFront(elements);
         }
 
-        mpublic DynamicArray(const ThisT ref other) noexcept = default;
-        mpublic DynamicArray(ThisT rref other) noexcept = default;
+        DynamicArray(const ThisT& other) noexcept = default;
+        DynamicArray(ThisT&& other) noexcept = default;
 
-        mpublic ThisT ref operator = (const ThisT ref other) noexcept = default;
-        mpublic ThisT ref operator = (ThisT rref other) noexcept = default;
+        ThisT& operator = (const ThisT& other) noexcept = default;
+        ThisT& operator = (ThisT&& other) noexcept = default;
 
-        mpublic dtor DynamicArray()
+        ~DynamicArray()
         {
             Clear();
             ShrinkToFit();
         }
 
-        // *******************************************************************
-        // * IDynamicCollection
+    /// ----------------------------------------------------------------------------
+    /// IDynamicCollection
+    public:
+        using BaseT::Clear;
 
-        mpublic virtual void Resize(const sizet count) final
+        void Resize(sizet count) final
         {
-            sizet checkedCount = max(count, mCount);
-
-            if (checkedCount != mCapacity)
+            count = max(count, _count);
+            if (count != _capacity)
             {
-                mArray = mAllocator.Reallocate<ElementT>(mArray, checkedCount);
+                _array = _allocator.Reallocate<ElementT>(_array, count);
             }
         }
 
-        mpublic virtual sizet Reserve(const sizet count) final
+        sizet Reserve(sizet count) final
         {
-            if (mCapacity - mCount < count)
+            if (_capacity - _count < count)
             {
-                mAllocator.Reallocate<ElementT>(mArray, mCapacity - mCount + count);
+                _allocator.Reallocate<ElementT>(_array, _capacity - _count + count);
             }
 
-            return mCapacity - mCount;
+            return _capacity - _count;
         }
 
-        mpublic virtual void ShrinkToFit() final
+        void ShrinkToFit() final
         {
-            return Resize(mCount);
+            return Resize(_count);
         }
 
-        // *******************************************************************
+    protected:
+        using BaseT::_array;
+        using BaseT::_count;
+        using BaseT::_capacity;
 
-        mprotected IAllocator ref mAllocator;
+        IAllocator& _allocator;
     };
 }

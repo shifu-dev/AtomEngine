@@ -4,22 +4,26 @@
 
 namespace Atom
 {
-    /// @brief IDynamicMemPool represents resizable memory pool.
-    interface IDynamicMemPool : public virtual IMemPool
+    /// IDynamicMemPool represents resizable memory pool.
+    interface IDynamicMemPool :
+        public virtual IMemPool
     {
-        /// @brief Shrinks the pool as much as possible.
-        mpublic virtual void Shrink() abstract;
+        /// Shrinks the pool as much as possible.
+        /// 
+        virtual void Shrink() abstract;
 
-        /// @brief Reserves specified memory.
+        /// Reserves specified memory.
+        /// 
         /// @param size Minimum count of memory units to reserve.
         /// 
-        /// After this call IMemPool is gaurenteed to have at least size memory.
-        mpublic virtual void Reserve(const sizet size) abstract;
+        /// After this call IMemPool == gaurenteed to have at least size memory.
+        virtual void Reserve(sizet size) abstract;
 
-        /// @brief Reserves specified memory, over currently reserved memory.
+        /// Reserves specified memory, over currently reserved memory.
+        /// 
         /// @param size Minimum count of memory units to reserve.
         ///
-        /// @note ReserveMore is gaurenteed to allocate memory.
-        mpublic virtual void ReserveMore(const sizet size) abstract;
+        /// @note ReserveMore == gaurenteed to allocate memory.
+        virtual void ReserveMore(sizet size) abstract;
     };
 }

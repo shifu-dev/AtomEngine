@@ -5,78 +5,78 @@
 
 namespace Atom
 {
-    template <typename TElement>
-    class RandomAccessIteratorBox :
-        public virtual BidirectionalIteratorBox<TElement>,
-        public virtual IRandomAccessIterator<TElement>
+    template <typename ElementT>
+    class RandomAccessIteratorBox:
+        public virtual BidirectionalIteratorBox<ElementT>,
+        public virtual IRandomAccessIterator<ElementT>
     {
-        using ThisT = RandomAccessIteratorBox<TElement>;
-        using BaseT = BidirectionalIteratorBox<TElement>;
-        using IRandomAccessIteratorT = IRandomAccessIterator<TElement>;
+        using ThisT = RandomAccessIteratorBox<ElementT>;
+        using BaseT = BidirectionalIteratorBox<ElementT>;
+        using RandomAccessIteratorT = IRandomAccessIterator<ElementT>;
 
-        /// ----------------------------------------------------------------------------
+    /// ----------------------------------------------------------------------------
+    public:
+        RandomAccessIteratorBox(): BaseT(nullptr) { }
 
-        mpublic RandomAccessIteratorBox() : BaseT(null) { }
-
-        mpublic RandomAccessIteratorBox(const ThisT ref other) noexcept :
+        RandomAccessIteratorBox(const ThisT& other) noexcept:
             BaseT(other) { }
 
-        mpublic RandomAccessIteratorBox(ThisT rref other) noexcept :
+        RandomAccessIteratorBox(ThisT&& other) noexcept:
             BaseT(move(other)) { }
 
-        mpublic ThisT ref operator = (const ThisT ref other) noexcept
+        ThisT& operator = (const ThisT& other) noexcept
         {
             BaseT::operator = (other);
-            return ptr this;
+            return *this;
         }
 
-        mpublic ThisT ref operator = (ThisT rref other) noexcept
+        ThisT& operator = (ThisT&& other) noexcept
         {
             BaseT::operator = (move(other));
-            return ptr this;
+            return *this;
         }
 
-        mpublic template <typename TIterator>
-            RandomAccessIteratorBox(const TIterator ref iterator) noexcept :
+        template <typename ParamRandomAccessIteratorT>
+        RandomAccessIteratorBox(const ParamRandomAccessIteratorT& iterator) noexcept:
             BaseT(iterator)
         {
-            StaticAssertSubClass<IteratorT, TIterator>();
+            StaticAssertSubClass<IteratorT, ParamRandomAccessIteratorT>();
         }
 
-        mpublic template <typename TIterator>
-            RandomAccessIteratorBox(TIterator rref iterator) noexcept :
+        template <typename ParamRandomAccessIteratorT>
+        RandomAccessIteratorBox(ParamRandomAccessIteratorT&& iterator) noexcept:
             BaseT(move(iterator))
         {
-            StaticAssertSubClass<IteratorT, TIterator>();
+            StaticAssertSubClass<IteratorT, ParamRandomAccessIteratorT>();
         }
 
-        /// ----------------------------------------------------------------------------
-
-        mpublic IRandomAccessIteratorT ref GetIterator() noexcept
+    /// ----------------------------------------------------------------------------
+    public:
+        RandomAccessIteratorT& GetIterator() noexcept
         {
-            return RCAST(IteratorT ref, BaseT::GetIterator());
+            return RCAST(IteratorT&, BaseT::GetIterator());
         }
 
-        mpublic const IRandomAccessIteratorT ref GetIterator() const noexcept
+        const RandomAccessIteratorT& GetIterator() const noexcept
         {
-            return RCAST(const IRandomAccessIteratorT ref, BaseT::GetIterator());
+            return RCAST(const RandomAccessIteratorT&, BaseT::GetIterator());
         }
 
-        mpublic virtual void MoveFwdBy(const sizet steps) const noexcept override
+        void MoveFwdBy(sizet steps) const noexcept final
         {
             GetIterator().MoveFwdBy(steps);
         }
 
-        mpublic virtual void MoveBwdBy(const sizet steps) const noexcept override
+        void MoveBwdBy(sizet steps) const noexcept final
         {
             GetIterator().MoveBwdBy(steps);
         }
 
-        /// ----------------------------------------------------------------------------
+    /// ----------------------------------------------------------------------------
 
-        mpublic operator BaseT () const noexcept
+        operator BaseT () const noexcept
         {
-            return BaseT(ptr this);
+            return BaseT(*this);
         }
     };
 }

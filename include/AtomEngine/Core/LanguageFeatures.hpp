@@ -4,33 +4,18 @@
 #define final override final
 #define interface struct
 
-#define mpublic public:
-#define mprotected protected:
-#define mprivate private:
+#define NullT std::nullptr_t
 
-#define nullt std::nullptr_t
-#define null nullptr
-
-#define is ==
-#define isnot !=
-#define isnull(ptr) (ptr is nullptr)
-#define isnotnull(ptr) (isnull(ptr) is false)
-
-#define ptr *
-#define ref &
-#define rref &&
-#define dtor ~
 #define abstract = 0
-
 #define noexceptif(cond) noexcept(noexcept(cond))
 
 #define typeof(T) typeid(T)
 #define nameof(T) typeid(T).name()
 
-#define SCAST(TType, arg) static_cast<TType>(arg)
-#define DCAST(TType, arg) dynamic_cast<TType>(arg)
-#define RCAST(TType, arg) reinterpret_cast<TType>(arg)
-#define CCAST(TType, arg) const_cast<TType>(arg)
+#define SCAST(T, arg) static_cast<T>(arg)
+#define DCAST(T, arg) dynamic_cast<T>(arg)
+#define RCAST(T, arg) reinterpret_cast<T>(arg)
+#define CCAST(T, arg) const_cast<T>(arg)
 
 #define SASSERT static_assert
 #define STHROW(msg) SASSERT(false, msg)

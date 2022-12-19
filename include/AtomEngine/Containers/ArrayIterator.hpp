@@ -4,64 +4,66 @@
 
 namespace Atom
 {
-    template <typename TElement>
-    interface IArray;
-
     /// Iterator for array.
     /// 
-    /// @tparam TElement Type of element iterator iterates over.
-    template <typename TElement>
-    interface ArrayIterator : public virtual IRandomAccessIterator<TElement>
+    /// @tparam ElementT Type of element iterator iterates over.
+    template <typename ElementT>
+    interface ArrayIterator: public virtual IRandomAccessIterator<ElementT>
     {
-        using ThisT = ArrayIterator<TElement>;
-        using ElementT = TElement;
-        using IIteratorT = IIterator<ElementT>;
+        using ThisT = ArrayIterator<ElementT>;
+        using ConstElementT = const ElementT;
+        using IteratorT = IIterator<ElementT>;
 
-        mpublic ArrayIterator(ElementT ptr elementPtr)
-            : mPtr(elementPtr) { }
+    public:
+        ArrayIterator(ElementT* ptr)
+            : _ptr(ptr) { }
 
-        mpublic ArrayIterator(const ThisT ref other) = default;
-        mpublic ArrayIterator(ThisT rref other) = default;
+        ArrayIterator(const ThisT& other) = default;
+        ArrayIterator(ThisT&& other) = default;
 
-        mpublic ThisT ref operator = (const ThisT ref other) = default;
-        mpublic ThisT ref operator = (ThisT rref other) = default;
+        ThisT& operator = (const ThisT& other) = default;
+        ThisT& operator = (ThisT&& other) = default;
 
-        mpublic virtual ElementT ref Value() noexcept override
+        ~ArrayIterator() = default;
+
+    public:
+        ElementT& Value() noexcept final
         {
-            return ptr mPtr;
+            return *_ptr;
         }
 
-        mpublic virtual const ElementT ref Value() const noexcept override
+        ConstElementT& Value() const noexcept final
         {
-            return ptr mPtr;
+            return *_ptr;
         }
 
-        mpublic virtual void MoveFwdBy(const sizet steps) const noexcept override
+        void MoveFwdBy(sizet steps) const noexcept final
         {
-            mPtr = mPtr + steps;
+            _ptr += steps;
         }
 
-        mpublic virtual void MoveBwdBy(const sizet steps) const noexcept override
+        void MoveBwdBy(sizet steps) const noexcept final
         {
-            mPtr = mPtr - steps;
+            _ptr -= steps;
         }
 
-        mpublic virtual int Compare(const IIteratorT ref rhs) const noexcept override
+        int Compare(const IteratorT& rhs) const noexcept final
         {
-            const ThisT ptr rhsPtr = DCAST(const ThisT ptr, ref rhs);
-            if (rhsPtr isnot null)
+            const ThisT* rhsPtr = DCAST(const ThisT*, &rhs);
+            if (rhsPtr != nullptr)
             {
-                return Compare(ptr rhsPtr);
+                return Compare(*rhsPtr);
             }
 
             return -1;
         }
 
-        mpublic virtual int Compare(const ThisT ref rhs) const noexcept
+        int Compare(const ThisT& rhs) const noexcept
         {
-            return SCAST(int, mPtr - rhs.mPtr);
+            return SCAST(int, _ptr - rhs._ptr);
         }
 
-        mprotected mutable ElementT ptr mPtr;
+    protected:
+        mutable ElementT* _ptr;
     };
 }

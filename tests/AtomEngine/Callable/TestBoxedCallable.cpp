@@ -5,7 +5,7 @@ using namespace Atom;
 
 class Functor
 {
-    mpublic int operator()(int a, char b, uint c) const
+    public: int operator()(int a, char b, uint c) const
     {
         return 1;
     }
@@ -21,7 +21,7 @@ TEST_CASE("CallableBox", "[Implementation]")
     using ICallableT = ICallable<int(int, char, uint)>;
     using CallableBoxT = CallableBox<int(int, char, uint)>;
 
-    CallableBoxT function = ICallableT::Create(ref testFunc);
+    CallableBoxT function = ICallableT::Create(& testFunc);
     CallableBoxT functor = ICallableT::Create(Functor());
     CallableBoxT lambda = ICallableT::Create(
         [](int a, char b, uint c)

@@ -5,7 +5,7 @@
 
 namespace Atom
 {
-    template <sizet TBlockStackSize>
-    class FastDynamicLinkedMemPool : public FastLinkedMemPool<TBlockStackSize>,
+    template <sizet BlockStackSize>
+    class FastDynamicLinkedMemPool : public FastLinkedMemPool<BlockStackSize>,
         public virtual DynamicLinkedMemPool {};
 }

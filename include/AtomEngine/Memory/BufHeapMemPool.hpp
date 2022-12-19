@@ -4,26 +4,31 @@
 
 namespace Atom
 {
-    template<sizet TStackSize, sizet TBlockStackSize = 10>
-    class BufHeapMemPool : public HeapMemPool<TBlockStackSize>
+    template<sizet StackSize, sizet BlockStackSize = 10>
+    class BufHeapMemPool: public HeapMemPool<BlockStackSize>
     {
-        using BaseT = HeapMemPool<TBlockStackSize>;
-        using LinkedMemPool::mAddMemory;
-        using BaseT::mAddMemory;
+        using BaseT = HeapMemPool<BlockStackSize>;
 
-        static constexpr sizet SIZE = TStackSize;
-
-        mpublic BufHeapMemPool() noexcept : BaseT(0)
+    /// ----------------------------------------------------------------------------
+    public:
+        BufHeapMemPool() noexcept:
+            BaseT(0)
         {
-            mAddMemory(mStackMemory, SIZE);
+            _AddMemory(_stackMemory, StackSize);
         }
 
-        mpublic BufHeapMemPool(const sizet heapSize) noexcept : BaseT(0)
+        BufHeapMemPool(sizet heapSize) noexcept:
+            BaseT(0)
         {
-            mAddMemory(mStackMemory, SIZE);
-            mAddMemory(heapSize);
+            _AddMemory(_stackMemory, StackSize);
+            _AddMemory(heapSize);
         }
 
-        mprotected byte mStackMemory[SIZE];
+    /// ----------------------------------------------------------------------------
+    protected:
+        using BaseT::_AddMemory;
+
+    protected:
+        byte _stackMemory[StackSize];
     };
 }

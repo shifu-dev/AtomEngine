@@ -4,64 +4,61 @@
 
 namespace Atom
 {
-    /// ----------------------------------------------------------------------------
     /// Object to iterate over container elements.
     /// \n IForwardIterator provides functionality to move iterator forward.
     ///
-    /// @tparam TElement Type of element IIterator iterates over.
-    template <typename TElement>
-    interface IForwardIterator : public virtual IIterator<TElement>
+    /// @tparam ElementT Type of element IIterator iterates over.
+    template <typename ElementT>
+    interface IForwardIterator:
+        public virtual IIterator<ElementT>
     {
-        using ThisT = IForwardIterator<TElement>;    ///< ----
+        using ThisT = IForwardIterator<ElementT>;
 
-        /// ----------------------------------------------------------------------------
+    /// ----------------------------------------------------------------------------
+    public:
         /// Moves IIterator forward to point to next element.
-        mpublic virtual void MoveFwd() const noexcept abstract;
+        virtual void MoveFwd() const noexcept abstract;
 
-        /// ----------------------------------------------------------------------------
-        /// Moves IIterator forward to point to next element.
-        ///
-        /// @note
-        /// - Calls MoveFwd()
-        mpublic const ThisT ref operator ++() const noexcept
-        {
-            MoveFwd();
-            return ptr this;
-        }
-
-        /// ----------------------------------------------------------------------------
         /// Moves IIterator forward to point to next element.
         ///
         /// @note
         /// - Calls MoveFwd()
-        mpublic ThisT ref operator ++() noexcept
+        const ThisT& operator ++ () const noexcept
         {
             MoveFwd();
-            return ptr this;
+            return *this;
         }
 
-        /// ----------------------------------------------------------------------------
+        /// Moves IIterator forward to point to next element.
+        ///
+        /// @note
+        /// - Calls MoveFwd()
+        ThisT& operator ++ () noexcept
+        {
+            MoveFwd();
+            return *this;
+        }
+
         /// Moves IIterator forward to point to next element.
         ///
         /// @note
         /// - Does not follow postfix definations, works same as prefix.
         /// - Calls MoveFwd()
-        mpublic const ThisT ref operator ++(int) const noexcept
+        const ThisT& operator ++ (int) const noexcept
         {
             MoveFwd();
-            return ptr this;
+            return *this;
         }
 
-        /// ----------------------------------------------------------------------------
         /// Moves IIterator forward to point to next element.
         ///
         /// @note
         /// - Does not follow postfix definations, works same as prefix.
         /// - Calls MoveFwd()
-        mpublic ThisT ref operator ++(int) noexcept
+        ThisT& operator ++ (int) noexcept
         {
             MoveFwd();
-            return ptr this;
+            return *this;
         }
     };
 }

@@ -6,63 +6,61 @@
 namespace Atom
 {
     /// @todo Fix LinkedMemPool virtual inheritance
-    class DynamicLinkedMemPool : public virtual LinkedMemPool,
+    class DynamicLinkedMemPool: public virtual LinkedMemPool,
         public virtual IDynamicMemPool
     {
-        mpublic virtual void Shrink() override;
-        mpublic virtual void Reserve(const sizet size) override;
-        mpublic virtual void ReserveMore(const sizet size) override;
+    /// ----------------------------------------------------------------------------
+    public:
+        void Shrink() final
+        {
+            // TODO: implement
+        }
 
-        mprotected virtual memptr mAllocateMemory(const sizet count) abstract;
-        mprotected virtual void mDeallocateMemory(memptr mem, const sizet count) abstract;
+        void Reserve(sizet size) final
+        {
+            sizet freeCount = FreeCount();
+            if (size > freeCount)
+            {
+                ReserveMore(size - freeCount);
+            }
+        }
 
-        /// @brief calls mAllocateMemory, and passes it to mAddMemory(mem, size, isRoot);
-        mprotected blockptr mAddMemory(const sizet size, bool isRoot = true);
+        void ReserveMore(sizet size) final
+        {
+            memptr mem = _AllocateMemory(size);
+            if (mem == nullptr)
+            {
+                // todo: throw exception
+                // out of memory
+
+                return;
+            }
+
+            blockptr block = mCreateBlock();
+            block->mem = mem;
+            block->size = size;
+            block->isFree = true;
+            block->isRoot = true;
+            block->next = nullptr;
+        }
+
+    /// ----------------------------------------------------------------------------
+    protected:
+        /// @note Calls _AllocateMemory, and passes it to _AddMemory(mem, size, isRoot);
+        blockptr _AddMemory(sizet size, bool isRoot = true)
+        {
+            if (size == 0) return nullptr;
+
+            memptr mem = _AllocateMemory(size);
+            if (mem == nullptr)
+            {
+                return nullptr;
+            }
+
+            return LinkedMemPool::_AddMemory(mem, size, isRoot);
+        }
+
+        virtual memptr _AllocateMemory(sizet count) abstract;
+        virtual void _DeallocateMemory(memptr mem, sizet count) abstract;
     };
-
-    inline void DynamicLinkedMemPool::Shrink()
-    {
-        // TODO: implement
-    }
-
-    inline void DynamicLinkedMemPool::Reserve(const sizet size)
-    {
-        const sizet freeCount = FreeCount();
-        if (size > freeCount)
-        {
-            ReserveMore(size - freeCount);
-        }
-    }
-
-    inline void DynamicLinkedMemPool::ReserveMore(const sizet size)
-    {
-        memptr mem = mAllocateMemory(size);
-        if (mem is nullptr)
-        {
-            // todo: throw exception
-            // out of memory
-
-            return;
-        }
-
-        blockptr block = mCreateBlock();
-        block->mem = mem;
-        block->size = size;
-        block->isFree = true;
-        block->isRoot = true;
-        block->next = nullptr;
-    }
-
-    inline DynamicLinkedMemPool::blockptr DynamicLinkedMemPool::mAddMemory(const sizet size, bool isRoot)
-    {
-        if (size is 0) return nullptr;
-
-        memptr mem = mAllocateMemory(size);
-        if (mem is nullptr)
-        {
-            return nullptr;
-        }
-
-        return LinkedMemPool::mAddMemory(mem, size, isRoot);
-    }
 }

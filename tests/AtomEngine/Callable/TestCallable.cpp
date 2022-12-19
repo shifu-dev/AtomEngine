@@ -22,11 +22,11 @@ TEST_CASE("Callable")
 {
     using ICallableT = ICallable<int(int, char, uint)>;
 
-    const ICallableT ref functionCallable = ICallableT::Create(ref testFunc);
+    const ICallableT & functionCallable = ICallableT::Create(& testFunc);
 
-    const ICallableT ref functorCallable = ICallableT::Create(ref testFunc);
+    const ICallableT & functorCallable = ICallableT::Create(& testFunc);
 
-    const ICallableT ref lambdaCallable = ICallableT::Create(
+    const ICallableT & lambdaCallable = ICallableT::Create(
         [](int a, char b, uint c)
         {
             // std::cout << "Hi! I am lambda()" << std::endl;
@@ -34,7 +34,7 @@ TEST_CASE("Callable")
         }
     );
 
-    const ICallableT ref captureLambdaCallable = ICallableT::Create(
+    const ICallableT & captureLambdaCallable = ICallableT::Create(
         [&](int a, char b, uint c)
         {
             // std::cout << "Hi! I am captureLambda()" << std::endl;

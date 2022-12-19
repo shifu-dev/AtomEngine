@@ -8,90 +8,91 @@ namespace Atom
     /// 
     /// Types extending from this class will be able to be used in range based for loops.
     /// 
-    /// @tparam TElement Type of element this iterable iterates on.
-    template <typename TElement>
-    interface IIterable : public virtual IConstIterable<TElement>
+    /// @tparam ElementT Type of element this iterable iterates on.
+    template <typename ElementT>
+    interface IIterable:
+        public virtual IConstIterable<ElementT>
     {
-        using ElementT = TElement;
         using ForwardIteratorBoxT = ForwardIteratorBox<ElementT>;
-        using ForEachActionT = ILoopAction<ElementT ref>;
+        using ForEachActionT = ILoopAction<ElementT&>;
 
-        /// ----------------------------------------------------------------------------
         /// @copydoc IIConstItearble::ForEachT().
-        mpublic template <typename TFunctor,
-            EnableIf<!IsSubClass<ForEachActionT, TFunctor>> = 0>
-            void ForEach(const TFunctor ref functor)
+        template <typename FunctorT, EnableIf<!IsSubClass<ForEachActionT, FunctorT>> = 0>
+        void ForEach(const FunctorT& functor)
         {
             ForEach(ForEachActionT::Create(functor));
         }
 
-        /// ----------------------------------------------------------------------------
         /// @copydoc IIConstItearble::ForEach().
-        mpublic virtual void ForEach(const ForEachActionT ref callback) abstract;
+        virtual void ForEach(ForEachActionT& callback) abstract;
 
-        /// ----------------------------------------------------------------------------
         /// @copydoc IIConstItearble::Begin().
-        mpublic ForwardIteratorBoxT Begin() noexcept
+        ForwardIteratorBoxT Begin() noexcept
         {
-            return mIterableBegin();
+            return _IterableBegin();
         }
 
-        /// ----------------------------------------------------------------------------
         /// @copydoc IIConstItearble::End().
-        mpublic ForwardIteratorBoxT End() noexcept
+        ForwardIteratorBoxT End() noexcept
         {
-            return mIterableEnd();
+            return _IterableEnd();
         }
 
-        /// ----------------------------------------------------------------------------
-        /// @copydoc IIConstItearble::mIterableBegin().
-        mprotected virtual ForwardIteratorBoxT mIterableBegin() noexcept abstract;
+    protected:
+        /// @copydoc IIConstItearble::_IterableBegin().
+        virtual ForwardIteratorBoxT _IterableBegin() noexcept abstract;
 
-        /// ----------------------------------------------------------------------------
-        /// @copydoc IIConstItearble::mIterableEnd().
-        mprotected virtual ForwardIteratorBoxT mIterableEnd() noexcept abstract;
+        /// @copydoc IIConstItearble::_IterableEnd().
+        virtual ForwardIteratorBoxT _IterableEnd() noexcept abstract;
     };
 
-    template <typename TIterable>
+    template <typename ElementT>
     class iterate
     {
-        mpublic iterate(TIterable ref iterable) :
-            mIterable(iterable) { }
+        using IterableT = IIterable<ElementT>;
 
-        /// @{ ----------------------------------------------------------------------------
-        /// This is used by range based for loop.
+    /// ----------------------------------------------------------------------------
+    public:
+        iterate(const IterableT& iterable):
+            _iterable(iterable) { }
+
+    /// ----------------------------------------------------------------------------
+    public:
+        /// @{ 
+        /// This == used by range based for loop.
         /// See Begin() for implementation.
         /// 
         /// @note AtomEngine does not use begin() becuase it does not
         ///       follow our naming standards.
-        mpublic auto begin() noexcept
+        auto begin() noexcept
         {
-            return mIterable.Begin();
+            return _iterable.Begin();
         }
 
-        mpublic const auto begin() const noexcept
+        const auto begin() const noexcept
         {
-            return mIterable.Begin();
+            return _iterable.Begin();
         }
-        /// @} ----------------------------------------------------------------------------
+        /// @} 
 
-        /// @{ ----------------------------------------------------------------------------
-        /// This is used by range based for loop.
+        /// @{ 
+        /// This == used by range based for loop.
         /// See End() for implementation.
         /// 
         /// @note AtomEngine does not use end() becuase it does not
         ///       follow our naming standards.
-        mpublic auto end() noexcept
+        auto end() noexcept
         {
-            return mIterable.End();
+            return _iterable.End();
         }
 
-        mpublic const auto end() const noexcept
+        const auto end() const noexcept
         {
-            return mIterable.End();
+            return _iterable.End();
         }
-        /// @} ----------------------------------------------------------------------------
+        /// @} 
 
-        mprivate TIterable ref mIterable;
+    private:
+        IterableT& _iterable;
     };
 }

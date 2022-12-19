@@ -12,7 +12,7 @@ namespace Atom
     struct TPtr
     {
     public:
-        /// Default constructor, creates a null pointer.
+        /// Default constructor, creates a nullptr pointer.
         /// 
         TPtr(): TPtr(nullptr) { }
 

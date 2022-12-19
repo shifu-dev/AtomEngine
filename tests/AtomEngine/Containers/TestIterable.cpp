@@ -6,7 +6,7 @@ using namespace Atom;
 TEST_CASE("IConstIterable Implementation")
 {
     StackArray<int, 10> arr;
-    IIterable<int> ref collection = arr;
+    IIterable<int> & collection = arr;
 
     SECTION("RangeBased ForLoop")
     {
@@ -23,7 +23,7 @@ TEST_CASE("IConstIterable Implementation")
         int i = 0;
         collection.ForEach
         (
-            [&i] (int& value)
+            [&i] (int value)
             {
                 CHECK(value == i);
                 i++;

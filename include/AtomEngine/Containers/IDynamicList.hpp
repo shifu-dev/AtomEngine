@@ -5,10 +5,11 @@
 
 namespace Atom
 {
-    /// @brief list like structure that can manage memory dynamically
-    /// @tparam TElement type of element to store
-    template <typename TElement>
-    interface IDynamicList : 
-        public virtual IList<TElement>, 
-        public virtual IDynamicCollection<TElement> {};
+    /// List like structure that can manage memory dynamically
+    /// 
+    /// @tparam ElementT type of element to store
+    template <typename ElementT>
+    interface IDynamicList:
+        public virtual IList<ElementT>,
+        public virtual IDynamicCollection<ElementT> { };
 }

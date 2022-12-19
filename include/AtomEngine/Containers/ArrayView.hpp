@@ -7,48 +7,49 @@ namespace Atom
 {
     /// Represents a read only collection that holds memory in contiguous order.
     /// 
-    /// @tparam TElement Type of element this array contains.
-    template <typename TElement>
-    class ArrayView : public ConstArrayBase<TElement>
+    /// @tparam ElementT Type of element this array contains.
+    template <typename ElementT>
+    class ArrayView: public ConstArrayBase<ElementT>
     {
-        using ThisT = ArrayView<TElement>;
-        using BaseT = ConstArrayBase<TElement>;
-        using ElementT = TElement;
+        using ThisT = ArrayView<ElementT>;
+        using BaseT = ConstArrayBase<ElementT>;
+        using ConstElementT = const ElementT;
         using InitializerListT = InitializerList<ElementT>;
-        using IConstArrayT = IConstArray<TElement>;
+        using ConstArrayT = const IConstArray<ElementT>;
 
-        mprotected using BaseT::mArray;
-        mprotected using BaseT::mCount;
+    /// ----------------------------------------------------------------------------
+    public:
+        ArrayView() noexcept = default;
 
-        // *******************************************************************
-        // * Constructors and Destructors
-
-        mpublic ArrayView() noexcept = default;
-
-        mpublic ArrayView(const InitializerListT list) noexcept :
+        ArrayView(const InitializerListT list) noexcept:
             ThisT(list.begin(), list.size()) { }
 
-        mpublic ArrayView(const ElementT ptr arr, const sizet count) noexcept
+        ArrayView(ConstElementT* arr, sizet count) noexcept
         {
-            mArray = CCAST(ElementT ptr, arr);
-            mCount = count;
+            _array = CCAST(ElementT*, arr);
+            _count = count;
         }
 
-        mpublic ArrayView(const IConstArrayT ref arr) noexcept :
+        ArrayView(ConstArrayT& arr) noexcept:
             ThisT(arr.Data(), arr.Count()) { }
 
-        mpublic ArrayView(const IConstArrayT ref arr, const sizet start) noexcept :
+        ArrayView(ConstArrayT& arr, sizet start) noexcept:
             ThisT(arr.Data() + start, arr.Count()) { }
 
-        mpublic ArrayView(const IConstArrayT ref arr, const sizet start, const sizet count) noexcept :
+        ArrayView(ConstArrayT& arr, sizet start, sizet count) noexcept:
             ThisT(arr.Data() + start, min(arr.Count(), count)) { }
 
-        mpublic ArrayView(const ThisT ref other) noexcept = default;
-        mpublic ArrayView(ThisT rref other) noexcept = default;
+        ArrayView(const ThisT& other) noexcept = default;
+        ArrayView(ThisT&& other) noexcept = default;
 
-        mpublic ThisT ref operator = (const ThisT ref other) noexcept = default;
-        mpublic ThisT ref operator = (ThisT rref other) noexcept = default;
+        ThisT& operator = (const ThisT& other) noexcept = default;
+        ThisT& operator = (ThisT&& other) noexcept = default;
 
-        mpublic dtor ArrayView() noexcept = default;
+        ~ArrayView() noexcept = default;
+
+    /// ----------------------------------------------------------------------------
+    protected:
+        using BaseT::_array;
+        using BaseT::_count;
     };
 }

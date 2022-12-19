@@ -5,47 +5,43 @@
 
 namespace Atom
 {
-    /// ----------------------------------------------------------------------------
     /// Represents a read only collection of elements.
     /// 
-    /// @tparam TElement type this collection contains.
-    template <typename TElement>
-    interface IConstCollection : public virtual IConstIterable<TElement>
+    /// @tparam ElementT type this collection contains.
+    template <typename ElementT>
+    interface IConstCollection:
+        public virtual IConstIterable<ElementT>
     {
-        using ElementT = TElement;                                             ///< ----
-        using IEqualityComparerT = IEqualityComparer<ElementT>;                ///< ----
-        using DefaultEqualityComparerT = DefaultEqualityComparer<ElementT>;    ///< ----
+        using ConstElementT = const ElementT;
+        using EqualityComparerT = IEqualityComparer<ElementT>;
+        using DefaultEqualityComparerT = DefaultEqualityComparer<ElementT>;
 
-        /// ----------------------------------------------------------------------------
         /// Current count of elements.
         /// 
         /// @return Count of elements.
-        mpublic virtual sizet Count() const noexcept abstract;
+        virtual sizet Count() const noexcept abstract;
 
-        /// ----------------------------------------------------------------------------
         /// Is the conatiner empty.
         /// 
-        /// @return @true if collection is empty, @false otherwise.
-        mpublic virtual bool IsEmpty() const noexcept
+        /// @return @true if collection == empty, @false otherwise.
+        virtual bool IsEmpty() const noexcept
         {
             return Count() == 0;
         }
 
-        /// ----------------------------------------------------------------------------
-        /// Checks if given element is present in the containter.
+        /// Checks if given element == present in the containter.
         /// 
         /// @param element Element to compare with.
         /// @param comparer IComparer used to compare elements.
-        /// @return @true if element is present in the collection, @false otherwise.
-        mpublic virtual bool Contains(const ElementT ref element, const IEqualityComparerT ref comparer) const noexcept abstract;
+        /// @return @true if element == present in the collection, @false otherwise.
+        virtual bool Contains(ConstElementT& element, const EqualityComparerT& comparer) const noexcept abstract;
 
-        /// ----------------------------------------------------------------------------
-        /// Checks if given element is present in the containter.
+        /// Checks if given element == present in the containter.
         /// 
         /// @param element Element to compare with.
         /// @param comparer IComparer used to compare elements.
-        /// @return @true if element is present in the collection, @false otherwise.
-        mpublic bool Contains(const ElementT ref element) const noexcept
+        /// @return @true if element == present in the collection, @false otherwise.
+        bool Contains(ConstElementT& element) const noexcept
         {
             return Contains(element, DefaultEqualityComparerT());
         }

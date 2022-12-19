@@ -3,45 +3,51 @@
 
 namespace Atom
 {
-    template <typename TFunctor, typename TResult, typename... TArgs>
+    template <typename FunctorT, typename ResultT, typename... ArgsT>
     class CallableFunctor;
 
-    template <typename TResult, typename... TArgs> class ICallable;
-    template <typename TResult, typename... TArgs>
-    class ICallable <TResult(TArgs...)>
+    template <typename ResultT, typename... ArgsT> class ICallable;
+    template <typename ResultT, typename... ArgsT>
+    class ICallable <ResultT(ArgsT...)>
     {
-        using ThisT = ICallable<TResult(TArgs...)>;
-
-        mpublic template <typename TFunctor>
-            static CallableFunctor<TFunctor, TResult, TArgs...> Create(const TFunctor ref func)
+    /// ----------------------------------------------------------------------------
+    public:
+        template <typename FunctorT>
+        static CallableFunctor<FunctorT, ResultT, ArgsT...> Create(const FunctorT& func)
         {
-            return CallableFunctor<TFunctor, TResult, TArgs...>(func);
+            return CallableFunctor<FunctorT, ResultT, ArgsT...>(func);
         }
 
-        mpublic TResult operator () (TArgs rref ... args) const
+    /// ----------------------------------------------------------------------------
+    public:
+        ResultT operator () (ArgsT && ... args) const
         {
-            return Invoke(forward<TArgs>(args)...);
+            return Invoke(forward<ArgsT>(args)...);
         }
 
-        mpublic virtual TResult Invoke(TArgs rref ... args) const abstract;
+        virtual ResultT Invoke(ArgsT && ... args) const abstract;
     };
 
-    template <typename... TArgs>
-    using IPredicate = ICallable<bool(TArgs...)>;
+    template <typename... ArgsT>
+    using IPredicate = ICallable<bool(ArgsT...)>;
 
-    template <typename... TArgs>
-    using IAction = ICallable<void(TArgs...)>;
+    template <typename... ArgsT>
+    using IAction = ICallable<void(ArgsT...)>;
 
-    template <typename TFunctor, typename TResult, typename... TArgs>
-    class CallableFunctor : public ICallable<TResult(TArgs...)>
+    template <typename FunctorT, typename ResultT, typename... ArgsT>
+    class CallableFunctor: public ICallable<ResultT(ArgsT...)>
     {
-        mpublic CallableFunctor(const TFunctor ref func) : func(func) { }
+    /// ----------------------------------------------------------------------------
+    public:
+        CallableFunctor(const FunctorT& func): func(func) { }
 
-        mpublic virtual TResult Invoke(TArgs rref ... args) const override
+        ResultT Invoke(ArgsT && ... args) const final
         {
-            return func(forward<TArgs>(args)...);
+            return func(forward<ArgsT>(args)...);
         }
 
-        mpublic TFunctor func;
+    /// ----------------------------------------------------------------------------
+    public:
+        FunctorT func;
     };
 }

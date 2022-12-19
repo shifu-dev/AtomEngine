@@ -6,71 +6,79 @@
 
 namespace Atom
 {
-    template <typename TResult, typename... TArgs> class CallableBox;
-    template <typename TResult, typename... TArgs>
-    class CallableBox<TResult(TArgs...)> :
-        public ICallable<TResult(TArgs...)>,
+    template <typename ResultT, typename... ArgsT> class CallableBox;
+    template <typename ResultT, typename... ArgsT>
+    class CallableBox<ResultT(ArgsT...)>:
+        public ICallable<ResultT(ArgsT...)>,
         public TObjectBox<DefaultAllocator, 50>
     {
-        mprivate using ThisT = CallableBox<TResult(TArgs...)>;
-        mprotected using BaseT = TObjectBox<DefaultAllocator, 50>;
-        mprotected using CallableT = ICallable<TResult(TArgs...)>;
+        using ThisT = CallableBox<ResultT(ArgsT...)>;
+        using BaseT = TObjectBox<DefaultAllocator, 50>;
+        using CallableT = ICallable<ResultT(ArgsT...)>;
 
-        /// ----------------------------------------------------------------------------
+    /// ----------------------------------------------------------------------------
+    public:
+        CallableBox() = default;
 
-        mpublic CallableBox() = default;
-        mpublic CallableBox(const ThisT ref other) = default;
-        mpublic CallableBox(ThisT rref other) = default;
-        mpublic ThisT ref operator = (const ThisT ref other) = default;
-        mpublic ThisT ref operator = (ThisT rref other) = default;
+        CallableBox(const ThisT& other) = default;
+        CallableBox(ThisT&& other) = default;
 
-        mpublic template <typename TCallable>
-            CallableBox(const TCallable ref callable) :
+        ThisT& operator = (const ThisT& other) = default;
+        ThisT& operator = (ThisT&& other) = default;
+
+        template <typename CallableT>
+        CallableBox(const CallableT& callable):
             BaseT(callable)
         {
-            StaticAssertSubClass<CallableT, TCallable>();
+            StaticAssertSubClass<CallableT, CallableT>();
         }
 
-        mpublic template <typename TCallable>
-            CallableBox(TCallable rref callable) :
+        template <typename CallableT>
+        CallableBox(CallableT&& callable):
             BaseT(move(callable))
         {
-            StaticAssertSubClass<CallableT, TCallable>();
+            StaticAssertSubClass<CallableT, CallableT>();
         }
 
-        mpublic template <typename TCallable>
-            ThisT ref operator = (const TCallable ref callable)
+        template <typename CallableT>
+        ThisT& operator = (const CallableT& callable)
         {
-            StaticAssertSubClass<CallableT, TCallable>();
+            StaticAssertSubClass<CallableT, CallableT>();
             BaseT::operator = (callable);
 
-            return ptr this;
+            return *this;
         }
 
-        mpublic template <typename TCallable>
-            ThisT ref operator = (TCallable rref callable)
+        template <typename CallableT>
+        ThisT& operator = (CallableT&& callable)
         {
-            StaticAssertSubClass<CallableT, TCallable>();
+            StaticAssertSubClass<CallableT, CallableT>();
             BaseT::operator = (move(callable));
 
-            return ptr this;
+            return *this;
         }
 
-        /// ----------------------------------------------------------------------------
+        ~CallableBox() = default;
 
-        mpublic CallableT ref GetCallable() noexcept
+    /// ----------------------------------------------------------------------------
+    public:
+        CallableT& GetCallable() noexcept
         {
-            return BaseT::GetObject<CallableT>();
+            return GetObject<CallableT>();
         }
 
-        mpublic const CallableT ref GetCallable() const noexcept
+        const CallableT& GetCallable() const noexcept
         {
-            return BaseT::GetObject<CallableT>();
+            return GetObject<CallableT>();
         }
 
-        mpublic virtual TResult Invoke(TArgs rref ... args) const override
+        ResultT Invoke(ArgsT && ... args) const final
         {
-            return GetCallable().Invoke(forward<TArgs>(args)...);
+            return GetCallable().Invoke(forward<ArgsT>(args)...);
         }
+
+    /// ----------------------------------------------------------------------------
+    public:
+        using BaseT::GetObject;
     };
 }

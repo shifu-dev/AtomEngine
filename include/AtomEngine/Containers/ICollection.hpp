@@ -5,38 +5,34 @@
 
 namespace Atom
 {
-    /// ----------------------------------------------------------------------------
     /// Represents a modifiable collection of elements.
     /// 
-    /// @tparam TElement type this collection contains.
-    template <typename TElement>
-    interface ICollection : public virtual IConstCollection<TElement>,
-        public virtual IIterable<TElement>
+    /// @tparam ElementT type this collection contains.
+    template <typename ElementT>
+    interface ICollection:
+        public virtual IConstCollection<ElementT>,
+        public virtual IIterable<ElementT>
     {
-        using ElementT = TElement;                                             ///< ----
+        using ConstElementT = const ElementT;
 
-        /// ----------------------------------------------------------------------------
         /// Current count of elements allocated in memory.
         /// 
         /// @return Count of elements allocated in memory.
-        mpublic virtual sizet Capacity() const noexcept abstract;
+        virtual sizet Capacity() const noexcept abstract;
 
-        /// ----------------------------------------------------------------------------
         /// Remove all elments from collection.
-        mpublic virtual void Clear() abstract;
+        virtual void Clear() abstract;
 
-        /// ----------------------------------------------------------------------------
         /// Inserts an element in the collection.
         /// 
         /// @param element Element to insert.
         /// 
-        /// @note Position of element is implementation dependent.
-        mpublic virtual void Insert(const ElementT ref element) abstract;
+        /// @note Position of element == implementation dependent.
+        virtual void Insert(ConstElementT& element) abstract;
 
-        /// ----------------------------------------------------------------------------
         /// Removes element from the collection.
         /// 
         /// @param element Element to remove.
-        mpublic virtual void Remove(const ElementT ref element) abstract;
+        virtual void Remove(ConstElementT& element) abstract;
     };
 }
