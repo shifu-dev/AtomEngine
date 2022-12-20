@@ -19,7 +19,6 @@ namespace Atom
         using FwdIteratorT = IForwardIterator<ElementT>;
         using FwdIteratorBoxT = ForwardIteratorBox<ElementT>;
         using ArrayIteratorT = ArrayIterator<ElementT>;
-        using ForEachActionT = ILoopAction<ElementT&>;
 
     /// ----------------------------------------------------------------------------
     /// IArray
@@ -149,15 +148,6 @@ namespace Atom
 
     /// ----------------------------------------------------------------------------
     /// IIterable
-    public:
-        void ForEach(ForEachActionT& callback) final
-        {
-            for (sizet i = 0; i < _count; i++)
-            {
-                callback(_array[i]);
-            }
-        }
-
     protected:
         FwdIteratorBoxT _IterableBegin() noexcept final
         {

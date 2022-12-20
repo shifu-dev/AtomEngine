@@ -12,7 +12,6 @@ namespace Atom
         using ConstListT = IConstList<ElementT>;
         using EqualityComparerT = IEqualityComparer<ElementT>;
         using ConstFwdIteratorBoxT = const ForwardIteratorBox<ElementT>;
-        using ConstForEachActionT = const ILoopAction<ConstElementT&>;
         using ConstArrayIteratorT = const ArrayIterator<ElementT>;
 
     /// ----------------------------------------------------------------------------
@@ -97,15 +96,6 @@ namespace Atom
 
     /// ----------------------------------------------------------------------------
     /// IIterable
-    public:
-        void ForEach(ConstForEachActionT& callback) const final
-        {
-            for (sizet i = 0; i < _count; i++)
-            {
-                callback(_array[i]);
-            }
-        }
-
     protected:
         ConstFwdIteratorBoxT _IterableBegin() const noexcept final
         {

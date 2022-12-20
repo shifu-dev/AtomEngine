@@ -14,17 +14,6 @@ namespace Atom
         public virtual IConstIterable<ElementT>
     {
         using ForwardIteratorBoxT = ForwardIteratorBox<ElementT>;
-        using ForEachActionT = ILoopAction<ElementT&>;
-
-        /// @copydoc IIConstItearble::ForEachT().
-        template <typename FunctorT, EnableIf<!IsSubClass<ForEachActionT, FunctorT>> = 0>
-        void ForEach(const FunctorT& functor)
-        {
-            ForEach(ForEachActionT::Create(functor));
-        }
-
-        /// @copydoc IIConstItearble::ForEach().
-        virtual void ForEach(ForEachActionT& callback) abstract;
 
         /// @copydoc IIConstItearble::Begin().
         ForwardIteratorBoxT Begin() noexcept

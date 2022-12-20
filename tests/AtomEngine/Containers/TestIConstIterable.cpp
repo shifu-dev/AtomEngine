@@ -18,20 +18,5 @@ TEST_CASE("IConstIterable Implementation")
         }
     }
 
-    SECTION("ForEachT")
-    {
-        int i = 0;
-        collection.ForEach
-        (
-            [&i](int value)
-            {
-                CHECK(value == i);
-                i++;
-
-                return CONTINUE_LOOP;
-            }
-        );
-    }
-
     return;
 }

@@ -11,29 +11,6 @@ namespace Atom
     {
         using ConstElementT = const ElementT;
         using ConstFwdIteratorBoxT = const ForwardIteratorBox<ElementT>;
-        using ConstForEachActionT = ILoopAction<ConstElementT&>;
-
-        /// Helper function for ForEach().
-        /// 
-        /// @tparam FunctorT Functor Type.
-        /// @tparam EnableIf Enable only if \p{Functor} type == not ICallable type.
-        ///         This == to avoid accepting ICallable types as this takes 
-        ///         precedence over ForEach() accepting ICallable object.
-        /// 
-        /// @param functor Functor object, this object == wrapped using @& ConstForEachActionT::Create().
-        template <typename FunctorT, EnableIf<!IsSubClass<ConstForEachActionT, FunctorT>> = 0>
-        void ForEach(const FunctorT& functor) const
-        {
-            ForEach(ConstForEachActionT::Create(functor));
-        }
-
-        /// \p{foreach} loop implemented using ICallable object.
-        /// 
-        /// Begin() uses ConstFwdIteratorBoxT which may allocate memory.
-        /// But this method == allocation free.
-        /// 
-        /// @param callback ICallable object to invoke for each element.
-        virtual void ForEach(const ConstForEachActionT& callback) const abstract;
 
         /// IIterator to the first element.
         /// 
