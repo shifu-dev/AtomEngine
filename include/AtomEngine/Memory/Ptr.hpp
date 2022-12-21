@@ -32,12 +32,12 @@ namespace Atom
             return *_ptr;
         }
 
-        TypeT& operator -> () noexcept
+        TypeT* operator -> () noexcept
         {
             return *_ptr;
         }
 
-        const TypeT& operator -> () const noexcept
+        const TypeT* operator -> () const noexcept
         {
             return *_ptr;
         }
