@@ -1,6 +1,6 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Memory/ObjectBox.hpp"
+#include "AtomEngine/Memory/UniqueBox.hpp"
 #include "AtomEngine/Memory/DefaultAllocator.hpp"
 #include "AtomEngine/Containers/IIterator.hpp"
 
@@ -13,11 +13,11 @@ namespace Atom
     /// @note
     /// - This class acts like a unique * with functionality of iterators.
     template <typename ElementT>
-    class IteratorBox: public TObjectBox<DefaultAllocator, 50>,
+    class IteratorBox: public TUniqueBox<IIterator<ElementT>, 40>,
         public virtual IIterator<ElementT>
     {
         using ThisT = IteratorBox<ElementT>;
-        using BaseT = TObjectBox<DefaultAllocator, 50>;
+        using BaseT = TUniqueBox<IIterator<ElementT>, 40>;
         using ConstElementT = const ElementT;
         using IteratorT = IIterator<ElementT>;
 
@@ -80,12 +80,12 @@ namespace Atom
     public:
         IteratorT& GetIterator() noexcept
         {
-            return BaseT::GetObject<IteratorT>();
+            return BaseT::operator * ();
         }
 
         const IteratorT& GetIterator() const noexcept
         {
-            return BaseT::GetObject<IteratorT>();
+            return BaseT::operator * ();
         }
 
         virtual ElementT& Value() noexcept final

@@ -88,4 +88,7 @@ namespace Atom
             return Compare(other) != 0;
         }
     };
+
+    // template <typename ElementT>
+    // using IteratorBox = TUniqueBox<IIterator<ElementT>, 40>;
 }

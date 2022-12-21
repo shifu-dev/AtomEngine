@@ -1,19 +1,18 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
 #include "AtomEngine/Callable/ICallable.hpp"
-#include "AtomEngine/Memory/ObjectBox.hpp"
+#include "AtomEngine/Memory/UniqueBox.hpp"
 #include "AtomEngine/Memory/DefaultAllocator.hpp"
 
 namespace Atom
 {
     template <typename ResultT, typename... ArgsT> class CallableBox;
     template <typename ResultT, typename... ArgsT>
-    class CallableBox<ResultT(ArgsT...)>:
-        public ICallable<ResultT(ArgsT...)>,
-        public TObjectBox<DefaultAllocator, 50>
+    class CallableBox<ResultT(ArgsT...)>: public TUniqueBox<ICallable<ResultT(ArgsT...)>, 50>,
+        public virtual ICallable<ResultT(ArgsT...)>
     {
         using ThisT = CallableBox<ResultT(ArgsT...)>;
-        using BaseT = TObjectBox<DefaultAllocator, 50>;
+        using BaseT = TUniqueBox<ICallable<ResultT(ArgsT...)>, 50>;
         using CallableT = ICallable<ResultT(ArgsT...)>;
 
     /// ----------------------------------------------------------------------------
@@ -64,21 +63,17 @@ namespace Atom
     public:
         CallableT& GetCallable() noexcept
         {
-            return GetObject<CallableT>();
+            return BaseT::operator * ();
         }
 
         const CallableT& GetCallable() const noexcept
         {
-            return GetObject<CallableT>();
+            return BaseT::operator * ();
         }
 
         ResultT Invoke(ArgsT && ... args) const final
         {
             return GetCallable().Invoke(forward<ArgsT>(args)...);
         }
-
-    /// ----------------------------------------------------------------------------
-    public:
-        using BaseT::GetObject;
     };
 }

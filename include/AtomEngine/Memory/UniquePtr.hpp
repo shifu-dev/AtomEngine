@@ -2,6 +2,7 @@
 #include "AtomEngine/Core.hpp"
 #include "AtomEngine/Memory/Ptr.hpp"
 #include "AtomEngine/Memory/IAllocator.hpp"
+#include "AtomEngine/Memory/DefaultAllocator.hpp"
 
 namespace Atom
 {
@@ -15,17 +16,36 @@ namespace Atom
         TUniquePtr() noexcept:
             BaseT(nullptr) { }
 
-        TUniquePtr(TUniquePtr&& other) = default;
-        ThisT& operator = (ThisT&& other) = default;
-
         TUniquePtr(const TUniquePtr& other) = delete;
-        ThisT& operator = (const ThisT& other) = delete;
+        TUniquePtr& operator = (const TUniquePtr& other) = delete;
 
-        TUniquePtr(TypeT* inPtr) noexcept:
-            BaseT(inPtr), _allocator(DefaultAllocatorInstance) { }
+        TUniquePtr(TUniquePtr&& other) noexcept
+        {
+            Swap(other);
+        }
 
-        TUniquePtr(TypeT* inPtr, IAllocator& allocator) noexcept:
-            BaseT(inPtr), _allocator(allocator) { }
+        TUniquePtr& operator = (TUniquePtr&& other) noexcept
+        {
+            TUniquePtr tmp = other;
+            Swap(tmp);
+
+            return *this;
+        }
+
+        TUniquePtr(TypeT* ptr) noexcept:
+            BaseT(ptr), _allocator(DefaultAllocatorInstance) { }
+
+        TUniquePtr(TypeT* ptr, IAllocator& allocator) noexcept:
+            BaseT(ptr), _allocator(allocator) { }
+
+        TUniquePtr& operator = (TypeT* ptr) noexcept
+        {
+            TUniquePtr tmp = move(*this);
+
+            _ptr = ptr;
+
+            return *this;
+        }
 
         ~TUniquePtr()
         {
@@ -43,9 +63,16 @@ namespace Atom
             return ThisT(obj, DefaultAllocatorInstance);
         }
 
+    public:
+        void Swap(TUniquePtr& other) noexcept
+        {
+            swap(_ptr, other._ptr);
+            swap(_allocator, other._allocator);
+        }
+
     protected:
         using BaseT::_ptr;
 
-        IAllocator& _allocator;
+        IAllocator& _allocator = DefaultAllocatorInstance;
     };
 }
