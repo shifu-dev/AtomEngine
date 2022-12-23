@@ -15,7 +15,7 @@ namespace Atom
         using ConstIteratorT = IConstIterator<ElementT>;
 
     public:
-        ConstArrayIterator(ElementT* ptr)
+        ConstArrayIterator(const ElementT* ptr)
             : _ptr(ptr) { }
 
     public:
@@ -51,7 +51,7 @@ namespace Atom
         }
 
     protected:
-        ElementT* _ptr;
+        const ElementT* _ptr;
     };
 
     /// Iterator for array.
@@ -70,7 +70,7 @@ namespace Atom
     public:
         ElementT& Value() noexcept final
         {
-            return *_ptr;
+            return *CCAST(ElementT*, _ptr);
         }
 
     protected:

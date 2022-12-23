@@ -28,7 +28,7 @@ namespace Atom
     using RemoveReferenceT = std::remove_reference_t<T>;
 
     template <typename T>
-    constexpr T& min(T& left, T& right)
+    constexpr const T& min(const T& left, const T& right)
     {
         return left <= right ? left : right;
     }
