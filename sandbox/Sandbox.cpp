@@ -7,7 +7,5 @@ using namespace Atom;
 
 int main()
 {
-    ConstArrayIterator<int> arrIt(nullptr);
-
     return 0;
 }
