@@ -2,10 +2,10 @@
 #include "AtomEngine/Core.hpp"
 #include "AtomEngine/Containers/IConstArray.hpp"
 
-namespace Atom
+namespace Atom::Internal
 {
     template <typename ElementT>
-    class ConstArrayBase:
+    class ConstArrayImpl:
         public virtual IConstArray<ElementT>
     {
         using IConstListT = IConstList<ElementT>;

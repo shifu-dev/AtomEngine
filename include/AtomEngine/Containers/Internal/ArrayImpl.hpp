@@ -1,19 +1,18 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
 #include "AtomEngine/Containers/IArray.hpp"
-#include "AtomEngine/Containers/ConstArrayBase.hpp"
+#include "AtomEngine/Containers/Internal/ConstArrayImpl.hpp"
 
-namespace Atom
+namespace Atom::Internal
 {
     /// Represents a collection that holds memory in contiguous order.
     /// 
     /// @tparam ElementT Type of element this array contains.
     template <typename ElementT>
-    class ArrayBase: public ConstArrayBase<ElementT>,
+    class ArrayImpl: public Internal::ConstArrayImpl<ElementT>,
         public virtual IArray<ElementT>
     {
-        using ThisT = ArrayBase<ElementT>;
-        using BaseT = ConstArrayBase<ElementT>;
+        using BaseT = Internal::ConstArrayImpl<ElementT>;
         using PredicateT = IPredicate<const ElementT&, sizet>;
         using ConstFwdIteratorT = IConstForwardIterator<ElementT>;
         using FwdIteratorBoxT = ForwardIteratorBox<ElementT>;

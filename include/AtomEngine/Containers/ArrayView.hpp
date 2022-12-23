@@ -1,7 +1,7 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
 #include "AtomEngine/Containers/InitializerList.hpp"
-#include "AtomEngine/Containers/ConstArrayBase.hpp"
+#include "AtomEngine/Containers/Internal/ConstArrayImpl.hpp"
 
 namespace Atom
 {
@@ -9,10 +9,10 @@ namespace Atom
     /// 
     /// @tparam ElementT Type of element this array contains.
     template <typename ElementT>
-    class ArrayView: public ConstArrayBase<ElementT>
+    class ArrayView: public Internal::ConstArrayImpl<ElementT>
     {
         using ThisT = ArrayView<ElementT>;
-        using BaseT = ConstArrayBase<ElementT>;
+        using BaseT = Internal::ConstArrayImpl<ElementT>;
         using ConstElementT = const ElementT;
         using InitializerListT = InitializerList<ElementT>;
         using ConstArrayT = const IConstArray<ElementT>;

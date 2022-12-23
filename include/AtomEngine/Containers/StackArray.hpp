@@ -1,6 +1,6 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Containers/ArrayBase.hpp"
+#include "AtomEngine/Containers/Internal/ArrayImpl.hpp"
 
 namespace Atom
 {
@@ -8,10 +8,10 @@ namespace Atom
     /// @tparam ElementT type of value stored in array
     /// @tparam TSize size of array, this cannot be changed
     template <typename ElementT, sizet TSize>
-    class StackArray: public ArrayBase<ElementT>
+    class StackArray: public Internal::ArrayImpl<ElementT>
     {
         using ThisT = StackArray<ElementT, TSize>;
-        using BaseT = ArrayBase<ElementT>;
+        using BaseT = Internal::ArrayImpl<ElementT>;
 
     /// ----------------------------------------------------------------------------
     public:

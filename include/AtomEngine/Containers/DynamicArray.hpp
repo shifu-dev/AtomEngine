@@ -1,16 +1,16 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
 #include "AtomEngine/Containers/IDynamicArray.hpp"
-#include "AtomEngine/Containers/ArrayBase.hpp"
+#include "AtomEngine/Containers/Internal/ArrayImpl.hpp"
 
 namespace Atom
 {
     template <typename ElementT>
-    class DynamicArray: public ArrayBase<ElementT>,
+    class DynamicArray: public Internal::ArrayImpl<ElementT>,
         public IDynamicArray<ElementT>
     {
         using ThisT = DynamicArray<ElementT>;
-        using BaseT = ArrayBase<ElementT>;
+        using BaseT = Internal::ArrayImpl<ElementT>;
         using IDynamicArrayT = IDynamicArray<ElementT>;
         using InitializerListT = InitializerList<ElementT>;
         using IForwardIteratorT = IForwardIterator<ElementT>;
