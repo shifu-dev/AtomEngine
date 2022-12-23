@@ -8,18 +8,18 @@ namespace Atom
 
     /// ----------------------------------------------------------------------------
     public:
-        GlobalRootMemPool(const sizet size):
+        GlobalRootMemPool(sizet size):
             BaseT(size) { }
 
     /// ----------------------------------------------------------------------------
     protected:
-        memptr _AllocateMemory(const sizet size) final
+        memptr _AllocateMemory(sizet size) final
         {
             // default implementation uses global mem pool
             return SCAST(memptr, malloc(size));
         }
 
-        void _DeallocateMemory(memptr mem, const sizet size) final
+        void _DeallocateMemory(memptr mem, sizet size) final
         {
             // default implementation uses global mem pool
             free(mem);
