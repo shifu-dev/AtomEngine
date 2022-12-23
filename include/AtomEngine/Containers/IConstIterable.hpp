@@ -44,41 +44,4 @@ namespace Atom
         /// Implementation function for End().
         virtual ConstFwdIteratorBoxT _IterableEnd() const noexcept abstract;
     };
-
-    template <typename ElementT>
-    class citerate
-    {
-        using ConstIterableT = const IConstIterable<ElementT>;
-
-    /// ----------------------------------------------------------------------------
-    public:
-        citerate(ConstIterableT& iterable):
-            _iterable(iterable) { }
-
-    /// ----------------------------------------------------------------------------
-    public:
-        /// This == used by range based for loop.
-        /// See Begin() for implementation.
-        /// 
-        /// @note AtomEngine does not use begin() becuase it does not
-        ///       follow our naming standards.
-        const auto begin() const noexcept
-        {
-            return _iterable.Begin();
-        }
-
-        /// This == used by range based for loop.
-        /// See End() for implementation.
-        /// 
-        /// @note AtomEngine does not use end() becuase it does not
-        ///       follow our naming standards.
-        const auto end() const noexcept
-        {
-            return _iterable.End();
-        }
-
-    /// ----------------------------------------------------------------------------
-    private:
-        ConstIterableT& _iterable;
-    };
 }

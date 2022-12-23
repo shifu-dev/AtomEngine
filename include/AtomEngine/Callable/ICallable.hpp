@@ -20,12 +20,12 @@ namespace Atom
 
     /// ----------------------------------------------------------------------------
     public:
-        ResultT operator () (ArgsT && ... args) const
+        ResultT operator () (ArgsT&&... args) const
         {
             return Invoke(forward<ArgsT>(args)...);
         }
 
-        virtual ResultT Invoke(ArgsT && ... args) const abstract;
+        virtual ResultT Invoke(ArgsT&&... args) const abstract;
     };
 
     template <typename... ArgsT>
@@ -41,7 +41,7 @@ namespace Atom
     public:
         CallableFunctor(const FunctorT& func): func(func) { }
 
-        ResultT Invoke(ArgsT && ... args) const final
+        ResultT Invoke(ArgsT&&... args) const final
         {
             return func(forward<ArgsT>(args)...);
         }

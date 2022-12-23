@@ -40,8 +40,8 @@ TEST_CASE("CallableBox", "[Implementation]")
     CallableBoxT functionCopyByOperator;
     functionCopyByOperator = function;
 
-    CHECK(function(0, 'a', 0) == 0);
-    CHECK(functor(0, 'a', 0) == 1);
-    CHECK(lambda(0, 'a', 0) == 2);
-    CHECK(capturedLambda(0, 'a', 0) == 3);
+    CHECK(function->Invoke(0, 'a', 0) == 0);
+    CHECK(functor->Invoke(0, 'a', 0) == 1);
+    CHECK(lambda->Invoke(0, 'a', 0) == 2);
+    CHECK(capturedLambda->Invoke(0, 'a', 0) == 3);
 }

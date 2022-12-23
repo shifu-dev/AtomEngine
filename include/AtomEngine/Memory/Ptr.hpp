@@ -34,12 +34,12 @@ namespace Atom
 
         TypeT* operator -> () noexcept
         {
-            return *_ptr;
+            return _ptr;
         }
 
         const TypeT* operator -> () const noexcept
         {
-            return *_ptr;
+            return _ptr;
         }
 
     protected:

@@ -1,5 +1,6 @@
 #include "catch2/catch_all.hpp"
 #include "AtomEngine/Containers/StackArray.hpp"
+#include "AtomEngine/Containers/ForLoopIterator.hpp"
 
 using namespace Atom;
 
@@ -11,7 +12,7 @@ TEST_CASE("IConstIterable Implementation")
     SECTION("RangeBased ForLoop")
     {
         int i = 0;
-        for (auto value : citerate(collection))
+        for (auto value : iterate(collection))
         {
             CHECK(value == i);
             i++;

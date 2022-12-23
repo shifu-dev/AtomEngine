@@ -121,10 +121,10 @@ namespace Atom
         template <sizet OtherStackSize>
         void _Copy(const TUniqueBox<TypeT, OtherStackSize>& other) noexcept
         {
-            _ptr = _AllocMem(other._objectSize);
+            _ptr = RCAST(TypeT*, _AllocMem(other._objectSize));
             _objectSize = other._objectSize;
 
-            memcpy(_ptr, other._ptr, _objectSize);
+            memcpy(RCAST(memptr, _ptr), RCAST(memptr, other._ptr), _objectSize);
         }
 
         template <sizet OtherStackSize>

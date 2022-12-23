@@ -1,15 +1,13 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Callable/ICallable.hpp"
 #include "AtomEngine/Memory/UniqueBox.hpp"
-#include "AtomEngine/Memory/DefaultAllocator.hpp"
+#include "AtomEngine/Callable/ICallable.hpp"
 
 namespace Atom
 {
     template <typename ResultT, typename... ArgsT> class CallableBox;
     template <typename ResultT, typename... ArgsT>
-    class CallableBox<ResultT(ArgsT...)>: public TUniqueBox<ICallable<ResultT(ArgsT...)>, 50>,
-        public virtual ICallable<ResultT(ArgsT...)>
+    class CallableBox<ResultT(ArgsT...)>: public TUniqueBox<ICallable<ResultT(ArgsT...)>, 50>
     {
         using ThisT = CallableBox<ResultT(ArgsT...)>;
         using BaseT = TUniqueBox<ICallable<ResultT(ArgsT...)>, 50>;
@@ -25,55 +23,38 @@ namespace Atom
         ThisT& operator = (const ThisT& other) = default;
         ThisT& operator = (ThisT&& other) = default;
 
-        template <typename CallableT>
-        CallableBox(const CallableT& callable):
+        ~CallableBox() = default;
+
+        template <typename CallableImplT, EnableIf<!IsSubClass<ThisT, CallableImplT>> = 0>
+        CallableBox(const CallableImplT& callable):
             BaseT(callable)
         {
-            StaticAssertSubClass<CallableT, CallableT>();
+            StaticAssertSubClass<CallableT, CallableImplT>();
         }
 
-        template <typename CallableT>
-        CallableBox(CallableT&& callable):
+        template <typename CallableImplT, EnableIf<!IsSubClass<ThisT, CallableImplT>> = 0>
+        CallableBox(CallableImplT&& callable):
             BaseT(move(callable))
         {
-            StaticAssertSubClass<CallableT, CallableT>();
+            StaticAssertSubClass<CallableT, CallableImplT>();
         }
 
-        template <typename CallableT>
-        ThisT& operator = (const CallableT& callable)
+        template <typename CallableImplT, EnableIf<!IsSubClass<ThisT, CallableImplT>> = 0>
+        ThisT& operator = (const CallableImplT& callable)
         {
-            StaticAssertSubClass<CallableT, CallableT>();
+            StaticAssertSubClass<CallableT, CallableImplT>();
             BaseT::operator = (callable);
 
             return *this;
         }
 
-        template <typename CallableT>
-        ThisT& operator = (CallableT&& callable)
+        template <typename CallableImplT, EnableIf<!IsSubClass<ThisT, CallableImplT>> = 0>
+        ThisT& operator = (CallableImplT&& callable)
         {
-            StaticAssertSubClass<CallableT, CallableT>();
+            StaticAssertSubClass<CallableT, CallableImplT>();
             BaseT::operator = (move(callable));
 
             return *this;
-        }
-
-        ~CallableBox() = default;
-
-    /// ----------------------------------------------------------------------------
-    public:
-        CallableT& GetCallable() noexcept
-        {
-            return BaseT::operator * ();
-        }
-
-        const CallableT& GetCallable() const noexcept
-        {
-            return BaseT::operator * ();
-        }
-
-        ResultT Invoke(ArgsT && ... args) const final
-        {
-            return GetCallable().Invoke(forward<ArgsT>(args)...);
         }
     };
 }

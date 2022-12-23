@@ -13,13 +13,18 @@ namespace Atom
     interface IIterable:
         public virtual IConstIterable<ElementT>
     {
+        using IConstIterableT = IConstIterable<ElementT>;
         using ForwardIteratorBoxT = ForwardIteratorBox<ElementT>;
+
+        using IConstIterableT::Begin;
 
         /// @copydoc IIConstItearble::Begin().
         ForwardIteratorBoxT Begin() noexcept
         {
             return _IterableBegin();
         }
+
+        using IConstIterableT::End;
 
         /// @copydoc IIConstItearble::End().
         ForwardIteratorBoxT End() noexcept
@@ -33,55 +38,5 @@ namespace Atom
 
         /// @copydoc IIConstItearble::_IterableEnd().
         virtual ForwardIteratorBoxT _IterableEnd() noexcept abstract;
-    };
-
-    template <typename ElementT>
-    class iterate
-    {
-        using IterableT = IIterable<ElementT>;
-
-    /// ----------------------------------------------------------------------------
-    public:
-        iterate(const IterableT& iterable):
-            _iterable(iterable) { }
-
-    /// ----------------------------------------------------------------------------
-    public:
-        /// @{ 
-        /// This == used by range based for loop.
-        /// See Begin() for implementation.
-        /// 
-        /// @note AtomEngine does not use begin() becuase it does not
-        ///       follow our naming standards.
-        auto begin() noexcept
-        {
-            return _iterable.Begin();
-        }
-
-        const auto begin() const noexcept
-        {
-            return _iterable.Begin();
-        }
-        /// @} 
-
-        /// @{ 
-        /// This == used by range based for loop.
-        /// See End() for implementation.
-        /// 
-        /// @note AtomEngine does not use end() becuase it does not
-        ///       follow our naming standards.
-        auto end() noexcept
-        {
-            return _iterable.End();
-        }
-
-        const auto end() const noexcept
-        {
-            return _iterable.End();
-        }
-        /// @} 
-
-    private:
-        IterableT& _iterable;
     };
 }
