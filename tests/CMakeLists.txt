@@ -22,6 +22,7 @@ function (CreateTestFromSource TEST_SOURCE)
 
     string(REPLACE "${CMAKE_CURRENT_LIST_DIR}/AtomEngine/" "" TEST_NAME ${TEST_SOURCE})
     string(REPLACE "/Test" "-" TEST_NAME ${TEST_NAME})
+    string(REPLACE "/" "-" TEST_NAME ${TEST_NAME})
     string(REPLACE ".cpp" "" TEST_NAME ${TEST_NAME})
     string(PREPEND TEST_NAME "Test-")
 
