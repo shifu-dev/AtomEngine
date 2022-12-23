@@ -14,9 +14,8 @@ namespace Atom
     {
         using ThisT = ArrayBase<ElementT>;
         using BaseT = ConstArrayBase<ElementT>;
-        using ConstElementT = const ElementT;
-        using PredicateT = IPredicate<ConstElementT&, sizet>;
-        using FwdIteratorT = IForwardIterator<ElementT>;
+        using PredicateT = IPredicate<const ElementT&, sizet>;
+        using ConstFwdIteratorT = IConstForwardIterator<ElementT>;
         using FwdIteratorBoxT = ForwardIteratorBox<ElementT>;
         using ArrayIteratorT = ArrayIterator<ElementT>;
 
@@ -47,7 +46,7 @@ namespace Atom
             return _array[index];
         }
 
-        void InsertAt(sizet index, ConstElementT& element) final
+        void InsertAt(sizet index, const ElementT& element) final
         {
             _AssertIndexIsInBounds(index);
             _AssertCapacityFor(1);
@@ -61,7 +60,7 @@ namespace Atom
             _array[index] = element;
         }
 
-        void InsertBack(ConstElementT& element) final
+        void InsertBack(const ElementT& element) final
         {
             _AssertCapacityFor(1);
 
@@ -77,7 +76,7 @@ namespace Atom
             _count--;
         }
 
-        void InsertAt(sizet index, const FwdIteratorT& it, sizet count) final
+        void InsertAt(sizet index, ConstFwdIteratorT& it, sizet count) final
         {
             _AssertIndexIsInBounds(index);
             _AssertCapacityFor(count);

@@ -5,43 +5,33 @@
 namespace Atom
 {
     /// Object to iterate over container elements.
-    /// \n IRandomAccessIterator provides functionality to move randomly to any element.
+    /// \n IConstRandomAccessIterator provides functionality to move randomly to any element.
     ///
     /// @tparam ElementT Type of element IIterator iterates over.
     template <typename ElementT>
-    interface IRandomAccessIterator:
-        public virtual IBidirectionalIterator<ElementT>
+    interface IConstRandomAccessIterator:
+        public virtual IConstBidirectionalIterator<ElementT>
     {
-        using ThisT = IBidirectionalIterator<ElementT>;
+        using ThisT = IConstRandomAccessIterator<ElementT>;
 
         /// Moves iterator forward by count \p{steps}.
         ///
         /// @param steps Count of steps to move iterator by.
-        virtual void MoveBwdBy(sizet steps) const noexcept abstract;
+        virtual void MoveBwdBy(sizet steps) noexcept abstract;
 
         /// Moves iterator backward by count \p{steps}.
         ///
         /// @param steps Count of steps to move iterator by.
-        virtual void MoveFwdBy(sizet steps) const noexcept abstract;
+        virtual void MoveFwdBy(sizet steps) noexcept abstract;
 
-        void MoveFwd() const noexcept final { MoveFwdBy(1); }
-        void MoveBwd() const noexcept final { MoveBwdBy(1); }
+        void MoveFwd() noexcept final { MoveFwdBy(1); }
+        void MoveBwd() noexcept final { MoveBwdBy(1); }
 
         /// Moves iterator forward by count \p{steps}.
         /// 
         /// @param steps Count of steps to move iterator by.
         /// @return & to this object.
         ThisT& operator += (sizet steps) noexcept
-        {
-            MoveFwdBy(steps);
-            return *this;
-        }
-
-        /// Moves iterator forward by count \p{steps}.
-        /// 
-        /// @param steps Count of steps to move iterator by.
-        /// @return const & to this object.
-        const ThisT& operator += (sizet steps) const noexcept
         {
             MoveFwdBy(steps);
             return *this;
@@ -56,15 +46,10 @@ namespace Atom
             MoveBwdBy(steps);
             return *this;
         }
-
-        /// Moves iterator backward by count \p{steps}.
-        /// 
-        /// @param steps Count of steps to move iterator by.
-        /// @return const & to this object.
-        const ThisT& operator -= (sizet steps) const noexcept
-        {
-            MoveBwdBy(steps);
-            return *this;
-        }
     };
+
+    template <typename ElementT>
+    interface IRandomAccessIterator:
+        public virtual IConstRandomAccessIterator<ElementT>,
+        public virtual IBidirectionalIterator<ElementT> { };
 }

@@ -8,17 +8,15 @@ namespace Atom
     class ConstArrayBase:
         public virtual IConstArray<ElementT>
     {
-        using ConstElementT = const ElementT;
-        using ConstListT = IConstList<ElementT>;
+        using IConstListT = IConstList<ElementT>;
+        using ConstForwardIteratorBoxT = ConstForwardIteratorBox<ElementT>;
+        using ConstArrayIteratorT = ConstArrayIterator<ElementT>;
         using EqualityComparerT = IEqualityComparer<ElementT>;
-        using ConstFwdIteratorBoxT = const ForwardIteratorBox<ElementT>;
-        using ConstArrayIteratorT = const ArrayIterator<ElementT>;
 
     /// ----------------------------------------------------------------------------
     /// IConstArray
     public:
-        /// @return Pointer to the underlying array.
-        ConstElementT* Data() const noexcept final
+        const ElementT* Data() const noexcept final
         {
             return _array;
         }
@@ -36,14 +34,14 @@ namespace Atom
     /// ----------------------------------------------------------------------------
     /// IConstList
     public:
-        ConstElementT& operator[](sizet index) const noexcept final
+        const ElementT& operator[](sizet index) const noexcept final
         {
             return _array[index];
         }
 
-        using ConstListT::FirstIndexOf;
+        using IConstListT::FirstIndexOf;
 
-        sizet FirstIndexOf(ConstElementT& element, const EqualityComparerT& comparer) const noexcept final
+        sizet FirstIndexOf(const ElementT& element, const EqualityComparerT& comparer) const noexcept final
         {
             for (sizet i = 0; i < _count; i++)
             {
@@ -56,9 +54,9 @@ namespace Atom
             return NPOS;
         }
 
-        using ConstListT::LastIndexOf;
+        using IConstListT::LastIndexOf;
 
-        sizet LastIndexOf(ConstElementT& element, const EqualityComparerT& comparer) const noexcept final
+        sizet LastIndexOf(const ElementT& element, const EqualityComparerT& comparer) const noexcept final
         {
             for (sizet i = _count; i >= 0; i--)
             {
@@ -97,14 +95,14 @@ namespace Atom
     /// ----------------------------------------------------------------------------
     /// IIterable
     protected:
-        ConstFwdIteratorBoxT _IterableBegin() const noexcept final
+        ConstForwardIteratorBoxT _IterableBegin() const noexcept final
         {
-            return ConstFwdIteratorBoxT(Begin());
+            return ConstForwardIteratorBoxT(Begin());
         }
 
-        ConstFwdIteratorBoxT _IterableEnd() const noexcept final
+        ConstForwardIteratorBoxT _IterableEnd() const noexcept final
         {
-            return ConstFwdIteratorBoxT(End());
+            return ConstForwardIteratorBoxT(End());
         }
 
     /// ----------------------------------------------------------------------------

@@ -9,16 +9,16 @@ namespace Atom
     /// 
     /// @tparam ElementT Type of element this array contains.
     template <typename ElementT>
-    interface IArray :
+    interface IArray:
         public virtual IConstArray<ElementT>,
         public virtual IList<ElementT>
     {
         using ArrayIteratorT = ArrayIterator<ElementT>;
 
     /// ----------------------------------------------------------------------------
-    public: 
+    public:
         /// @return Pointer to the underlying array.
-        virtual ElementT * Data() noexcept abstract;
+        virtual ElementT* Data() noexcept abstract;
 
         virtual ArrayIteratorT Begin() noexcept abstract;
 

@@ -15,14 +15,13 @@ namespace Atom
         public virtual IConstList<ElementT>,
         public virtual ICollection<ElementT>
     {
-        using ConstElementT = const ElementT;
         using ConstIterableT = IConstIterable<ElementT>;
         using ConstCollectionT = IConstCollection<ElementT>;
         using ConstListT = IConstList<ElementT>;
-        using ForwardIteratorT = IForwardIterator<ElementT>;
+        using ConstFwddIteratorT = IConstForwardIterator<ElementT>;
         using EqualityComparerT = IEqualityComparer<ElementT>;
         using DefaultEqualityComparerT = DefaultEqualityComparer<ElementT>;
-        using PredicateT = IPredicate<ConstElementT&, sizet>;
+        using PredicateT = IPredicate<const ElementT&, sizet>;
 
     /// ----------------------------------------------------------------------------
     public:
@@ -57,14 +56,14 @@ namespace Atom
         /// @param[in] element Element to insert.
         /// 
         /// @throws OutOfBoundsException if index == out of bounds.
-        virtual void InsertAt(sizet index, ConstElementT& element) abstract;
+        virtual void InsertAt(sizet index, const ElementT& element) abstract;
 
         /// Insert multiple elements at index \p{index}.
         /// 
         /// @param[in] index Index to insert elements at.
         /// @param[in] it IForwardIterator pointing to the begining of elements.
         /// @param[in] count Count of elements to insert.
-        virtual void InsertAt(sizet index, const ForwardIteratorT& it, sizet count) abstract;
+        virtual void InsertAt(sizet index, ConstFwddIteratorT& it, sizet count) abstract;
 
         /// Insert multiple elements at index \p{index}.
         /// 
@@ -73,7 +72,7 @@ namespace Atom
         /// @param index Index to insert elements at.
         /// @param begin IForwardIterator pointing to the begining of elements.
         /// @param end IForwardIterator pointing to the end of elements.
-        virtual void InsertAt(sizet index, const ForwardIteratorT& begin, const ForwardIteratorT& end)
+        virtual void InsertAt(sizet index, ConstFwddIteratorT& begin, ConstFwddIteratorT& end)
         {
             sizet count = 0;
             for (auto& it = begin; it != end; ++it)
@@ -152,23 +151,23 @@ namespace Atom
         /// @param[in] element Element to insert.
         /// 
         /// @note
-        /// - Calls InsertAt(sizet index, ConstElementT & element)
+        /// - Calls InsertAt(sizet index, const ElementT & element)
         ///   \n with \p{index}: 0, \p{element}: element.
-        virtual void InsertFront(ConstElementT& element)
+        virtual void InsertFront(const ElementT& element)
         {
             InsertAt(0, element);
         }
 
         /// - Calls InsertAt(sizet index, const ForwardIteratorT & it, sizet count).
         ///   with index: 0, it: it, count: count.
-        virtual void InsertFront(const ForwardIteratorT& it, sizet count)
+        virtual void InsertFront(ConstFwddIteratorT& it, sizet count)
         {
             InsertAt(0, it, count);
         }
 
         /// - Calls InsertAt(sizet index, const ForwardIteratorT & begin, const ForwardIteratorT & end).
         ///   with index: 0, begin: begin, end: end.
-        virtual void InsertFront(const ForwardIteratorT& begin, const ForwardIteratorT& end)
+        virtual void InsertFront(ConstFwddIteratorT& begin, ConstFwddIteratorT& end)
         {
             InsertAt(0, begin, end);
         }
@@ -208,23 +207,23 @@ namespace Atom
         /// @param[in] element Element to insert.
         /// 
         /// @note
-        /// - Calls InsertAt(sizet index, ConstElementT & element)
+        /// - Calls InsertAt(sizet index, const ElementT & element)
         ///   \n with \p{index}: Count() - 1, \p{element}: element.
-        virtual void InsertBack(ConstElementT& element)
+        virtual void InsertBack(const ElementT& element)
         {
             InsertAt(Count() - 1, element);
         }
 
         /// - Calls InsertAt(sizet index, const ForwardIteratorT & it, sizet count).
         ///   with index: Count() - 1, it: it, count: count.
-        virtual void InsertBack(const ForwardIteratorT& it, sizet count)
+        virtual void InsertBack(ConstFwddIteratorT& it, sizet count)
         {
             InsertAt(Count() - 1, it, count);
         }
 
         /// - Calls InsertAt(sizet index, const ForwardIteratorT & begin, const ForwardIteratorT & end).
         ///   with index: Count() - 1, begin: begin, end: end.
-        virtual void InsertBack(const ForwardIteratorT& begin, const ForwardIteratorT& end)
+        virtual void InsertBack(ConstFwddIteratorT& begin, ConstFwddIteratorT& end)
         {
             InsertAt(Count() - 1, begin, end);
         }
@@ -289,13 +288,13 @@ namespace Atom
         /// Removes the first element matching element \p{element}.
         /// 
         /// @note
-        /// - Calls FirstIndexOf(ConstElementT & element, const EqualityComparerT comparer)
+        /// - Calls FirstIndexOf(const ElementT & element, const EqualityComparerT comparer)
         ///   with element: element, comparer: comparer
         ///   to find the element to remove.
         /// 
         /// - Calls RemoveAt(sizet index)
         ///   with index: FindFirstOf(element, comparer) if \p{index != NPOS}.
-        virtual void RemoveFront(ConstElementT& element, const EqualityComparerT& comparer)
+        virtual void RemoveFront(const ElementT& element, const EqualityComparerT& comparer)
         {
             if (sizet index = FirstIndexOf(element, comparer) != NPOS)
             {
@@ -304,9 +303,9 @@ namespace Atom
         }
 
         /// @note 
-        /// - Calls RemoveFront(ConstElementT & element, const EqualityComparerT & comparer)
+        /// - Calls RemoveFront(const ElementT & element, const EqualityComparerT & comparer)
         ///   with element: element, comparer: DefaultEqualityComparerT().
-        virtual void RemoveFront(ConstElementT& element)
+        virtual void RemoveFront(const ElementT& element)
         {
             RemoveFront(element, DefaultEqualityComparerT());
         }
@@ -314,13 +313,13 @@ namespace Atom
         /// Removes the last element matching element \p{element}.
         /// 
         /// @note
-        /// - Calls LastIndexOf(ConstElementT & element, const EqualityComparerT comparer)
+        /// - Calls LastIndexOf(const ElementT & element, const EqualityComparerT comparer)
         ///   with element: element, comparer: comparer
         ///   to find the element to remove.
         /// 
         /// - Calls RemoveAt(sizet index)
         ///   with index: FindFirstOf(element, comparer) if \p{index != NPOS}.
-        virtual void RemoveBack(ConstElementT& element, const EqualityComparerT& comparer)
+        virtual void RemoveBack(const ElementT& element, const EqualityComparerT& comparer)
         {
             if (sizet index = LastIndexOf(element, comparer) != NPOS)
             {
@@ -329,9 +328,9 @@ namespace Atom
         }
 
         /// @note 
-        /// - Calls RemoveBack(ConstElementT & element, const EqualityComparerT & comparer)
+        /// - Calls RemoveBack(const ElementT & element, const EqualityComparerT & comparer)
         ///   with element: element, comparer: DefaultEqualityComparerT().
-        virtual void RemoveBack(ConstElementT& element)
+        virtual void RemoveBack(const ElementT& element)
         {
             RemoveBack(element, DefaultEqualityComparerT());
         }
@@ -387,9 +386,9 @@ namespace Atom
         /// @param[in] element Element to insert.
         /// 
         /// @note
-        /// - Calls InsertBack(ConstElementT & element)
+        /// - Calls InsertBack(const ElementT & element)
         ///   \n with \p{element}: element.
-        void Insert(ConstElementT& element) final
+        void Insert(const ElementT& element) final
         {
             InsertBack(element);
         }
@@ -397,9 +396,9 @@ namespace Atom
         /// Removes element from last.
         /// 
         /// @note 
-        /// - Calls RemoveBack(ConstElementT & element)
+        /// - Calls RemoveBack(const ElementT & element)
         ///   with element: element.
-        void Remove(ConstElementT& element) final
+        void Remove(const ElementT& element) final
         {
             RemoveBack(element);
         }

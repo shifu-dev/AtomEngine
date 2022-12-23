@@ -92,22 +92,20 @@ namespace Atom
                 _begin(move(begin)), _end(move(end)) { }
 
         public:
-            // template <typename EnableIf<> = 0>
-            // StdIteratorT begin() noexcept
-            // {
-            //     return _ToStdIterator(_begin);
-            // }
+            StdIteratorT begin() noexcept
+            {
+                return _ToStdIterator(_begin);
+            }
 
             ConstStdIteratorT begin() const noexcept
             {
                 return _ToStdIterator(_begin);
             }
 
-            // template <typename EnableIf<> = 0>
-            // StdIteratorT end() noexcept
-            // {
-            //     return _ToStdIterator(_end);
-            // }
+            StdIteratorT end() noexcept
+            {
+                return _ToStdIterator(_end);
+            }
 
             ConstStdIteratorT end() const noexcept
             {

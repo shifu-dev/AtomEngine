@@ -8,46 +8,33 @@ namespace Atom
     /// 
     /// @tparam ElementT Type of element iterator iterates over.
     template <typename ElementT>
-    interface ArrayIterator: public virtual IRandomAccessIterator<ElementT>
+    class ConstArrayIterator:
+        public virtual IConstRandomAccessIterator<ElementT>
     {
-        using ThisT = ArrayIterator<ElementT>;
-        using ConstElementT = const ElementT;
-        using IteratorT = IIterator<ElementT>;
+        using ThisT = ConstArrayIterator<ElementT>;
+        using ConstIteratorT = IConstIterator<ElementT>;
 
     public:
-        ArrayIterator(ElementT* ptr)
+        ConstArrayIterator(ElementT* ptr)
             : _ptr(ptr) { }
 
-        ArrayIterator(const ThisT& other) = default;
-        ArrayIterator(ThisT&& other) = default;
-
-        ThisT& operator = (const ThisT& other) = default;
-        ThisT& operator = (ThisT&& other) = default;
-
-        ~ArrayIterator() = default;
-
     public:
-        ElementT& Value() noexcept final
+        const ElementT& Value() const noexcept final
         {
             return *_ptr;
         }
 
-        ConstElementT& Value() const noexcept final
-        {
-            return *_ptr;
-        }
-
-        void MoveFwdBy(sizet steps) const noexcept final
+        void MoveFwdBy(sizet steps) noexcept final
         {
             _ptr += steps;
         }
 
-        void MoveBwdBy(sizet steps) const noexcept final
+        void MoveBwdBy(sizet steps) noexcept final
         {
             _ptr -= steps;
         }
 
-        int Compare(const IteratorT& rhs) const noexcept final
+        int Compare(const ConstIteratorT& rhs) const noexcept final
         {
             const ThisT* rhsPtr = DCAST(const ThisT*, &rhs);
             if (rhsPtr != nullptr)
@@ -64,6 +51,29 @@ namespace Atom
         }
 
     protected:
-        mutable ElementT* _ptr;
+        ElementT* _ptr;
+    };
+
+    /// Iterator for array.
+    /// 
+    /// @tparam ElementT Type of element iterator iterates over.
+    template <typename ElementT>
+    class ArrayIterator: public ConstArrayIterator<ElementT>,
+        public virtual IRandomAccessIterator<ElementT>
+    {
+        using BaseT = ConstArrayIterator<ElementT>;
+
+    public:
+        ArrayIterator(ElementT* ptr) noexcept:
+            BaseT(ptr) { }
+
+    public:
+        ElementT& Value() noexcept final
+        {
+            return *_ptr;
+        }
+
+    protected:
+        using BaseT::_ptr;
     };
 }

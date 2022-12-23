@@ -12,16 +12,23 @@ namespace Atom
     interface IConstArray:
         public virtual IConstList<ElementT>
     {
-        using ConstElementT = const ElementT;
-        using ArrayIteratorT = ArrayIterator<ElementT>;
+        using ConstArrayIteratorT = ConstArrayIterator<ElementT>;
 
     /// ----------------------------------------------------------------------------
     public:
-        /// @return Pointer to the underlying array.
-        virtual ConstElementT* Data() const noexcept abstract;
+        /// @returns Const pointer to the underlying array.
+        virtual const ElementT* Data() const noexcept abstract;
 
-        virtual const ArrayIteratorT Begin() const noexcept abstract;
+        /// ArrayIterator to the first element.
+        /// 
+        /// @note
+        /// - This is to avoid boxing the iterator which happens in IIterable.
+        virtual ConstArrayIteratorT Begin() const noexcept abstract;
 
-        virtual const ArrayIteratorT End() const noexcept abstract;
+        /// ArrayIterator to the last element.
+        /// 
+        /// @note
+        /// - This is to avoid boxing the iterator which happens in IIterable.
+        virtual ConstArrayIteratorT End() const noexcept abstract;
     };
 }

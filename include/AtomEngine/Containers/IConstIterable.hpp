@@ -9,7 +9,7 @@ namespace Atom
     interface IConstIterable
     {
         using ConstElementT = const ElementT;
-        using ConstFwdIteratorBoxT = const ForwardIteratorBox<ElementT>;
+        using ConstFwdIteratorBoxT = ConstForwardIteratorBox<ElementT>;
 
         /// IIterator to the first element.
         /// 
