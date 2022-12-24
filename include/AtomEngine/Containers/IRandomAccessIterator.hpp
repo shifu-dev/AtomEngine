@@ -17,21 +17,21 @@ namespace Atom
         /// Moves iterator forward by count \p{steps}.
         ///
         /// @param steps Count of steps to move iterator by.
-        virtual void MoveBwdBy(sizet steps) noexcept abstract;
+        virtual void MoveBwdBy(sizet steps) const noexcept abstract;
 
         /// Moves iterator backward by count \p{steps}.
         ///
         /// @param steps Count of steps to move iterator by.
-        virtual void MoveFwdBy(sizet steps) noexcept abstract;
+        virtual void MoveFwdBy(sizet steps) const noexcept abstract;
 
-        void MoveFwd() noexcept final { MoveFwdBy(1); }
-        void MoveBwd() noexcept final { MoveBwdBy(1); }
+        void MoveFwd() const noexcept final { MoveFwdBy(1); }
+        void MoveBwd() const noexcept final { MoveBwdBy(1); }
 
         /// Moves iterator forward by count \p{steps}.
         /// 
         /// @param steps Count of steps to move iterator by.
         /// @return & to this object.
-        ThisT& operator += (sizet steps) noexcept
+        const ThisT& operator += (sizet steps) const noexcept
         {
             MoveFwdBy(steps);
             return *this;
@@ -41,7 +41,7 @@ namespace Atom
         /// 
         /// @param steps Count of steps to move iterator by.
         /// @return & to this object.
-        ThisT& operator -= (sizet steps) noexcept
+        const ThisT& operator -= (sizet steps) const noexcept
         {
             MoveBwdBy(steps);
             return *this;

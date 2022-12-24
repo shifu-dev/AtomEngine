@@ -24,12 +24,12 @@ namespace Atom
             return *_ptr;
         }
 
-        void MoveFwdBy(sizet steps) noexcept final
+        void MoveFwdBy(sizet steps) const noexcept final
         {
             _ptr += steps;
         }
 
-        void MoveBwdBy(sizet steps) noexcept final
+        void MoveBwdBy(sizet steps) const noexcept final
         {
             _ptr -= steps;
         }
@@ -51,7 +51,7 @@ namespace Atom
         }
 
     protected:
-        const ElementT* _ptr;
+        const ElementT mutable* _ptr;
     };
 
     /// Iterator for array.
