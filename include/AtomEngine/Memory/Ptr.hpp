@@ -42,6 +42,16 @@ namespace Atom
             return _ptr;
         }
 
+        operator TypeT& () noexcept
+        {
+            return *_ptr;
+        }
+
+        operator const TypeT& () const noexcept
+        {
+            return *_ptr;
+        }
+
     protected:
         TypeT* _ptr;
     };
