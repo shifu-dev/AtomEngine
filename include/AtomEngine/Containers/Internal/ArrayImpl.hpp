@@ -18,6 +18,10 @@ namespace Atom::Internal
         using FwdIteratorBoxT = ForwardIteratorBox<ElementT>;
         using ArrayIteratorT = ArrayIterator<ElementT>;
 
+    public:
+        /// @todo Resolve ambiguity between IConstCollection::Count and ConstArrayImpl::Count.
+        using BaseT::Count;
+
     /// ----------------------------------------------------------------------------
     /// IArray
     public:
