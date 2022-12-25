@@ -11,6 +11,7 @@ set(ATOM_ENGINE_VENDORS_DIR ${ATOM_ENGINE_ROOT_DIR}/vendors)
 set(ATOM_ENGINE_BUILD_DIR ${ATOM_ENGINE_ROOT_DIR}/build)
 
 enable_testing()
+add_subdirectory(vendors/Catch2)
 add_subdirectory(src)
 add_subdirectory(tests)
 add_subdirectory(docs)
