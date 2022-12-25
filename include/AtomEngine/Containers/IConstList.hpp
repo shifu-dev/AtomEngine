@@ -142,7 +142,7 @@ namespace Atom
         using ConstCollectionT::Contains;
         using ConstCollectionT::Count;
 
-        virtual bool Contains(ConstElementT& element, const EqualityComparerT& comparer) const noexcept final
+        virtual bool Contains(ConstElementT& element, const EqualityComparerT& comparer) const noexcept override final
         {
             return FirstIndexOf(element, comparer) != NPOS;
         }

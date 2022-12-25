@@ -15,22 +15,22 @@ namespace Atom
             : _ptr(ptr) { }
 
     public:
-        const CharT& Value() const noexcept final
+        const CharT& Value() const noexcept override final
         {
             return *_ptr;
         }
 
-        void MoveFwdBy(sizet steps) const noexcept final
+        void MoveFwdBy(sizet steps) const noexcept override final
         {
             _ptr += steps;
         }
 
-        void MoveBwdBy(sizet steps) const noexcept final
+        void MoveBwdBy(sizet steps) const noexcept override final
         {
             _ptr -= steps;
         }
 
-        int Compare(const IConstIteratorT& rhs) const noexcept final
+        int Compare(const IConstIteratorT& rhs) const noexcept override final
         {
             if (*_ptr == rhs.Value())
                 return 0;

@@ -52,7 +52,7 @@ namespace Atom
 
         /// ----------------------------------------------------------------------------
     public:
-        sizet Size() const noexcept final
+        sizet Size() const noexcept override final
         {
             return _memoryTotal;
         }
@@ -98,7 +98,7 @@ namespace Atom
             return _FindBlock(sizeof(TypeT) * count) != nullptr;
         }
 
-        memptr AllocateRaw(sizet size, bool clear = true) final
+        memptr AllocateRaw(sizet size, bool clear = true) override final
         {
             blockptr block = _FindBlock(size);
             if (block == nullptr)
@@ -116,7 +116,7 @@ namespace Atom
             return block->mem;
         }
 
-        memptr ReallocateRaw(memptr mem, sizet size, bool clear = true, bool clearAll = false) final
+        memptr ReallocateRaw(memptr mem, sizet size, bool clear = true, bool clearAll = false) override final
         {
             if (mem == nullptr)
             {
@@ -170,7 +170,7 @@ namespace Atom
             return AllocateRaw(size, clear);
         }
 
-        void DeallocateRaw(memptr mem, sizet size) final
+        void DeallocateRaw(memptr mem, sizet size) override final
         {
             if (mem != nullptr)
             {

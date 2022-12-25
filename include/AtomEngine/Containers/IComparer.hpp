@@ -18,7 +18,7 @@ namespace Atom
     template <typename T>
     struct DefaultEqualityComparer: public virtual IEqualityComparer<T>
     {
-        bool Compare(const T& lhs, const T& rhs) const noexcept final
+        bool Compare(const T& lhs, const T& rhs) const noexcept override final
         {
             return lhs == rhs;
         }

@@ -16,17 +16,17 @@ namespace Atom::Internal
     /// ----------------------------------------------------------------------------
     /// IConstArray
     public:
-        const ElementT* Data() const noexcept final
+        const ElementT* Data() const noexcept override final
         {
             return _array;
         }
 
-        ConstArrayIteratorT Begin() const noexcept final
+        ConstArrayIteratorT Begin() const noexcept override final
         {
             return ConstArrayIteratorT(_array + 0);
         }
 
-        ConstArrayIteratorT End() const noexcept final
+        ConstArrayIteratorT End() const noexcept override final
         {
             return ConstArrayIteratorT(_array + _count);
         }
@@ -34,14 +34,14 @@ namespace Atom::Internal
     /// ----------------------------------------------------------------------------
     /// IConstList
     public:
-        const ElementT& operator[](sizet index) const noexcept final
+        const ElementT& operator[](sizet index) const noexcept override final
         {
             return _array[index];
         }
 
         using IConstListT::FirstIndexOf;
 
-        sizet FirstIndexOf(const ElementT& element, const EqualityComparerT& comparer) const noexcept final
+        sizet FirstIndexOf(const ElementT& element, const EqualityComparerT& comparer) const noexcept override final
         {
             for (sizet i = 0; i < _count; i++)
             {
@@ -56,7 +56,7 @@ namespace Atom::Internal
 
         using IConstListT::LastIndexOf;
 
-        sizet LastIndexOf(const ElementT& element, const EqualityComparerT& comparer) const noexcept final
+        sizet LastIndexOf(const ElementT& element, const EqualityComparerT& comparer) const noexcept override final
         {
             for (sizet i = _count; i >= 0; i--)
             {
@@ -71,7 +71,7 @@ namespace Atom::Internal
 
     /// ----------------------------------------------------------------------------
     protected:
-        void _AssertIndexIsInBounds(sizet index) const final
+        void _AssertIndexIsInBounds(sizet index) const override final
         {
             _AssertIndexIsInBounds(index, "Index was out of range");
         }
@@ -87,7 +87,7 @@ namespace Atom::Internal
     /// ----------------------------------------------------------------------------
     /// IConstCollection
     public:
-        sizet Count() const noexcept final
+        sizet Count() const noexcept override final
         {
             return _count;
         }
@@ -95,12 +95,12 @@ namespace Atom::Internal
     /// ----------------------------------------------------------------------------
     /// IIterable
     protected:
-        ConstForwardIteratorBoxT _IterableBegin() const noexcept final
+        ConstForwardIteratorBoxT _IterableBegin() const noexcept override final
         {
             return ConstForwardIteratorBoxT(Begin());
         }
 
-        ConstForwardIteratorBoxT _IterableEnd() const noexcept final
+        ConstForwardIteratorBoxT _IterableEnd() const noexcept override final
         {
             return ConstForwardIteratorBoxT(End());
         }

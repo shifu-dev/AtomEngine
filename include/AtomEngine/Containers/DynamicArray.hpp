@@ -79,7 +79,7 @@ namespace Atom
     public:
         using BaseT::Clear;
 
-        void Resize(sizet count) final
+        void Resize(sizet count) override final
         {
             count = max(count, _count);
             if (count != _capacity)
@@ -88,7 +88,7 @@ namespace Atom
             }
         }
 
-        sizet Reserve(sizet count) final
+        sizet Reserve(sizet count) override final
         {
             if (_capacity - _count < count)
             {
@@ -98,7 +98,7 @@ namespace Atom
             return _capacity - _count;
         }
 
-        void ShrinkToFit() final
+        void ShrinkToFit() override final
         {
             return Resize(_count);
         }

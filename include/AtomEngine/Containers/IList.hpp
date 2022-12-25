@@ -376,7 +376,7 @@ namespace Atom
     /// ----------------------------------------------------------------------------
     /// ICollection
 
-        void Clear() final
+        void Clear() override final
         {
             RemoveFrom(0);
         }
@@ -388,7 +388,7 @@ namespace Atom
         /// @note
         /// - Calls InsertBack(const ElementT & element)
         ///   \n with \p{element}: element.
-        void Insert(const ElementT& element) final
+        void Insert(const ElementT& element) override final
         {
             InsertBack(element);
         }
@@ -398,7 +398,7 @@ namespace Atom
         /// @note 
         /// - Calls RemoveBack(const ElementT & element)
         ///   with element: element.
-        void Remove(const ElementT& element) final
+        void Remove(const ElementT& element) override final
         {
             RemoveBack(element);
         }

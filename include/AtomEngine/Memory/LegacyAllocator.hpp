@@ -9,7 +9,7 @@ namespace Atom
         public virtual IAllocator
     {
     public:
-        memptr AllocateRaw(sizet count, bool clear = true) final
+        memptr AllocateRaw(sizet count, bool clear = true) override final
         {
             count = max<sizet>(0, count);
             memptr dest = nullptr;
@@ -30,7 +30,7 @@ namespace Atom
             return dest;
         }
 
-        void DeallocateRaw(memptr mem, sizet count) final
+        void DeallocateRaw(memptr mem, sizet count) override final
         {
             if (mem != nullptr)
             {

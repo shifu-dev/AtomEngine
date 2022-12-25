@@ -19,7 +19,7 @@ namespace Atom
 
     /// ----------------------------------------------------------------------------
     protected:
-        blockptr _AllocateBlocks(sizet count) final
+        blockptr _AllocateBlocks(sizet count) override final
         {
             if (_stackResFreeBlock != NPOS)
             {
@@ -43,7 +43,7 @@ namespace Atom
             return BaseT::_AllocateBlocks(count);
         }
 
-        void _DeallocateBlock(blockptr block) final
+        void _DeallocateBlock(blockptr block) override final
         {
             if (block > _stackResBlocks and block < _stackResBlocks + BlockStackSize)
             {

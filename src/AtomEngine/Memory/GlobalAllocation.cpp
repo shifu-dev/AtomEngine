@@ -13,13 +13,13 @@ namespace Atom
 
     /// ----------------------------------------------------------------------------
     protected:
-        memptr _AllocateMemory(sizet size) final
+        memptr _AllocateMemory(sizet size) override final
         {
             // default implementation uses global mem pool
             return SCAST(memptr, malloc(size));
         }
 
-        void _DeallocateMemory(memptr mem, sizet size) final
+        void _DeallocateMemory(memptr mem, sizet size) override final
         {
             // default implementation uses global mem pool
             free(mem);

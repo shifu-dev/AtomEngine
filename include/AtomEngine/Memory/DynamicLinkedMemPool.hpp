@@ -11,12 +11,12 @@ namespace Atom
     {
     /// ----------------------------------------------------------------------------
     public:
-        void Shrink() final
+        void Shrink() override final
         {
             // TODO: implement
         }
 
-        void Reserve(sizet size) final
+        void Reserve(sizet size) override final
         {
             sizet freeCount = FreeCount();
             if (size > freeCount)
@@ -25,7 +25,7 @@ namespace Atom
             }
         }
 
-        void ReserveMore(sizet size) final
+        void ReserveMore(sizet size) override final
         {
             memptr mem = _AllocateMemory(size);
             if (mem == nullptr)

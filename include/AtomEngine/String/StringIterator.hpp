@@ -15,7 +15,7 @@ namespace Atom
             BaseT(ptr) { }
 
     public:
-        CharT& Value() noexcept final
+        CharT& Value() noexcept override final
         {
             return *CCAST(CharT*, _ptr);
         }

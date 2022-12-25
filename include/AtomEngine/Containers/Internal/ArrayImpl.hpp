@@ -26,17 +26,17 @@ namespace Atom::Internal
     /// IArray
     public:
         /// @return Pointer to the underlying array.
-        ElementT* Data() noexcept final
+        ElementT* Data() noexcept override final
         {
             return _array;
         }
 
-        ArrayIteratorT Begin() noexcept final
+        ArrayIteratorT Begin() noexcept override final
         {
             return ArrayIteratorT(_array + 0);
         }
 
-        ArrayIteratorT End() noexcept final
+        ArrayIteratorT End() noexcept override final
         {
             return ArrayIteratorT(_array + _count);
         }
@@ -44,12 +44,12 @@ namespace Atom::Internal
     /// ----------------------------------------------------------------------------
     /// IList
     public:
-        ElementT& operator[](sizet index) noexcept final
+        ElementT& operator[](sizet index) noexcept override final
         {
             return _array[index];
         }
 
-        void InsertAt(sizet index, const ElementT& element) final
+        void InsertAt(sizet index, const ElementT& element) override final
         {
             _AssertIndexIsInBounds(index);
             _AssertCapacityFor(1);
@@ -63,7 +63,7 @@ namespace Atom::Internal
             _array[index] = element;
         }
 
-        void InsertBack(const ElementT& element) final
+        void InsertBack(const ElementT& element) override final
         {
             _AssertCapacityFor(1);
 
@@ -71,7 +71,7 @@ namespace Atom::Internal
             _count++;
         }
 
-        void RemoveBack() final
+        void RemoveBack() override final
         {
             _AssertIndexIsInBounds(0);
 
@@ -79,7 +79,7 @@ namespace Atom::Internal
             _count--;
         }
 
-        void InsertAt(sizet index, ConstFwdIteratorT& it, sizet count) final
+        void InsertAt(sizet index, ConstFwdIteratorT& it, sizet count) override final
         {
             _AssertIndexIsInBounds(index);
             _AssertCapacityFor(count);
@@ -97,7 +97,7 @@ namespace Atom::Internal
             }
         }
 
-        void RemoveAt(sizet index) final
+        void RemoveAt(sizet index) override final
         {
             _AssertIndexIsInBounds(index);
 
@@ -110,7 +110,7 @@ namespace Atom::Internal
             _count--;
         }
 
-        void RemoveFrom(sizet from, sizet to) final
+        void RemoveFrom(sizet from, sizet to) override final
         {
             sizet count = to - from;
             for (sizet i = from; i < (_count - count); i++)
@@ -125,7 +125,7 @@ namespace Atom::Internal
             _count -= count;
         }
 
-        void RemoveIfCallable(const PredicateT& pred) noexcept final
+        void RemoveIfCallable(const PredicateT& pred) noexcept override final
         {
             sizet count = _count;
             for (sizet i = 0; i < count; i++)
@@ -143,7 +143,7 @@ namespace Atom::Internal
     /// ----------------------------------------------------------------------------
     /// ICollection
     public:
-        sizet Capacity() const noexcept final
+        sizet Capacity() const noexcept override final
         {
             return _capacity;
         }
@@ -151,12 +151,12 @@ namespace Atom::Internal
     /// ----------------------------------------------------------------------------
     /// IIterable
     protected:
-        FwdIteratorBoxT _IterableBegin() noexcept final
+        FwdIteratorBoxT _IterableBegin() noexcept override final
         {
             return FwdIteratorBoxT(Begin());
         }
 
-        FwdIteratorBoxT _IterableEnd() noexcept final
+        FwdIteratorBoxT _IterableEnd() noexcept override final
         {
             return FwdIteratorBoxT(End());
         }

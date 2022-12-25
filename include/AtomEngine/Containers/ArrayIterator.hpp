@@ -19,22 +19,22 @@ namespace Atom
             : _ptr(ptr) { }
 
     public:
-        const ElementT& Value() const noexcept final
+        const ElementT& Value() const noexcept override final
         {
             return *_ptr;
         }
 
-        void MoveFwdBy(sizet steps) const noexcept final
+        void MoveFwdBy(sizet steps) const noexcept override final
         {
             _ptr += steps;
         }
 
-        void MoveBwdBy(sizet steps) const noexcept final
+        void MoveBwdBy(sizet steps) const noexcept override final
         {
             _ptr -= steps;
         }
 
-        int Compare(const ConstIteratorT& rhs) const noexcept final
+        int Compare(const ConstIteratorT& rhs) const noexcept override final
         {
             const ThisT* rhsPtr = DCAST(const ThisT*, &rhs);
             if (rhsPtr != nullptr)
@@ -68,7 +68,7 @@ namespace Atom
             BaseT(ptr) { }
 
     public:
-        ElementT& Value() noexcept final
+        ElementT& Value() noexcept override final
         {
             return *CCAST(ElementT*, _ptr);
         }

@@ -41,7 +41,7 @@ namespace Atom
     public:
         CallableFunctor(const FunctorT& func): func(func) { }
 
-        ResultT Invoke(ArgsT&&... args) const final
+        ResultT Invoke(ArgsT&&... args) const override final
         {
             return func(forward<ArgsT>(args)...);
         }
