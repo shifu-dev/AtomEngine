@@ -9,6 +9,6 @@ namespace Atom
         public virtual IAllocator
     {
         /// Count of memory units managed by this pool.
-        virtual sizet Size() const noexcept abstract;
+        virtual sizet Size() const noexcept = 0;
     };
 }

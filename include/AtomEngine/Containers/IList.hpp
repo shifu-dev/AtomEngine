@@ -27,7 +27,7 @@ namespace Atom
     public:
 
         /// @copydoc IConstList::operator[](sizet index)
-        virtual ElementT& operator[](sizet index) noexcept abstract;
+        virtual ElementT& operator[](sizet index) noexcept = 0;
 
         /// @copydoc IConstList::ElementAt[](sizet index)
         virtual ElementT& ElementAt(sizet index)
@@ -56,14 +56,14 @@ namespace Atom
         /// @param[in] element Element to insert.
         /// 
         /// @throws OutOfBoundsException if index == out of bounds.
-        virtual void InsertAt(sizet index, const ElementT& element) abstract;
+        virtual void InsertAt(sizet index, const ElementT& element) = 0;
 
         /// Insert multiple elements at index \p{index}.
         /// 
         /// @param[in] index Index to insert elements at.
         /// @param[in] it IForwardIterator pointing to the begining of elements.
         /// @param[in] count Count of elements to insert.
-        virtual void InsertAt(sizet index, ConstFwddIteratorT& it, sizet count) abstract;
+        virtual void InsertAt(sizet index, ConstFwddIteratorT& it, sizet count) = 0;
 
         /// Insert multiple elements at index \p{index}.
         /// 
@@ -263,7 +263,7 @@ namespace Atom
         /// Removes the element at index.
         /// 
         /// @param[in] index Index of the element to remove.
-        virtual void RemoveAt(sizet index) abstract;
+        virtual void RemoveAt(sizet index) = 0;
 
         /// Removes the element at begining.
         /// 
@@ -339,7 +339,7 @@ namespace Atom
         /// 
         /// @param from Starting index of the section to remove.
         /// @param to Last index of the section to remove.
-        virtual void RemoveFrom(sizet from, sizet to) abstract;
+        virtual void RemoveFrom(sizet from, sizet to) = 0;
 
         /// Removes elements from index \p{from} to the end of container.
         /// 
@@ -356,7 +356,7 @@ namespace Atom
         /// Removes single element if IPredicate \p{pred} returns true.
         /// 
         /// @param pred IPredicate to check whether to remove element or not.
-        virtual void RemoveIfCallable(const PredicateT& pred) noexcept abstract;
+        virtual void RemoveIfCallable(const PredicateT& pred) noexcept = 0;
 
         /// Helper function for RemoveIfCallable(const PredicateT & pred).
         /// 

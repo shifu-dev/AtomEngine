@@ -17,12 +17,12 @@ namespace Atom
         /// Moves iterator forward by count \p{steps}.
         ///
         /// @param steps Count of steps to move iterator by.
-        virtual void MoveBwdBy(sizet steps) const noexcept abstract;
+        virtual void MoveBwdBy(sizet steps) const noexcept = 0;
 
         /// Moves iterator backward by count \p{steps}.
         ///
         /// @param steps Count of steps to move iterator by.
-        virtual void MoveFwdBy(sizet steps) const noexcept abstract;
+        virtual void MoveFwdBy(sizet steps) const noexcept = 0;
 
         void MoveFwd() const noexcept override final { MoveFwdBy(1); }
         void MoveBwd() const noexcept override final { MoveBwdBy(1); }

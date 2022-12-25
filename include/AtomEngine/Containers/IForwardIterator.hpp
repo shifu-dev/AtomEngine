@@ -17,7 +17,7 @@ namespace Atom
     /// ----------------------------------------------------------------------------
     public:
         /// Moves IIterator forward to point to next element.
-        virtual void MoveFwd() const noexcept abstract;
+        virtual void MoveFwd() const noexcept = 0;
 
         /// @copydetail MoveFwd()
         /// @note

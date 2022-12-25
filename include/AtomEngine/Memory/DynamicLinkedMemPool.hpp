@@ -60,7 +60,7 @@ namespace Atom
             return LinkedMemPool::_AddMemory(mem, size, isRoot);
         }
 
-        virtual memptr _AllocateMemory(sizet count) abstract;
-        virtual void _DeallocateMemory(memptr mem, sizet count) abstract;
+        virtual memptr _AllocateMemory(sizet count) = 0;
+        virtual void _DeallocateMemory(memptr mem, sizet count) = 0;
     };
 }

@@ -18,21 +18,21 @@ namespace Atom
         /// Current count of elements allocated in memory.
         /// 
         /// @return Count of elements allocated in memory.
-        virtual sizet Capacity() const noexcept abstract;
+        virtual sizet Capacity() const noexcept = 0;
 
         /// Remove all elments from collection.
-        virtual void Clear() abstract;
+        virtual void Clear() = 0;
 
         /// Inserts an element in the collection.
         /// 
         /// @param element Element to insert.
         /// 
         /// @note Position of element == implementation dependent.
-        virtual void Insert(ConstElementT& element) abstract;
+        virtual void Insert(ConstElementT& element) = 0;
 
         /// Removes element from the collection.
         /// 
         /// @param element Element to remove.
-        virtual void Remove(ConstElementT& element) abstract;
+        virtual void Remove(ConstElementT& element) = 0;
     };
 }

@@ -26,7 +26,7 @@ namespace Atom
         /// 
         /// @exceptsafe
         /// \p{Strong Exception Safety}
-        virtual ConstElementT& operator[](sizet index) const noexcept abstract;
+        virtual ConstElementT& operator[](sizet index) const noexcept = 0;
 
         /// @{
         /// Access element at index \p{index} with bounds checking.
@@ -105,7 +105,7 @@ namespace Atom
         /// @param[in] element Element to compare with.
         /// @param[in] comparer IComparer used to compare this element with each element.
         /// @return Index of first element matching element \p{element}, else \p{npos}.
-        virtual sizet FirstIndexOf(ConstElementT& element, const EqualityComparerT& comparer) const noexcept abstract;
+        virtual sizet FirstIndexOf(ConstElementT& element, const EqualityComparerT& comparer) const noexcept = 0;
 
         /// Index of the first element matching element \p{element}.
         /// 
@@ -125,7 +125,7 @@ namespace Atom
         /// @param[in] element Element to compare with.
         /// @param[in] comparer IComparer used to compare this element with each element.
         /// @return Index of last element matching element \p{element}, else \p{npos}.
-        virtual sizet LastIndexOf(ConstElementT& element, const EqualityComparerT& comparer) const noexcept abstract;
+        virtual sizet LastIndexOf(ConstElementT& element, const EqualityComparerT& comparer) const noexcept = 0;
 
         /// Index of the last element matching element \p{element}.
         /// 

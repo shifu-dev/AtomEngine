@@ -11,7 +11,7 @@ namespace Atom
     interface IConstIterator
     {
         /// Get const reference to current element.
-        virtual const ElementT& Value() const noexcept abstract;
+        virtual const ElementT& Value() const noexcept = 0;
 
         /// Get const reference to current element.
         const ElementT& operator * () const noexcept
@@ -35,7 +35,7 @@ namespace Atom
         /// 
         /// @note
         /// - This does not compares the element, but the Iterator.
-        virtual int Compare(const IConstIterator& other) const noexcept abstract;
+        virtual int Compare(const IConstIterator& other) const noexcept = 0;
 
         /// @returns Compare(other) == 0;
         bool operator == (const IConstIterator& other) const noexcept
@@ -58,7 +58,7 @@ namespace Atom
         public virtual IConstIterator<ElementT>
     {
         /// Get reference to current element.
-        virtual ElementT& Value() noexcept abstract;
+        virtual ElementT& Value() noexcept = 0;
 
         /// Get reference to current element.
         ElementT& operator * () noexcept

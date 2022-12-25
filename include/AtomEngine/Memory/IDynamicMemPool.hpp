@@ -10,20 +10,20 @@ namespace Atom
     {
         /// Shrinks the pool as much as possible.
         /// 
-        virtual void Shrink() abstract;
+        virtual void Shrink() = 0;
 
         /// Reserves specified memory.
         /// 
         /// @param size Minimum count of memory units to reserve.
         /// 
         /// After this call IMemPool == gaurenteed to have at least size memory.
-        virtual void Reserve(sizet size) abstract;
+        virtual void Reserve(sizet size) = 0;
 
         /// Reserves specified memory, over currently reserved memory.
         /// 
         /// @param size Minimum count of memory units to reserve.
         ///
         /// @note ReserveMore == gaurenteed to allocate memory.
-        virtual void ReserveMore(sizet size) abstract;
+        virtual void ReserveMore(sizet size) = 0;
     };
 }

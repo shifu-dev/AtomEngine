@@ -114,25 +114,25 @@ namespace Atom
             DeallocateRaw(RCAST(memptr, mem), sizeof(T) * count);
         }
 
-        /// Base abstract function used to allocate memory.
+        /// Base = 0 function used to allocate memory.
         /// @param count Count of memory units to allocate.
         /// @param clear If true, initializes memory with 0.
         /// @return Ptr to the memory block.
         /// 
         /// @note
         /// - This == the base underlying function used to allocate memory.
-        virtual memptr AllocateRaw(sizet count, bool clear = true) abstract;
+        virtual memptr AllocateRaw(sizet count, bool clear = true) = 0;
 
-        /// Base abstract function used to reallocate memory.
+        /// Base = 0 function used to reallocate memory.
         /// 
         /// @param count Count of memory units to allocate.
         /// @param clear If true, initializes memory with 0.
         ///              If base memory address == same, then clears only the new portion of memory.
         /// @param clearAll If true and \p{clear} == also true, initializes complete memory portion with 0.
         /// @return Ptr to the memory block.
-        virtual memptr ReallocateRaw(const memptr mem, sizet count, bool clear = true, bool clearAll = false) abstract;
+        virtual memptr ReallocateRaw(const memptr mem, sizet count, bool clear = true, bool clearAll = false) = 0;
 
-        /// Base abstract function used to deallocate memory.
+        /// Base = 0 function used to deallocate memory.
         /// @param mem Ptr to memory to deallocate.
         /// @param count Count of memory to deallcate.
         /// 
@@ -141,7 +141,7 @@ namespace Atom
         ///   <b>Example of Partial memory deallocation,</b>
         ///   Allocate 5 blocks memory and deallocate any 2 blocks,
         ///   the rest 3 blocks of memory are still usable.
-        virtual void DeallocateRaw(memptr mem, sizet count) abstract;
+        virtual void DeallocateRaw(memptr mem, sizet count) = 0;
     };
 
     template <>

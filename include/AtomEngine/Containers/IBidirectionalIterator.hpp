@@ -15,7 +15,7 @@ namespace Atom
         using ThisT = IConstBidirectionalIterator<ElementT>;
 
         /// Moves Iterator backward to point to previous element.
-        virtual void MoveBwd() const noexcept abstract;
+        virtual void MoveBwd() const noexcept = 0;
 
         /// @copydetail MoveBwd()
         /// @note

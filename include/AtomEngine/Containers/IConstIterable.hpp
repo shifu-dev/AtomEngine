@@ -39,9 +39,9 @@ namespace Atom
 
     protected:
         /// Implementation function for Begin().
-        virtual ConstFwdIteratorBoxT _IterableBegin() const noexcept abstract;
+        virtual ConstFwdIteratorBoxT _IterableBegin() const noexcept = 0;
 
         /// Implementation function for End().
-        virtual ConstFwdIteratorBoxT _IterableEnd() const noexcept abstract;
+        virtual ConstFwdIteratorBoxT _IterableEnd() const noexcept = 0;
     };
 }

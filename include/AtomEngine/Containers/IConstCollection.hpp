@@ -19,7 +19,7 @@ namespace Atom
         /// Current count of elements.
         /// 
         /// @return Count of elements.
-        virtual sizet Count() const noexcept abstract;
+        virtual sizet Count() const noexcept = 0;
 
         /// Is the conatiner empty.
         /// 
@@ -34,7 +34,7 @@ namespace Atom
         /// @param element Element to compare with.
         /// @param comparer IComparer used to compare elements.
         /// @return @true if element == present in the collection, @false otherwise.
-        virtual bool Contains(ConstElementT& element, const EqualityComparerT& comparer) const noexcept abstract;
+        virtual bool Contains(ConstElementT& element, const EqualityComparerT& comparer) const noexcept = 0;
 
         /// Checks if given element == present in the containter.
         /// 

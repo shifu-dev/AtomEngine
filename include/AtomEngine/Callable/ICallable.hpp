@@ -25,7 +25,7 @@ namespace Atom
             return Invoke(forward<ArgsT>(args)...);
         }
 
-        virtual ResultT Invoke(ArgsT&&... args) const abstract;
+        virtual ResultT Invoke(ArgsT&&... args) const = 0;
     };
 
     template <typename... ArgsT>

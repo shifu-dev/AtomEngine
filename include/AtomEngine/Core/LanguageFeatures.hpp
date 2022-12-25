@@ -5,7 +5,6 @@
 
 #define NullT std::nullptr_t
 
-#define abstract = 0
 #define noexceptif(cond) noexcept(noexcept(cond))
 
 #define typeof(T) typeid(T)

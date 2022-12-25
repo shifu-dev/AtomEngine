@@ -6,13 +6,13 @@ namespace Atom
     template <typename T>
     interface IComparer
     {
-        virtual int Compare(const T& lhs, const T& rhs) const noexcept abstract;
+        virtual int Compare(const T& lhs, const T& rhs) const noexcept = 0;
     };
 
     template <typename T>
     interface IEqualityComparer
     {
-        virtual bool Compare(const T& lhs, const T& rhs) const noexcept abstract;
+        virtual bool Compare(const T& lhs, const T& rhs) const noexcept = 0;
     };
 
     template <typename T>

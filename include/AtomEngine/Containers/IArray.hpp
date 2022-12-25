@@ -18,10 +18,10 @@ namespace Atom
     /// ----------------------------------------------------------------------------
     public:
         /// @return Pointer to the underlying array.
-        virtual ElementT* Data() noexcept abstract;
+        virtual ElementT* Data() noexcept = 0;
 
-        virtual ArrayIteratorT Begin() noexcept abstract;
+        virtual ArrayIteratorT Begin() noexcept = 0;
 
-        virtual ArrayIteratorT End() noexcept abstract;
+        virtual ArrayIteratorT End() noexcept = 0;
     };
 }

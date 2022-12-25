@@ -34,9 +34,9 @@ namespace Atom
 
     protected:
         /// @copydoc IIConstItearble::_IterableBegin().
-        virtual ForwardIteratorBoxT _IterableBegin() noexcept abstract;
+        virtual ForwardIteratorBoxT _IterableBegin() noexcept = 0;
 
         /// @copydoc IIConstItearble::_IterableEnd().
-        virtual ForwardIteratorBoxT _IterableEnd() noexcept abstract;
+        virtual ForwardIteratorBoxT _IterableEnd() noexcept = 0;
     };
 }
