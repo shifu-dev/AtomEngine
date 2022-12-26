@@ -1,5 +1,6 @@
 #include "catch2/catch_all.hpp"
 #include "AtomEngine/Callable/CallableBox.hpp"
+#include "AtomEngine/Callable/CallableImpl.hpp"
 
 using namespace Atom;
 
@@ -19,17 +20,18 @@ static int testFunc(int a, char b, uint c)
 TEST_CASE("CallableBox", "[Implementation]")
 {
     using ICallableT = ICallable<int(int, char, uint)>;
+    using CallableMakerT = TCallableMaker<int(int, char, uint)>;
     using CallableBoxT = CallableBox<int(int, char, uint)>;
 
-    CallableBoxT function = ICallableT::Create(& testFunc);
-    CallableBoxT functor = ICallableT::Create(Functor());
-    CallableBoxT lambda = ICallableT::Create(
+    CallableBoxT function = CallableMakerT::Make(& testFunc);
+    CallableBoxT functor = CallableMakerT::Make(Functor());
+    CallableBoxT lambda = CallableMakerT::Make(
         [](int a, char b, uint c)
         {
             return 2;
         });
 
-    CallableBoxT capturedLambda = ICallableT::Create(
+    CallableBoxT capturedLambda = CallableMakerT::Make(
         [&](int a, char b, uint c)
         {
             return 3;

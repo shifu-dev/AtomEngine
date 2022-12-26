@@ -356,7 +356,7 @@ namespace Atom
         /// Removes single element if IPredicate \p{pred} returns true.
         /// 
         /// @param pred IPredicate to check whether to remove element or not.
-        virtual void RemoveIfCallable(const PredicateT& pred) noexcept = 0;
+        virtual void RemoveIfCallable(PredicateT&& pred) noexcept = 0;
 
         /// Helper function for RemoveIfCallable(const PredicateT & pred).
         /// 
