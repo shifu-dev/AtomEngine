@@ -17,6 +17,7 @@ namespace Atom::Internal
         using ConstFwdIteratorT = IConstForwardIterator<ElementT>;
         using FwdIteratorBoxT = ForwardIteratorBox<ElementT>;
         using ArrayIteratorT = ArrayIterator<ElementT>;
+        using LoopActionT = ILoopAction<ElementT&>;
 
     public:
         /// @todo Resolve ambiguity between IConstCollection::Count and ConstArrayImpl::Count.
@@ -150,15 +151,18 @@ namespace Atom::Internal
 
     /// ----------------------------------------------------------------------------
     /// IIterable
-    protected:
-        FwdIteratorBoxT _IterableBegin() noexcept override final
-        {
-            return FwdIteratorBoxT(Begin());
-        }
+    public:
+        using BaseT::ForEach;
 
-        FwdIteratorBoxT _IterableEnd() noexcept override final
+        virtual void ForEach(LoopActionT& action) override final
         {
-            return FwdIteratorBoxT(End());
+            for (sizet i = 0; i < _count; i++)
+            {
+                if (action(_array[i]) == BREAK_LOOP)
+                {
+                    break;
+                }
+            }
         }
 
     /// ----------------------------------------------------------------------------

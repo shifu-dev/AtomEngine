@@ -94,7 +94,8 @@ namespace Atom
         ///   with begin: elements.Begin(), count: count.
         virtual void InsertAt(sizet index, const ConstIterableT& elements, sizet count)
         {
-            InsertAt(index, *elements.Begin(), count);
+            /// @todo: fix this
+            // InsertAt(index, *elements.Begin(), count);
         }
 
         /// Inserts all elements from IConstIterable \p{elements} at index \p{index}.
@@ -107,7 +108,8 @@ namespace Atom
         ///   with begin: elements.Begin(), end: elements.End().
         virtual void InsertAt(sizet index, const ConstIterableT& elements)
         {
-            InsertAt(index, *elements.Begin(), *elements.End());
+            /// @todo: fix this
+            // InsertAt(index, *elements.Begin(), *elements.End());
         }
 
         /// Inserts all elements from IConstCollection \p{elements}.

@@ -12,6 +12,7 @@ namespace Atom::Internal
         using ConstForwardIteratorBoxT = ConstForwardIteratorBox<ElementT>;
         using ConstArrayIteratorT = ConstArrayIterator<ElementT>;
         using EqualityComparerT = IEqualityComparer<ElementT>;
+        using ConstLoopActionT = ILoopAction<const ElementT&>;
 
     /// ----------------------------------------------------------------------------
     /// IConstArray
@@ -94,15 +95,16 @@ namespace Atom::Internal
 
     /// ----------------------------------------------------------------------------
     /// IIterable
-    protected:
-        ConstForwardIteratorBoxT _IterableBegin() const noexcept override final
+    public:
+        virtual void ForEach(ConstLoopActionT& action) const override final
         {
-            return ConstForwardIteratorBoxT(Begin());
-        }
-
-        ConstForwardIteratorBoxT _IterableEnd() const noexcept override final
-        {
-            return ConstForwardIteratorBoxT(End());
+            for (sizet i = 0; i < _count; i++)
+            {
+                if (action(_array[i]) == BREAK_LOOP)
+                {
+                    break;
+                }
+            }
         }
 
     /// ----------------------------------------------------------------------------

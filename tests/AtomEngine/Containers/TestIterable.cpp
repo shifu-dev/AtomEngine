@@ -1,22 +1,23 @@
 #include "catch2/catch_all.hpp"
 #include "AtomEngine/Containers/StackArray.hpp"
-#include "AtomEngine/Containers/ForLoopIterator.hpp"
 
 using namespace Atom;
 
 TEST_CASE("IConstIterable Implementation")
 {
     StackArray<int, 10> arr;
-    IIterable<int> & collection = arr;
+    IIterable<int>& collection = arr;
 
-    SECTION("RangeBased ForLoop")
+    SECTION("ForEach")
     {
         int i = 0;
-        for (auto value : iterate(collection))
+        ForEach(collection, [&](int value)
         {
             CHECK(value == i);
             i++;
-        }
+
+            return CONTINUE_LOOP;
+        });
     }
 
     return;
