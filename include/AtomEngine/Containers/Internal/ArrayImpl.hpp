@@ -125,7 +125,7 @@ namespace Atom::Internal
             _count -= count;
         }
 
-        void RemoveIfCallable(PredicateT&& pred) noexcept override final
+        void RemoveIfInvokable(PredicateT&& pred) noexcept override final
         {
             sizet count = _count;
             for (sizet i = 0; i < count; i++)

@@ -1,20 +1,20 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Callable/ICallable.hpp"
+#include "AtomEngine/Invokable/IInvokable.hpp"
 
 namespace Atom
 {
-    template <typename FunctorT, typename ResultT, typename... ArgsT> class CallableImpl;
+    template <typename FunctorT, typename ResultT, typename... ArgsT> class InvokableImpl;
     template <typename FunctorT, typename ResultT, typename... ArgsT>
-    class CallableImpl <ResultT(ArgsT...), FunctorT>:
-        public virtual ICallable<ResultT(ArgsT...)>
+    class InvokableImpl <ResultT(ArgsT...), FunctorT>:
+        public virtual IInvokable<ResultT(ArgsT...)>
     {
     public:
-        CallableImpl(const FunctorT& func):
+        InvokableImpl(const FunctorT& func):
             func(func) { }
 
     /// ----------------------------------------------------------------------------
-    /// ICallable
+    /// IInvokable
     public:
         ResultT Invoke(ArgsT&&... args) override final
         {
@@ -26,21 +26,21 @@ namespace Atom
         FunctorT func;
     };
 
-    template <typename ResultT, typename... ArgsT> class TCallableMaker;
+    template <typename ResultT, typename... ArgsT> class TInvokableMaker;
     template <typename ResultT, typename... ArgsT>
-    class TCallableMaker <ResultT(ArgsT...)>
+    class TInvokableMaker <ResultT(ArgsT...)>
     {
         template <typename FunctorT>
-        using TCallableImplType = CallableImpl<ResultT(ArgsT...), FunctorT>;
+        using TInvokableImplType = InvokableImpl<ResultT(ArgsT...), FunctorT>;
 
     private:
-        TCallableMaker() noexcept = default;
+        TInvokableMaker() noexcept = default;
 
     public:
         template <typename FunctorT>
-        static TCallableImplType<FunctorT> Make(FunctorT&& functor) noexcept
+        static TInvokableImplType<FunctorT> Make(FunctorT&& functor) noexcept
         {
-            return TCallableImplType<FunctorT>(forward<FunctorT>(functor));
+            return TInvokableImplType<FunctorT>(forward<FunctorT>(functor));
         }
     };
 }

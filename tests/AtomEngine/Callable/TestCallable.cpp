@@ -1,6 +1,6 @@
 #include "catch2/catch_all.hpp"
-#include "AtomEngine/Callable/ICallable.hpp"
-#include "AtomEngine/Callable/CallableImpl.hpp"
+#include "AtomEngine/Invokable/IInvokable.hpp"
+#include "AtomEngine/Invokable/InvokableImpl.hpp"
 
 using namespace Atom;
 
@@ -19,16 +19,16 @@ static int testFunc(int a, char b, uint c)
     return 1;
 }
 
-TEST_CASE("Callable")
+TEST_CASE("Invokable")
 {
-    using ICallableT = ICallable<int(int, char, uint)>;
-    using CallableMakerT = TCallableMaker<int(int, char, uint)>;
+    using IInvokableT = IInvokable<int(int, char, uint)>;
+    using InvokableMakerT = TInvokableMaker<int(int, char, uint)>;
 
-    ICallableT&& functionCallable = CallableMakerT::Make(&testFunc);
+    IInvokableT&& functionInvokable = InvokableMakerT::Make(&testFunc);
 
-    ICallableT&& functorCallable = CallableMakerT::Make(&testFunc);
+    IInvokableT&& functorInvokable = InvokableMakerT::Make(&testFunc);
 
-    ICallableT&& lambdaCallable = CallableMakerT::Make(
+    IInvokableT&& lambdaInvokable = InvokableMakerT::Make(
         [](int a, char b, uint c)
         {
             // std::cout << "Hi! I am lambda()" << std::endl;
@@ -36,7 +36,7 @@ TEST_CASE("Callable")
         }
     );
 
-    ICallableT&& captureLambdaCallable = CallableMakerT::Make(
+    IInvokableT&& captureLambdaInvokable = InvokableMakerT::Make(
         [&](int a, char b, uint c)
         {
             // std::cout << "Hi! I am captureLambda()" << std::endl;
@@ -44,8 +44,8 @@ TEST_CASE("Callable")
         }
     );
 
-    CHECK(functionCallable(0, 'a', 0) == 1);
-    CHECK(functorCallable(0, 'a', 0) == 1);
-    CHECK(lambdaCallable(0, 'a', 0) == 1);
-    CHECK(captureLambdaCallable(0, 'a', 0) == 1);
+    CHECK(functionInvokable(0, 'a', 0) == 1);
+    CHECK(functorInvokable(0, 'a', 0) == 1);
+    CHECK(lambdaInvokable(0, 'a', 0) == 1);
+    CHECK(captureLambdaInvokable(0, 'a', 0) == 1);
 }

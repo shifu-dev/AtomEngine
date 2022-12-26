@@ -1,6 +1,6 @@
 #include "catch2/catch_all.hpp"
-#include "AtomEngine/Callable/CallableBox.hpp"
-#include "AtomEngine/Callable/CallableImpl.hpp"
+#include "AtomEngine/Invokable/InvokableBox.hpp"
+#include "AtomEngine/Invokable/InvokableImpl.hpp"
 
 using namespace Atom;
 
@@ -17,29 +17,29 @@ static int testFunc(int a, char b, uint c)
     return 0;
 }
 
-TEST_CASE("CallableBox", "[Implementation]")
+TEST_CASE("InvokableBox", "[Implementation]")
 {
-    using ICallableT = ICallable<int(int, char, uint)>;
-    using CallableMakerT = TCallableMaker<int(int, char, uint)>;
-    using CallableBoxT = CallableBox<int(int, char, uint)>;
+    using IInvokableT = IInvokable<int(int, char, uint)>;
+    using InvokableMakerT = TInvokableMaker<int(int, char, uint)>;
+    using InvokableBoxT = InvokableBox<int(int, char, uint)>;
 
-    CallableBoxT function = CallableMakerT::Make(& testFunc);
-    CallableBoxT functor = CallableMakerT::Make(Functor());
-    CallableBoxT lambda = CallableMakerT::Make(
+    InvokableBoxT function = InvokableMakerT::Make(& testFunc);
+    InvokableBoxT functor = InvokableMakerT::Make(Functor());
+    InvokableBoxT lambda = InvokableMakerT::Make(
         [](int a, char b, uint c)
         {
             return 2;
         });
 
-    CallableBoxT capturedLambda = CallableMakerT::Make(
+    InvokableBoxT capturedLambda = InvokableMakerT::Make(
         [&](int a, char b, uint c)
         {
             return 3;
         });
 
-    CallableBoxT functionCopy = function;
+    InvokableBoxT functionCopy = function;
 
-    CallableBoxT functionCopyByOperator;
+    InvokableBoxT functionCopyByOperator;
     functionCopyByOperator = function;
 
     CHECK(function->Invoke(0, 'a', 0) == 0);

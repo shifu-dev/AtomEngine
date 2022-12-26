@@ -3,9 +3,9 @@
 
 namespace Atom
 {
-    template <typename ResultT, typename... ArgsT> interface ICallable;
+    template <typename ResultT, typename... ArgsT> interface IInvokable;
     template <typename ResultT, typename... ArgsT>
-    interface ICallable <ResultT(ArgsT...)>
+    interface IInvokable <ResultT(ArgsT...)>
     {
     public:
         ResultT operator () (ArgsT&&... args)
@@ -17,8 +17,8 @@ namespace Atom
     };
 
     template <typename... ArgsT>
-    using IPredicate = ICallable<bool(ArgsT...)>;
+    using IPredicate = IInvokable<bool(ArgsT...)>;
 
     template <typename... ArgsT>
-    using IAction = ICallable<void(ArgsT...)>;
+    using IAction = IInvokable<void(ArgsT...)>;
 }

@@ -356,21 +356,21 @@ namespace Atom
         /// Removes single element if IPredicate \p{pred} returns true.
         /// 
         /// @param pred IPredicate to check whether to remove element or not.
-        virtual void RemoveIfCallable(PredicateT&& pred) noexcept = 0;
+        virtual void RemoveIfInvokable(PredicateT&& pred) noexcept = 0;
 
-        /// Helper function for RemoveIfCallable(const PredicateT & pred).
+        /// Helper function for RemoveIfInvokable(const PredicateT & pred).
         /// 
-        /// @tparam FunctorT Type of functor object. This object == wrapped using ICallable.
+        /// @tparam FunctorT Type of functor object. This object == wrapped using IInvokable.
         /// @param func Functor object.
         /// 
         /// @note
         /// - Wraps functor object \p{func} using PredicateT::Create(func) and 
-        ///   Calls RemoveIfCallable(const PredicateT & pred)
+        ///   Calls RemoveIfInvokable(const PredicateT & pred)
         ///   with pred: PredicateT::Create(func).
         template <typename FunctorT>
         void RemoveIf(const FunctorT& func) noexcept
         {
-            RemoveIfCallable(PredicateT::Create(func));
+            RemoveIfInvokable(PredicateT::Create(func));
         }
 
     /// ----------------------------------------------------------------------------
