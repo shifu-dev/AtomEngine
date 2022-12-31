@@ -58,14 +58,22 @@
 
 ////////////////////////////////////////////////////////
 
-#ifdef ATOM_PLATFORM_WIN
+#if defined(ATOM_PLATFORM_WIN)
 
-#ifdef ATOM_BUILD_DLL
+#if defined(ATOM_BUILD_DLL)
 #define ATOM_API __declspec(dllexport)
 #else
 #define ATOM_API __declspec(dllimport)
 #endif
 
+#elif defined(ATOM_PLATFORM_LINUX)
+
+#if defined(ATOM_BUILD_DLL)
+#define ATOM_API __attribute__((visibility("default")))
 #else
-#error AtomEngine supports only Windows for now.
+#define ATOM_API
+#endif
+
+#else
+#error AtomEngine: Unknown Platform.
 #endif
