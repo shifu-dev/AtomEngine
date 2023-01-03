@@ -17,3 +17,7 @@
 
 #define SASSERT static_assert
 #define STHROW(msg) SASSERT(false, msg)
+
+void ASSERT(bool assertion, const char* msg)
+{
+}

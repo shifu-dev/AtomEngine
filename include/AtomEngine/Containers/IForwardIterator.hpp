@@ -17,12 +17,12 @@ namespace Atom
     /// ----------------------------------------------------------------------------
     public:
         /// Moves IIterator forward to point to next element.
-        virtual void MoveFwd() const noexcept = 0;
+        virtual void MoveFwd() const = 0;
 
         /// @copydetail MoveFwd()
         /// @note
         /// - Calls MoveFwd()
-        const ThisT& operator ++ () const noexcept
+        const ThisT& operator ++ () const
         {
             MoveFwd();
             return *this;
@@ -32,7 +32,7 @@ namespace Atom
         /// @note
         /// - Does not follow postfix definations, works same as prefix.
         /// - Calls MoveFwd()
-        const ThisT& operator ++ (int) const noexcept
+        const ThisT& operator ++ (int) const
         {
             MoveFwd();
             return *this;

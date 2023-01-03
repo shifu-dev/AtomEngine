@@ -70,17 +70,17 @@ namespace Atom
         /// Counts the number of elements first, using iterators.
         /// 
         /// @param index Index to insert elements at.
-        /// @param begin IForwardIterator pointing to the begining of elements.
+        /// @param it IForwardIterator pointing to the begining of elements.
         /// @param end IForwardIterator pointing to the end of elements.
-        virtual void InsertAt(sizet index, ConstFwddIteratorT& begin, ConstFwddIteratorT& end)
+        virtual void InsertAt(sizet index, ConstFwddIteratorT& it)
         {
             sizet count = 0;
-            for (auto& it = begin; it != end; ++it)
+            for (; it.IsEnd() == false; it++)
             {
                 count++;
             }
 
-            InsertAt(index, begin, count);
+            InsertAt(index, it, count);
         }
 
         /// Inserts \p{count} elements from IConstIterable \p{elements} at index \p{index}.
@@ -169,9 +169,9 @@ namespace Atom
 
         /// - Calls InsertAt(sizet index, const ForwardIteratorT & begin, const ForwardIteratorT & end).
         ///   with index: 0, begin: begin, end: end.
-        virtual void InsertFront(ConstFwddIteratorT& begin, ConstFwddIteratorT& end)
+        virtual void InsertFront(ConstFwddIteratorT& it)
         {
-            InsertAt(0, begin, end);
+            InsertAt(0, it);
         }
 
         /// - Calls InsertAt(sizet index, const ConstIterableT & elements, sizet count).
@@ -225,9 +225,9 @@ namespace Atom
 
         /// - Calls InsertAt(sizet index, const ForwardIteratorT & begin, const ForwardIteratorT & end).
         ///   with index: Count() - 1, begin: begin, end: end.
-        virtual void InsertBack(ConstFwddIteratorT& begin, ConstFwddIteratorT& end)
+        virtual void InsertBack(ConstFwddIteratorT& it)
         {
-            InsertAt(Count() - 1, begin, end);
+            InsertAt(Count() - 1, it);
         }
 
         /// - Calls InsertAt(sizet index, const ConstIterableT & elements, sizet count).

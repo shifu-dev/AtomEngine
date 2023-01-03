@@ -11,43 +11,24 @@ namespace Atom
     interface IConstIterator
     {
         /// Get const reference to current element.
-        virtual const ElementT& Value() const noexcept = 0;
+        virtual const ElementT& Value() const = 0;
 
         /// Get const reference to current element.
-        const ElementT& operator * () const noexcept
+        const ElementT& operator * () const
         {
             return Value();
         }
 
         /// Get const pointer to current element.
-        const ElementT* operator -> () const noexcept
+        const ElementT* operator -> () const
         {
-            return Value();
+            return &Value();
         }
 
-        /// Compares itself with other iterator.
+        /// Checks if iterator has reached its end.
         /// 
-        /// @param other Other iterator to compare with.
-        /// @return
-        /// - = 0 if equal.
-        /// - > 0 if this is greater.
-        /// - < 0 if this is smaller.
-        /// 
-        /// @note
-        /// - This does not compares the element, but the Iterator.
-        virtual int Compare(const IConstIterator& other) const noexcept = 0;
-
-        /// @returns Compare(other) == 0;
-        bool operator == (const IConstIterator& other) const noexcept
-        {
-            return Compare(other) == 0;
-        }
-
-        /// @returns Compare(other) != 0;
-        bool operator != (const IConstIterator& other) const noexcept
-        {
-            return Compare(other) != 0;
-        }
+        /// @returns @true if iterator has reached its end, else @false.
+        virtual bool IsEnd() const noexcept = 0;
     };
 
     /// Object to iterate over container elements.
@@ -58,16 +39,18 @@ namespace Atom
         public virtual IConstIterator<ElementT>
     {
         /// Get reference to current element.
-        virtual ElementT& Value() noexcept = 0;
+        /// 
+        /// @throws OutOfBoundsException If IsEnd() == true.
+        virtual ElementT& Value() = 0;
 
         /// Get reference to current element.
-        ElementT& operator * () noexcept
+        ElementT& operator * ()
         {
             return Value();
         }
 
         /// Get pointer to current element.
-        ElementT* operator -> () noexcept
+        ElementT* operator -> ()
         {
             return &Value();
         }

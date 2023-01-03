@@ -15,12 +15,12 @@ namespace Atom
         using ThisT = IConstBidirectionalIterator<ElementT>;
 
         /// Moves Iterator backward to point to previous element.
-        virtual void MoveBwd() const noexcept = 0;
+        virtual void MoveBwd() const = 0;
 
         /// @copydetail MoveBwd()
         /// @note
         /// - Calls MoveBwd()
-        const ThisT& operator -- () const noexcept
+        const ThisT& operator -- () const
         {
             MoveBwd();
             return *this;
@@ -30,7 +30,7 @@ namespace Atom
         /// @note
         /// - Does not follow postfix definations, works same as prefix.
         /// - Calls MoveBwd()
-        const ThisT& operator -- (int) const noexcept
+        const ThisT& operator -- (int) const
         {
             MoveBwd();
             return *this;

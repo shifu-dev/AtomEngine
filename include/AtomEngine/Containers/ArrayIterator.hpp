@@ -12,46 +12,43 @@ namespace Atom
         public virtual IConstRandomAccessIterator<ElementT>
     {
         using ThisT = ConstArrayIterator<ElementT>;
-        using ConstIteratorT = IConstIterator<ElementT>;
+        using DiffT = long;
 
     public:
-        ConstArrayIterator(const ElementT* ptr)
-            : _ptr(ptr) { }
+        ConstArrayIterator(const ElementT* ptr, DiffT length) noexcept:
+            _ptr(ptr), _minPtr(ptr), _maxPtr(_ptr + length) { }
 
     public:
-        const ElementT& Value() const noexcept override final
+        const ElementT& Value() const override final
         {
+            ASSERT(IsEnd() == false, "ArrayIterator has reached its end, cannot access value.");
+
             return *_ptr;
         }
 
-        void MoveFwdBy(sizet steps) const noexcept override final
+        void MoveFwdBy(sizet steps) const override final
         {
+            ASSERT(_ptr < _maxPtr, "ArrayIterator has reached its end, cannot move forward.");
+
             _ptr += steps;
         }
 
-        void MoveBwdBy(sizet steps) const noexcept override final
+        void MoveBwdBy(sizet steps) const override final
         {
+            ASSERT(_ptr > _minPtr, "ArrayIterator has reached its end, cannot move backward.");
+
             _ptr -= steps;
         }
 
-        int Compare(const ConstIteratorT& rhs) const noexcept override final
+        bool IsEnd() const noexcept override final
         {
-            const ThisT* rhsPtr = DCAST(const ThisT*, &rhs);
-            if (rhsPtr != nullptr)
-            {
-                return Compare(*rhsPtr);
-            }
-
-            return -1;
-        }
-
-        int Compare(const ThisT& rhs) const noexcept
-        {
-            return SCAST(int, _ptr - rhs._ptr);
+            return _ptr < _minPtr || _ptr > _maxPtr;
         }
 
     protected:
         const ElementT mutable* _ptr;
+        const ElementT* _minPtr;
+        const ElementT* _maxPtr;
     };
 
     /// Iterator for array.
@@ -64,12 +61,14 @@ namespace Atom
         using BaseT = ConstArrayIterator<ElementT>;
 
     public:
-        ArrayIterator(ElementT* ptr) noexcept:
-            BaseT(ptr) { }
+        ArrayIterator(ElementT* ptr, DiffT length) noexcept:
+            BaseT(ptr, length) { }
 
     public:
-        ElementT& Value() noexcept override final
+        ElementT& Value() override final
         {
+            ASSERT(IsEnd() == false, "ArrayIterator has reached its end, cannot access value.");
+
             return *CCAST(ElementT*, _ptr);
         }
 
