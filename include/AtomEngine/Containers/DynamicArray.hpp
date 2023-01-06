@@ -13,11 +13,11 @@ namespace Atom
     {
         using ThisT = DynamicArray<ElementT>;
         using BaseT = Internal::ArrayImpl<ElementT>;
-        using IDynamicArrayT = IDynamicArray<ElementT>;
-        using InitializerListT = InitializerList<ElementT>;
-        using IForwardIteratorT = IForwardIterator<ElementT>;
+        using IIteratorT = IIterator<ElementT>;
         using IConstIterableT = IConstIterable<ElementT>;
         using IConstCollectionT = IConstCollection<ElementT>;
+        using IDynamicArrayT = IDynamicArray<ElementT>;
+        using InitializerListT = InitializerList<ElementT>;
 
     /// ----------------------------------------------------------------------------
     public:
@@ -39,12 +39,12 @@ namespace Atom
             InsertFront(list);
         }
 
-        DynamicArray(const IForwardIteratorT& it, sizet count): ThisT()
+        DynamicArray(const IIteratorT& it, sizet count): ThisT()
         {
             InsertFront(it, count);
         }
 
-        DynamicArray(const IForwardIteratorT& begin, const IForwardIteratorT& end): ThisT()
+        DynamicArray(const IIteratorT& begin, const IIteratorT& end): ThisT()
         {
             InsertFront(begin, end);
         }

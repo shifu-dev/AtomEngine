@@ -9,10 +9,10 @@ namespace Atom::Internal
         public virtual IConstArray<ElementT>
     {
         using IConstListT = IConstList<ElementT>;
-        using IConstForwardIteratorT = IConstForwardIterator<ElementT>;
+        using IConstIteratorT = IConstIterator<ElementT>;
         using ConstArrayIteratorT = ConstArrayIterator<ElementT>;
         using IEqualityComparerT = IEqualityComparer<ElementT>;
-        using ConstIterateActionT = IInvokable<void(const IConstForwardIteratorT&)>;
+        using ConstIterateActionT = IInvokable<void(const IConstIteratorT&)>;
 
     /// ----------------------------------------------------------------------------
     /// IConstArray

@@ -14,10 +14,10 @@ namespace Atom::Internal
     {
         using BaseT = Internal::ConstArrayImpl<ElementT>;
         using PredicateT = IPredicate<const ElementT&, sizet>;
-        using IForwardIteratorT = IForwardIterator<ElementT>;
-        using IConstForwardIteratorT = IConstForwardIterator<ElementT>;
-        using ArrayIteratorT = ArrayIterator<ElementT>;
-        using IterateActionT = IInvokable<void(IForwardIteratorT&)>;
+        using IConstIteratorT = IConstIterator<ElementT>;
+        using IIteratorT = IIterator<ElementT>;
+        using IConstIteratorTArrayIteratorT = ArrayIterator<ElementT>;
+        using IterateActionT = IInvokable<void(IIteratorT&)>;
 
     public:
         /// @todo Resolve ambiguity between IConstCollection::Count and ConstArrayImpl::Count.
@@ -80,7 +80,7 @@ namespace Atom::Internal
             _count--;
         }
 
-        void InsertAt(sizet index, IConstForwardIteratorT& it, sizet count) override final
+        void InsertAt(sizet index, IConstIteratorT& it, sizet count) override final
         {
             _AssertIndexIsInBounds(index);
             _AssertCapacityFor(count);

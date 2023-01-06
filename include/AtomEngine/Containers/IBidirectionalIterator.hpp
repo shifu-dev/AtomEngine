@@ -1,6 +1,6 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
-#include "AtomEngine/Containers/IForwardIterator.hpp"
+#include "AtomEngine/Containers/IIterator.hpp"
 
 namespace Atom
 {
@@ -10,7 +10,7 @@ namespace Atom
     /// @tparam ElementT Type of element IIterator iterates over.
     template <typename ElementT>
     interface IConstBidirectionalIterator:
-        public virtual IConstForwardIterator<ElementT>
+        public virtual IConstIterator<ElementT>
     {
         using ThisT = IConstBidirectionalIterator<ElementT>;
 
@@ -44,5 +44,5 @@ namespace Atom
     template <typename ElementT>
     interface IBidirectionalIterator:
         public virtual IConstBidirectionalIterator<ElementT>,
-        public virtual IForwardIterator<ElementT> { };
+        public virtual IIterator<ElementT> { };
 }

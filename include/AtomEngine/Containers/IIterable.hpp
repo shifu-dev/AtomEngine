@@ -14,8 +14,8 @@ namespace Atom
         public virtual IConstIterable<ElementT>
     {
         using IConstIterableT = IConstIterable<ElementT>;
-        using IForwardIteratorT = IForwardIterator<ElementT>;
-        using IterateActionT = IInvokable<void(IForwardIteratorT&)>;
+        using IIteratorT = IIterator<ElementT>;
+        using IterateActionT = IInvokable<void(IIteratorT&)>;
 
         using IConstIterableT::Iterate;
 
@@ -26,12 +26,12 @@ namespace Atom
     template <typename ElementT, typename ActionT>
     void ForEach(IIterable<ElementT>& iterable, ActionT&& action)
     {
-        using IForwardIteratorT = IForwardIterator<ElementT>;
-        using IterableInvokableMakerT = TInvokableMaker<void(IForwardIteratorT&)>;
+        using IIteratorT = IIterator<ElementT>;
+        using IterableInvokableMakerT = TInvokableMaker<void(IIteratorT&)>;
 
         auto invokable = IterableInvokableMakerT::Make
         (
-            [&action](IForwardIteratorT& it)
+            [&action](IIteratorT& it)
             {
                 while (it.IsEnd() != false)
                 {

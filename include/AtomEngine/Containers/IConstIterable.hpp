@@ -2,7 +2,7 @@
 #include "AtomEngine/Core.hpp"
 #include "AtomEngine/Invokable/IInvokable.hpp"
 #include "AtomEngine/Invokable/InvokableImpl.hpp"
-#include "AtomEngine/Containers/IForwardIterator.hpp"
+#include "AtomEngine/Containers/IIterator.hpp"
 
 namespace Atom
 {
@@ -15,8 +15,8 @@ namespace Atom
     template <typename ElementT>
     interface IConstIterable
     {
-        using IConstForwardIteratorT = IConstForwardIterator<ElementT>;
-        using ConstIterateActionT = IInvokable<void(const IConstForwardIteratorT&)>;
+        using IConstIteratorT = IConstIterator<ElementT>;
+        using ConstIterateActionT = IInvokable<void(const IConstIteratorT&)>;
 
     public:
         virtual void Iterate(ConstIterateActionT& action) const = 0;
@@ -25,12 +25,12 @@ namespace Atom
     template <typename ElementT, typename ActionT>
     void ForEach(const IConstIterable<ElementT>& iterable, ActionT&& action)
     {
-        using IConstForwardIteratorT = IConstForwardIterator<ElementT>;
-        using IterableInvokableMakerT = TInvokableMaker<void(const IConstForwardIteratorT&)>;
+        using IConstIteratorT = IConstIterator<ElementT>;
+        using IterableInvokableMakerT = TInvokableMaker<void(const IConstIteratorT&)>;
 
         auto invokable = IterableInvokableMakerT::Make
         (
-            [&action](const IConstForwardIteratorT& it)
+            [&action](const IConstIteratorT& it)
             {
                 while (it.IsEnd() != false)
                 {

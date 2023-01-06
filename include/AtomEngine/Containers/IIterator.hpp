@@ -10,6 +10,10 @@ namespace Atom
     template <typename ElementT>
     interface IConstIterator
     {
+        using ThisT = IConstIterator<ElementT>;
+
+    /// ----------------------------------------------------------------------------
+
         /// Get const reference to current element.
         virtual const ElementT& Value() const = 0;
 
@@ -29,6 +33,30 @@ namespace Atom
         /// 
         /// @returns @true if iterator has reached its end, else @false.
         virtual bool IsEnd() const noexcept = 0;
+
+    /// ----------------------------------------------------------------------------
+
+        /// Moves IIterator forward to point to next element.
+        virtual void MoveFwd() const = 0;
+
+        /// @copydetail MoveFwd()
+        /// @note
+        /// - Calls MoveFwd()
+        const ThisT& operator ++ () const
+        {
+            MoveFwd();
+            return *this;
+        }
+
+        /// @copydetail MoveFwd()
+        /// @note
+        /// - Does not follow postfix definations, works same as prefix.
+        /// - Calls MoveFwd()
+        const ThisT& operator ++ (int) const
+        {
+            MoveFwd();
+            return *this;
+        }
     };
 
     /// Object to iterate over container elements.
