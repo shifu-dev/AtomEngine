@@ -14,6 +14,7 @@ namespace Atom
     using ulint = unsigned long int;
     using sizet = size_t;
     using SizeT = size_t;
+    using DiffT = long long;
     constexpr sizet NPOS = -1;
 }
 

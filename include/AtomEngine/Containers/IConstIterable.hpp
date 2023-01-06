@@ -2,7 +2,7 @@
 #include "AtomEngine/Core.hpp"
 #include "AtomEngine/Invokable/IInvokable.hpp"
 #include "AtomEngine/Invokable/InvokableImpl.hpp"
-#include "AtomEngine/Containers/ForwardIteratorBox.hpp"
+#include "AtomEngine/Containers/IForwardIterator.hpp"
 
 namespace Atom
 {
@@ -12,26 +12,36 @@ namespace Atom
         BREAK_LOOP
     };
 
-    template <typename... ArgsT>
-    using ILoopAction = IInvokable<LoopCommand(ArgsT...)>;
-
     template <typename ElementT>
     interface IConstIterable
     {
-        using ConstElementT = const ElementT;
-        using ConstForwardIteratorBoxT = ConstForwardIteratorBox<ElementT>;
-        using ConstLoopActionT = ILoopAction<const ElementT&>;
+        using IConstForwardIteratorT = IConstForwardIterator<ElementT>;
+        using ConstIterateActionT = IInvokable<void(const IConstForwardIteratorT&)>;
 
     public:
-        virtual void ForEach(ConstLoopActionT& action) const = 0;
+        virtual void Iterate(ConstIterateActionT& action) const = 0;
     };
 
     template <typename ElementT, typename ActionT>
     void ForEach(const IConstIterable<ElementT>& iterable, ActionT&& action)
     {
-        using InvokableMakerT = TInvokableMaker<LoopCommand(const ElementT&)>;
+        using IConstForwardIteratorT = IConstForwardIterator<ElementT>;
+        using IterableInvokableMakerT = TInvokableMaker<void(const IConstForwardIteratorT&)>;
 
-        auto invokable = InvokableMakerT::Make(forward<ActionT>(action));
-        iterable.ForEach(invokable);
+        auto invokable = IterableInvokableMakerT::Make
+        (
+            [&action](const IConstForwardIteratorT& it)
+            {
+                while (it.IsEnd() != false)
+                {
+                    LoopCommand cmd = action(it.Value());
+                    if (cmd == BREAK_LOOP) break;
+
+                    it.MoveFwd();
+                }
+            }
+        );
+
+        iterable.Iterate(invokable);
     }
 }

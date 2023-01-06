@@ -15,6 +15,9 @@ namespace Atom
         using DiffT = long;
 
     public:
+        ConstArrayIterator(NullT null) noexcept:
+            ThisT(nullptr, 0) { }
+
         ConstArrayIterator(const ElementT* ptr, DiffT length) noexcept:
             _ptr(ptr), _minPtr(ptr), _maxPtr(_ptr + length) { }
 
@@ -58,13 +61,19 @@ namespace Atom
     class ArrayIterator: public ConstArrayIterator<ElementT>,
         public virtual IRandomAccessIterator<ElementT>
     {
+        using ThisT = ArrayIterator<ElementT>;
         using BaseT = ConstArrayIterator<ElementT>;
 
     public:
+        ArrayIterator(NullT null) noexcept:
+            ThisT(nullptr, 0) { }
+
         ArrayIterator(ElementT* ptr, DiffT length) noexcept:
             BaseT(ptr, length) { }
 
     public:
+        using BaseT::IsEnd;
+    
         ElementT& Value() override final
         {
             ASSERT(IsEnd() == false, "ArrayIterator has reached its end, cannot access value.");

@@ -14,21 +14,35 @@ namespace Atom
         public virtual IConstIterable<ElementT>
     {
         using IConstIterableT = IConstIterable<ElementT>;
-        using ForwardIteratorBoxT = ForwardIteratorBox<ElementT>;
-        using LoopActionT = ILoopAction<ElementT&>;
+        using IForwardIteratorT = IForwardIterator<ElementT>;
+        using IterateActionT = IInvokable<void(IForwardIteratorT&)>;
 
-        using IConstIterableT::ForEach;
+        using IConstIterableT::Iterate;
 
     public:
-        virtual void ForEach(LoopActionT& action) = 0;
+        virtual void Iterate(IterateActionT& action) = 0;
     };
 
     template <typename ElementT, typename ActionT>
     void ForEach(IIterable<ElementT>& iterable, ActionT&& action)
     {
-        using InvokableMakerT = TInvokableMaker<LoopCommand(ElementT&)>;
+        using IForwardIteratorT = IForwardIterator<ElementT>;
+        using IterableInvokableMakerT = TInvokableMaker<void(IForwardIteratorT&)>;
 
-        auto invokable = InvokableMakerT::Make(forward<ActionT>(action));
-        iterable.ForEach(invokable);
+        auto invokable = IterableInvokableMakerT::Make
+        (
+            [&action](IForwardIteratorT& it)
+            {
+                while (it.IsEnd() != false)
+                {
+                    LoopCommand cmd = action(it.Value());
+                    if (cmd == BREAK_LOOP) break;
+
+                    it.MoveFwd();
+                }
+            }
+        );
+
+        iterable.Iterate(invokable);
     }
 }

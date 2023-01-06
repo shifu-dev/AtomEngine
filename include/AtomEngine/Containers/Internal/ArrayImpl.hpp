@@ -14,10 +14,10 @@ namespace Atom::Internal
     {
         using BaseT = Internal::ConstArrayImpl<ElementT>;
         using PredicateT = IPredicate<const ElementT&, sizet>;
-        using ConstFwdIteratorT = IConstForwardIterator<ElementT>;
-        using FwdIteratorBoxT = ForwardIteratorBox<ElementT>;
+        using IForwardIteratorT = IForwardIterator<ElementT>;
+        using IConstForwardIteratorT = IConstForwardIterator<ElementT>;
         using ArrayIteratorT = ArrayIterator<ElementT>;
-        using LoopActionT = ILoopAction<ElementT&>;
+        using IterateActionT = IInvokable<void(IForwardIteratorT&)>;
 
     public:
         /// @todo Resolve ambiguity between IConstCollection::Count and ConstArrayImpl::Count.
@@ -34,12 +34,12 @@ namespace Atom::Internal
 
         ArrayIteratorT Begin() noexcept override final
         {
-            return ArrayIteratorT(_array + 0);
+            return ArrayIteratorT(_array, _count);
         }
 
         ArrayIteratorT End() noexcept override final
         {
-            return ArrayIteratorT(_array + _count);
+            return ArrayIteratorT(_array + _count, _count);
         }
 
     /// ----------------------------------------------------------------------------
@@ -80,7 +80,7 @@ namespace Atom::Internal
             _count--;
         }
 
-        void InsertAt(sizet index, ConstFwdIteratorT& it, sizet count) override final
+        void InsertAt(sizet index, IConstForwardIteratorT& it, sizet count) override final
         {
             _AssertIndexIsInBounds(index);
             _AssertCapacityFor(count);
@@ -152,17 +152,12 @@ namespace Atom::Internal
     /// ----------------------------------------------------------------------------
     /// IIterable
     public:
-        using BaseT::ForEach;
+        using BaseT::Iterate;
 
-        virtual void ForEach(LoopActionT& action) override final
+        virtual void Iterate(IterateActionT& action) override final
         {
-            for (sizet i = 0; i < _count; i++)
-            {
-                if (action(_array[i]) == BREAK_LOOP)
-                {
-                    break;
-                }
-            }
+            auto it = Begin();
+            action(it);
         }
 
     /// ----------------------------------------------------------------------------

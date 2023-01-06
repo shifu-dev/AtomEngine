@@ -1,5 +1,7 @@
 #pragma once
 #include "AtomEngine/Core.hpp"
+#include "AtomEngine/Memory/IAllocator.hpp"
+#include "AtomEngine/Memory/DefaultAllocator.hpp"
 #include "AtomEngine/Containers/IDynamicArray.hpp"
 #include "AtomEngine/Containers/Internal/ArrayImpl.hpp"
 

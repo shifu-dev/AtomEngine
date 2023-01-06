@@ -9,10 +9,10 @@ namespace Atom::Internal
         public virtual IConstArray<ElementT>
     {
         using IConstListT = IConstList<ElementT>;
-        using ConstForwardIteratorBoxT = ConstForwardIteratorBox<ElementT>;
+        using IConstForwardIteratorT = IConstForwardIterator<ElementT>;
         using ConstArrayIteratorT = ConstArrayIterator<ElementT>;
-        using EqualityComparerT = IEqualityComparer<ElementT>;
-        using ConstLoopActionT = ILoopAction<const ElementT&>;
+        using IEqualityComparerT = IEqualityComparer<ElementT>;
+        using ConstIterateActionT = IInvokable<void(const IConstForwardIteratorT&)>;
 
     /// ----------------------------------------------------------------------------
     /// IConstArray
@@ -24,12 +24,12 @@ namespace Atom::Internal
 
         ConstArrayIteratorT Begin() const noexcept override final
         {
-            return ConstArrayIteratorT(_array + 0);
+            return ConstArrayIteratorT(_array, _count);
         }
 
         ConstArrayIteratorT End() const noexcept override final
         {
-            return ConstArrayIteratorT(_array + _count);
+            return ConstArrayIteratorT(_array + _count, _count);
         }
 
     /// ----------------------------------------------------------------------------
@@ -42,7 +42,7 @@ namespace Atom::Internal
 
         using IConstListT::FirstIndexOf;
 
-        sizet FirstIndexOf(const ElementT& element, const EqualityComparerT& comparer) const noexcept override final
+        sizet FirstIndexOf(const ElementT& element, const IEqualityComparerT& comparer) const noexcept override final
         {
             for (sizet i = 0; i < _count; i++)
             {
@@ -57,7 +57,7 @@ namespace Atom::Internal
 
         using IConstListT::LastIndexOf;
 
-        sizet LastIndexOf(const ElementT& element, const EqualityComparerT& comparer) const noexcept override final
+        sizet LastIndexOf(const ElementT& element, const IEqualityComparerT& comparer) const noexcept override final
         {
             for (sizet i = _count; i >= 0; i--)
             {
@@ -96,15 +96,9 @@ namespace Atom::Internal
     /// ----------------------------------------------------------------------------
     /// IIterable
     public:
-        virtual void ForEach(ConstLoopActionT& action) const override final
+        virtual void Iterate(ConstIterateActionT& action) const override final
         {
-            for (sizet i = 0; i < _count; i++)
-            {
-                if (action(_array[i]) == BREAK_LOOP)
-                {
-                    break;
-                }
-            }
+            action(Begin());
         }
 
     /// ----------------------------------------------------------------------------
