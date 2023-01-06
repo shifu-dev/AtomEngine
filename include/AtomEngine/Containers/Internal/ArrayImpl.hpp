@@ -16,7 +16,7 @@ namespace Atom::Internal
         using PredicateT = IPredicate<const ElementT&, sizet>;
         using IConstIteratorT = IConstIterator<ElementT>;
         using IIteratorT = IIterator<ElementT>;
-        using IConstIteratorTArrayIteratorT = ArrayIterator<ElementT>;
+        using ArrayIteratorT = ArrayIterator<ElementT>;
         using IterateActionT = IInvokable<void(IIteratorT&)>;
 
     public:
