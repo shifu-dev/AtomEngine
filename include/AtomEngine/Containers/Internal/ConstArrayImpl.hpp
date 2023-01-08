@@ -10,7 +10,7 @@ namespace Atom::Internal
     {
         using IConstListT = IConstList<ElementT>;
         using IConstIteratorT = IConstIterator<ElementT>;
-        using ConstArrayIteratorT = ConstArrayIterator<ElementT>;
+        using ConstArrayIteratorT = TConstArrayIterator<ElementT>;
         using IEqualityComparerT = IEqualityComparer<ElementT>;
         using ConstIterateActionT = IInvokable<void(const IConstIteratorT&)>;
 

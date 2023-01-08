@@ -29,6 +29,8 @@ namespace Atom
             return &Value();
         }
 
+        virtual void Reset() const noexcept = 0;
+
         /// Checks if iterator has reached its end.
         /// 
         /// @returns @true if iterator has reached its end, else @false.

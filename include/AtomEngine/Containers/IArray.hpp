@@ -13,7 +13,7 @@ namespace Atom
         public virtual IConstArray<ElementT>,
         public virtual IList<ElementT>
     {
-        using ArrayIteratorT = ArrayIterator<ElementT>;
+        using ArrayIteratorT = TArrayIterator<ElementT>;
 
     /// ----------------------------------------------------------------------------
     public:

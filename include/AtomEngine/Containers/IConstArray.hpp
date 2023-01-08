@@ -12,7 +12,7 @@ namespace Atom
     interface IConstArray:
         public virtual IConstList<ElementT>
     {
-        using ConstArrayIteratorT = ConstArrayIterator<ElementT>;
+        using ConstArrayIteratorT = TConstArrayIterator<ElementT>;
 
     /// ----------------------------------------------------------------------------
     public:

@@ -19,6 +19,7 @@ namespace Atom
         using IConstIterableT = IConstIterable<ElementT>;
         using IConstCollectionT = IConstCollection<ElementT>;
         using IConstListT = IConstList<ElementT>;
+        using ConstArrayIteratorT = TConstArrayIterator<ElementT>;
         using IEqualityComparerT = IEqualityComparer<ElementT>;
         using DefaultEqualityComparerT = DefaultEqualityComparer<ElementT>;
         using PredicateT = IPredicate<const ElementT&, sizet>;
@@ -140,12 +141,12 @@ namespace Atom
         /// 
         /// @note
         /// - Calls InsertAt(sizet index, const IteratorT & it, sizet count).
-        ///   with index: index, it: ArrayIterator(elements), count: "count of elements";
+        ///   with index: index, it: ConstArrayIterator(elements), count: "count of elements";
         template <ElementT... ElementTs>
         void InsertAt(sizet index)
         {
             constexpr ElementT elements{ ElementTs... };
-            InsertAt(index, ArrayIterator(elements), sizeof...(ElementTs));
+            InsertAt(index, ConstArrayIteratorT(elements), sizeof...(ElementTs));
         }
 
         /// Inserts element at begining.

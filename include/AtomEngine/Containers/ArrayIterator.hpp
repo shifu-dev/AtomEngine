@@ -8,80 +8,101 @@ namespace Atom
     /// 
     /// @tparam ElementT Type of element iterator iterates over.
     template <typename ElementT>
-    class ConstArrayIterator:
+    class TConstArrayIterator:
         public virtual IConstRandomAccessIterator<ElementT>
     {
-        using ThisT = ConstArrayIterator<ElementT>;
-        using DiffT = long;
+        using ThisT = TConstArrayIterator<ElementT>;
 
     public:
-        ConstArrayIterator(NullT null) noexcept:
+        TConstArrayIterator(NullT null) noexcept:
             ThisT(nullptr, 0) { }
 
-        ConstArrayIterator(const ElementT* ptr, DiffT length) noexcept:
-            _ptr(ptr), _minPtr(ptr), _maxPtr(_ptr + length) { }
+        TConstArrayIterator(const ElementT* arr, SizeT length, SizeT offset = 0) noexcept:
+            _arrBegin(arr + offset), _arr(_arrBegin),
+            _arrMin(arr), _arrMax(arr + length)
+        {
+            if (_arrBegin > _arrMax + 1)
+            {
+                _arrBegin = _arrMax + 1;
+                _arr = _arrBegin;
+            }
+        }
+
+        TConstArrayIterator(const ElementT* begin, const ElementT* end, SizeT offset = 0) noexcept:
+            ThisT(begin < end ? begin : end, abs(end - begin), offset) { }
 
     public:
         const ElementT& Value() const override final
         {
-            ASSERT(IsEnd() == false, "ArrayIterator has reached its end, cannot access value.");
+            ASSERT(IsEnd() == false, "Iterator has reached its end, cannot access value.");
 
-            return *_ptr;
+            return *_arr;
         }
 
-        void MoveFwdBy(sizet steps) const override final
+        virtual void Reset() const noexcept override final
         {
-            ASSERT(_ptr < _maxPtr, "ArrayIterator has reached its end, cannot move forward.");
-
-            _ptr += steps;
-        }
-
-        void MoveBwdBy(sizet steps) const override final
-        {
-            ASSERT(_ptr > _minPtr, "ArrayIterator has reached its end, cannot move backward.");
-
-            _ptr -= steps;
+            _arr = _arrBegin;
         }
 
         bool IsEnd() const noexcept override final
         {
-            return _ptr < _minPtr || _ptr > _maxPtr;
+            return _arr <= _arrMin && _arr >= _arrMax;
+        }
+
+        void MoveFwdBy(SizeT steps) const override final
+        {
+            ASSERT(_arr <= _arrMax, "Iterator has reached its end, cannot move forward.");
+
+            steps = min<SizeT>(steps, (_arrMax + 1) - _arr);
+            _arr += steps;
+        }
+
+        void MoveBwdBy(SizeT steps) const override final
+        {
+            ASSERT(_arr >= _arrMin, "Iterator has reached its end, cannot move backward.");
+
+            steps = min<SizeT>(steps, _arr - (_arrMin - 1));
+            _arr -= steps;
         }
 
     protected:
-        const ElementT mutable* _ptr;
-        const ElementT* _minPtr;
-        const ElementT* _maxPtr;
+        const ElementT mutable* _arr;
+        const ElementT* _arrMin;
+        const ElementT* _arrMax;
+        const ElementT* _arrBegin;
     };
 
     /// Iterator for array.
     /// 
     /// @tparam ElementT Type of element iterator iterates over.
     template <typename ElementT>
-    class ArrayIterator: public ConstArrayIterator<ElementT>,
+    class TArrayIterator: public TConstArrayIterator<ElementT>,
         public virtual IRandomAccessIterator<ElementT>
     {
-        using ThisT = ArrayIterator<ElementT>;
-        using BaseT = ConstArrayIterator<ElementT>;
+        using ThisT = TArrayIterator<ElementT>;
+        using BaseT = TConstArrayIterator<ElementT>;
 
     public:
-        ArrayIterator(NullT null) noexcept:
-            ThisT(nullptr, 0) { }
+        TArrayIterator(NullT null) noexcept:
+            BaseT(null) { }
 
-        ArrayIterator(ElementT* ptr, DiffT length) noexcept:
-            BaseT(ptr, length) { }
+        TArrayIterator(ElementT* arr, SizeT length, SizeT offset = 0) noexcept:
+            BaseT(arr, length, offset) { }
+
+        TArrayIterator(ElementT* begin, ElementT* end, SizeT offset = 0) noexcept:
+            BaseT(begin, end, offset) { }
 
     public:
         using BaseT::IsEnd;
-    
+
         ElementT& Value() override final
         {
-            ASSERT(IsEnd() == false, "ArrayIterator has reached its end, cannot access value.");
+            ASSERT(IsEnd() == false, "Iterator has reached its end, cannot access value.");
 
-            return *CCAST(ElementT*, _ptr);
+            return *CCAST(ElementT*, _arr);
         }
 
     protected:
-        using BaseT::_ptr;
+        using BaseT::_arr;
     };
 }
