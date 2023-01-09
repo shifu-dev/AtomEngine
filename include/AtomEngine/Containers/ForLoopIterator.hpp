@@ -6,6 +6,8 @@ namespace Atom
 {
     namespace Internal
     {
+        class ForLoopIteratorEnd { };
+        
         template <typename IteratorT>
         class ForLoopIterator
         {
@@ -48,24 +50,14 @@ namespace Atom
                 return *this;
             }
 
-            bool operator == (const IteratorT& other) const noexcept
+            bool operator == (const ForLoopIteratorEnd& other) const noexcept
             {
-                return it == other;
+                return it.IsEnd();
             }
 
-            bool operator != (const IteratorT& other) const noexcept
+            bool operator != (const ForLoopIteratorEnd& other) const noexcept
             {
-                return it != other;
-            }
-
-            bool operator == (const ThisT& other) const noexcept
-            {
-                return it == other.it;
-            }
-
-            bool operator != (const ThisT& other) const noexcept
-            {
-                return it != other.it;
+                return !it.IsEnd();
             }
 
         public:
@@ -75,77 +67,44 @@ namespace Atom
         template <typename IteratorT>
         class ForLoopIterable
         {
-            constexpr static bool IsIteratorBox = IsSubClass<
-                Internal::UniqueBoxIdentifier, IteratorT>;
-
-            using ActualIteratorT = std::conditional_t<IsIteratorBox,
-                decltype(((IteratorT*)nullptr)->operator * ()), IteratorT>;
-
-            using StdIteratorT = Internal::ForLoopIterator<ActualIteratorT>;
-            using ConstStdIteratorT = Internal::ForLoopIterator<ActualIteratorT>;
+            using ForLoopIteratorT = Internal::ForLoopIterator<IteratorT>;
+            using ConstForLoopIteratorT = Internal::ForLoopIterator<IteratorT>;
 
         public:
-            ForLoopIterable(IteratorT& begin, IteratorT& end) noexcept:
-                _begin(begin), _end(end) { }
-
-            ForLoopIterable(IteratorT&& begin, IteratorT&& end) noexcept:
-                _begin(move(begin)), _end(move(end)) { }
+            ForLoopIterable(IteratorT&& begin) noexcept:
+                _it(forward<IteratorT>(begin)) { }
 
         public:
-            StdIteratorT begin() noexcept
+            ForLoopIteratorT begin() noexcept
             {
-                return _ToStdIterator(_begin);
+                return ForLoopIteratorT(_it);
             }
 
-            ConstStdIteratorT begin() const noexcept
+            ConstForLoopIteratorT begin() const noexcept
             {
-                return _ToStdIterator(_begin);
+                return ConstForLoopIteratorT(_it);
             }
 
-            StdIteratorT end() noexcept
+            ForLoopIteratorEnd end() const noexcept
             {
-                return _ToStdIterator(_end);
-            }
-
-            ConstStdIteratorT end() const noexcept
-            {
-                return _ToStdIterator(_end);
+                return ForLoopIteratorEnd();
             }
 
         protected:
-            StdIteratorT _ToStdIterator(IteratorT& it) const noexcept
-            {
-                if constexpr (IsIteratorBox)
-                {
-                    return StdIteratorT(*it);
-                }
-                else
-                {
-                    return StdIteratorT(it);
-                }
-            }
-
-        protected:
-            IteratorT _begin;
-            IteratorT _end;
+            IteratorT _it;
         };
     }
 
     template <typename IteratorT>
-    auto iterate(IteratorT& begin, IteratorT& end) noexcept
+    auto ITERATE(IteratorT&& it) noexcept
     {
-        return Internal::ForLoopIterable<IteratorT>(begin, end);
+        return Internal::ForLoopIterable<IteratorT>(forward<IteratorT>(it));
     }
 
-    template <typename IteratorT>
-    auto iterate(IteratorT&& begin, IteratorT&& end) noexcept
+    template <typename BidirectionalIteratorT>
+    auto RITERATE(BidirectionalIteratorT&& it) noexcept
     {
-        return Internal::ForLoopIterable<IteratorT>(move(begin), move(end));
-    }
-
-    template <typename IterableT>
-    auto iterate(const IterableT& iterable) noexcept
-    {
-        return iterate(iterable.Begin(), iterable.End());
+        return Internal::ForLoopIterable<BidirectionalIteratorT>(
+            forward<BidirectionalIteratorT>(it));
     }
 }
